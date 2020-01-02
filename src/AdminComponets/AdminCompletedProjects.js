@@ -2,17 +2,19 @@
 FileName:AdminCompletedProjects.js
 Version:1.0.0
 Purpose:Getting the List of completed Projects list
-Devloper:Raju
+Devloper:Raju,Naveen
 */
 import React, { Component } from 'react';
 import { Alert, Platform, StyleSheet, Text, View, TouchableOpacity, Dimensions, FlatList, TouchableHighlight, Image } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Title, Button, Container, Content, Header, Right, Left, Body, Tab, Tabs, TabHeading, Footer, Item, Input, FooterTab } from 'native-base';
+import { Title, Button, Container, Content, Header, Right, Left, Body, Tab, Tabs, TabHeading, Footer, Subtitle, Item, Input, FooterTab } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
+import log from '../LogFile/Log';
+import { NavigationEvents } from 'react-navigation';
 import {
     BallIndicator,
     BarIndicator,
@@ -22,12 +24,82 @@ import {
     PulseIndicator,
     SkypeIndicator,
     UIActivityIndicator
-  } from 'react-native-indicators';
+} from 'react-native-indicators';
 
 class ListItem extends React.Component {
 
+    //alert for project ReOpen
+    ReOpenProjectAction() {
+        log("Info", "ReOpenProject() method is used to give alert");
+        const { item } = this.props;
+
+        Alert.alert(
+            'Alert..!',
+            'Do you want to ReOpen the Project ?',
+            [
+                {
+                    text: 'NO',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'NO',
+                },
+                { text: 'YES', onPress: () => this.ReOpenProject(item.idea_id) },
+            ],
+            { cancelable: false },
+        );
+
+    }
+
+
+    //project verification 
+    ReOpenProject(projectid) {
+        log("Info", "ProjectReOpen(projectid) method is used to Re Open project");
+        AsyncStorage.getItem("cropcode", (err, res) => {
+            const cropcode = res;
+
+            NetInfo.fetch().then(state => {
+                if (state.type == "none") {
+                    console.log(state.type);
+                    Snackbar.show({
+                        title: 'No Internet Connection',
+                        backgroundColor: 'red',
+                        duration: Snackbar.LENGTH_LONG,
+                    });
+                } else {
+                    fetch(API + 'getIdeas.php',
+                        {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                crop: cropcode,
+                                ideaId: projectid,
+                                action: 'reopen'
+
+                            })
+                        })
+                        .then((response) => response.json())
+                        .then((responseJson) => {
+                            if (responseJson.status == 'True') {
+                                alert("Project Re Opened")
+                            } else {
+                                alert(responseJson.message);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            log("Error", "Project Reopen Error");
+                        });
+                }
+            });
+        });
+    }
+
+
     render() {
         const { item } = this.props;
+        
         return (
             <View style={styles.container}>
                 <TouchableOpacity onPress={this.props.Module}>
@@ -45,13 +117,17 @@ class ListItem extends React.Component {
                                 style={{
                                     borderBottomColor: '#C0C0C0',
                                     borderBottomWidth: 0.3,
-                              }}
+                                }}
                             />
                             <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-                                <Text style={styles.signUpText4} >Title:</Text>
-                                <Text style={styles.signUpText3} >{item.idea_title}</Text>
-                                <TouchableOpacity style={{ width: 100, backgroundColor: '#6cbb3f', marginLeft: 220,marginTop:15 }}>
-                <Text style={{ color: '#fff', textAlign: 'center' }}>Re Open</Text></TouchableOpacity>
+                                <View style={{ width: wp('70%'), flexDirection: 'row' }}>
+                                    <Text style={styles.signUpText4} >Title:</Text>
+                                    <Text style={styles.signUpText3} >{item.idea_title}</Text>
+                                </View>
+                                <View>
+                                    <TouchableOpacity style={{ width: 100, backgroundColor: '#6cbb3f', marginEnd: 100, marginTop: 15 }} onPress={() => { this.ReOpenProjectAction() }}>
+                                        <Text style={{ color: '#fff', textAlign: 'center' }}>Re Open</Text></TouchableOpacity>
+                                </View>
                             </View>
                             <View style={{ flexDirection: 'row', paddingRight: 25 }}>
                                 <Text style={styles.signUpText4} >Requested By:</Text>
@@ -66,9 +142,21 @@ class ListItem extends React.Component {
     }
 }
 export default class AdminCompletedProjects extends Component {
-    constructor(props) {
+    static navigationOptions = () => {
+        return {
+            tabBarOnPress({ navigation, defaultHandler }) {
+                navigation.state.params.onTabFocus();
+                defaultHandler();
+                this.onRefresh();
+            }
+        };
+    }
 
+    constructor(props) {
         super(props);
+        props.navigation.setParams({
+            onTabFocus: this.handleTabFocus
+        });
         this.state = {
             isLoading: true,
             dataSource: [],
@@ -80,8 +168,13 @@ export default class AdminCompletedProjects extends Component {
         }
         this.arrayholder = [];
     }
-    async componentDidMount() {
+    handleTabFocus = () => {
+        this.onRefresh();
+    };
 
+    //For getting the emp role ,user token and cropcode.   
+    async componentDidMount() {
+        log("Debug", "Admin completed projects screen is loaded");
         await AsyncStorage.getItem("emp_role", (err, res) => {
             console.log(res);
             this.setState({ role: res });
@@ -100,68 +193,81 @@ export default class AdminCompletedProjects extends Component {
         console.log(this.state.role);
         this.adminCompletedProjects(this.state.role, this.state.userToken, this.state.cropcode)
     }
+    //Refresh the Completed Project List
+    onRefresh() {
+        this.setState({
+            dataSource:[],
+        })
+
+        this.adminCompletedProjects();
+    }
 
     //get AdminApprovedProjects list start
     adminCompletedProjects(role, userToken, cropcode) {
-
+        log("Info", "AdminCompletedProjects:adminCompletedProjects(role, userToken, cropcode) method used to get all completed projects at admin side");
         console.log(userToken);
         console.log(role);
-    
-            NetInfo.fetch().then(state => {
-                if (state.type == "none") {
-                  console.log(state.type);
-                  Snackbar.show({
+
+        NetInfo.fetch().then(state => {
+            if (state.type == "none") {
+                console.log(state.type);
+                Snackbar.show({
                     title: 'No Internet Connection',
                     backgroundColor: 'red',
                     duration: Snackbar.LENGTH_LONG,
-                  });
-                }else{
-        fetch(API + 'ReactgetIdeas.php',
-            {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    crop: cropcode,
-                    action: 'completed',
-                    empId: userToken,
-                    userType: role,
-                    // empId:empId
-                })
-            })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                   //alert(JSON.stringify(responseJson));
-                console.log(responseJson)
-                if(responseJson.status=='True'){
-                
-                
-                this.setState({
-                    isLoading: false,
-                    dataSource: responseJson.data,
-                    isFetching: false
-                }, function () {
-
                 });
-                this.arrayholder = responseJson.data;
-            }
-            else{
-                Snackbar.show({
-                    title: 'No CompletedProjects',
-                    backgroundColor: '#3BB9FF',
-                    duration: Snackbar.LENGTH_LONG,
-                  });
-            }
-            })
-            .catch((error) => {
-                //console.error(error);
-            });
-        }
-    });
-}
+            } else {
+                fetch(API + 'getIdeas.php',
+                    {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            crop: cropcode,
+                            action: 'completed',
+                            empId: userToken,
+                            userType: role,
+                            // empId:empId
+                        })
+                    })
+                    .then((response) => response.json())
+                    .then((responseJson) => {
+                        //alert(JSON.stringify(responseJson));
+                        console.log(responseJson)
+                        if (responseJson.status == 'True') {
 
+
+                            this.setState({
+                                isLoading: false,
+                                dataSource: responseJson.data,
+                                isFetching: false
+                            }, function () {
+
+                            });
+                            this.arrayholder = responseJson.data;
+                        }
+                        else {
+                            log("Warn", "no completed projects at admin side");
+                            this.setState({
+                                isLoading: false,
+                            })
+                            Snackbar.show({
+                                title: 'No CompletedProjects',
+                                backgroundColor: '#3BB9FF',
+                                duration: Snackbar.LENGTH_LONG,
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        //console.error(error);
+                        log("Error", "Error in getting completed projects at admin side");
+                    });
+            }
+        });
+    }
+    //get AdminApprovedProjects list end.
 
     FlatListItemSeparator = Module = (item, index) => {
 
@@ -177,6 +283,7 @@ export default class AdminCompletedProjects extends Component {
     }
 
 
+    //if data is empty in flatlist we will use _listEmptyComponent method
 
     _listEmptyComponent = () => {
         return (
@@ -188,6 +295,7 @@ export default class AdminCompletedProjects extends Component {
 
     //For Search 
     SearchFilterFunction(text) {
+        log("Info", "AdminCompletedProjects:SearchFilterFunction(text) method used for search functionality");
         console.log(text);
         const newData = this.arrayholder.filter(function (item) {
             const idea_id = item.idea_id.toUpperCase()
@@ -212,47 +320,41 @@ export default class AdminCompletedProjects extends Component {
     render() {
         if (this.state.isLoading) {
             return (
-              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <DotIndicator color='#00A2C1' />
-              </View>
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                    <DotIndicator color='#00A2C1' />
+                </View>
             );
-      
-          }
+
+        }
         return (
             <Container style={{ height: Dimensions.get('window').height }}>
-                 <Header
-          androidStatusBarColor="#00A2C1"
+                <Header
+                    androidStatusBarColor="#00A2C1"
 
-          style={{
-            backgroundColor: '#00A2C1',
-            height: 80,
-            width: Dimensions.get('window').width,
-            borderBottomColor: '#ffffff',
-            justifyContent: 'space-between',
-          }}>
-          <Left>
-            <Icon size={25} name="navicon" style={{ color: '#fff' }} onPress={() =>
-              this.props.navigation.toggleDrawer()} />
-          </Left>
-          <Body>
-            <Title style={{ color: '#fff', fontWeight: '600' }}>Completed Ideas</Title>
-          </Body>
-
-          
-          <Right>
-          <Icon size={25} name="home" style={{color: '#fff'}}  onPress={()=>
-                       this.props.navigation.navigate('AdminManageProjects')}/>   
-
-          </Right>
-          
-
-
-        </Header>
+                    style={{
+                        backgroundColor: '#00A2C1',
+                        height: 80,
+                        width: Dimensions.get('window').width,
+                        borderBottomColor: '#ffffff',
+                        justifyContent: 'space-between',
+                    }}>
+                    <Icon name="navicon" size={25} style={{ color: '#fff', paddingTop: 17 }} onPress={() =>
+                        this.props.navigation.toggleDrawer()} />
+                    <Body style={{ paddingLeft: 30, }}>
+                        <Title style={{ color: '#fff', fontWeight: '600' }}>Completed Projects</Title>
+                        <Subtitle></Subtitle>
+                    </Body>
+                    <Icon name="home" size={25} style={{ color: '#fff', paddingTop: 17 }} onPress={() =>
+                        this.props.navigation.navigate('AdminManageProjects')} />
+                </Header>
 
                 <Item>
+                    <NavigationEvents
+                        onDidFocus={() => this.onRefresh()}
+                    />
                     <Input placeholder="Search"
                         onChangeText={(text) => this.SearchFilterFunction(text)} />
-                    <Icon  size={25} style={{marginLeft:10}} name="search" />
+                    <Icon size={25} style={{ marginLeft: 10 }} name="search" />
                 </Item>
                 <Content>
                     <View>
@@ -275,7 +377,8 @@ export default class AdminCompletedProjects extends Component {
 
                                         <ListItem navigation={this.props.navigation}
                                             item={item}
-                                        
+                                            ReOpenProjectAction={() => this.ReOpenProjectAction(item, index)}//For ReOpen Project
+
                                         />
                                     </View>
                                 }
@@ -377,7 +480,7 @@ const styles = StyleSheet.create({
 
     },
     signUpText2: {
-        fontSize: 10,
+        fontSize: 13,
         marginLeft: 200,
         fontSize: 13,
         color: 'green',
@@ -385,14 +488,14 @@ const styles = StyleSheet.create({
     },
     signUpText3: {
 
-        fontSize: 12,
+        fontSize: 13,
         paddingTop: 10,
         paddingLeft: 10,
 
         alignItems: 'center',
     },
     signUpText4: {
-        fontSize: 12,
+        fontSize: 13,
         paddingTop: 10,
 
 
@@ -423,7 +526,7 @@ const styles = StyleSheet.create({
 
     },
     signUpText: {
-        fontSize: 20,
+        fontSize: 13,
         justifyContent: 'center',
 
 

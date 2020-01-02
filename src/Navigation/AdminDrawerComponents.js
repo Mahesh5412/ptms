@@ -16,21 +16,22 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class drawerContentComponents1 extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state={
-      usertype:'',
-      ptime:'0',
+    this.state = {
+      usertype: '',
+      ptime: '0',
     }
   }
 
-  preferedDays=()=>{
+  preferedDays = () => {
     // alert(this.state.nodays);
-     const days=this.state.ptime;
-     AsyncStorage.setItem('nodays', days);
-     this.props.navigation.navigate('AdminManageTask');
+    const days = this.state.ptime;
+    AsyncStorage.setItem('nodays', days);
+    AsyncStorage.setItem("level",''),
+    this.props.navigation.navigate('AdminManageTask');
 
- }
+  }
 
   //this methos is used to ask the user about confirm about 
   logOutOption() {
@@ -69,62 +70,67 @@ export default class drawerContentComponents1 extends Component {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
 
-        <View style={{ alignItems: 'center',marginTop:10,}}>
-          <Image  style={{width:wp('37%'),height:hp('18%')}}  source={require('../Images/drawer.png')}/>
+          <View style={{ alignItems: 'center', marginTop: 10, }}>
+            <Image style={{ width: wp('37%'), height: hp('18%') }} source={require('../Images/drawer.png')} />
             <Text style={{ color: '#000000', paddingLeft: 10 }}>Welcome Admin</Text>
           </View>
-          </View>
+        </View>
 
 
         <View style={styles.screenContainer}>
 
-     
+
           <TouchableOpacity onPress={this.navigateToScreen('AdminManageProjects')}>
             <View style={styles.screenStyle}>
-              <Icon size={25} name="home" style={{ color: '#000000',width: wp('8%') }} />
+              <Icon size={25} name="home" style={{ color: '#000000', width: wp('8%') }} />
               <Text style={{ color: '#000000', marginLeft: 20 }}>Manage Projects</Text>
             </View>
           </TouchableOpacity>
 
-
+          <TouchableOpacity onPress={this.navigateToScreen('RoadBlockList')}>
+            <View style={styles.screenStyle}>
+              <Icon size={25} name="bitbucket" style={{ color: '#000000', width: wp('8%') }} />
+              <Text style={{ color: '#000000', marginLeft: 20 }}>RoadBlock</Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={this.preferedDays.bind(this)}>
             <View style={styles.screenStyle}>
-              <Icon size={25} name="id-badge" style={{ color: '#000000',width: wp('8%') }} />
+              <Icon size={25} name="id-badge" style={{ color: '#000000', width: wp('8%') }} />
               <Text style={{ color: '#000000', marginLeft: 20 }}>Manage Tasks</Text>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={this.navigateToScreen('AdminManageEmployees')}>
             <View style={styles.screenStyle}>
-              <Icon size={25} name="user" style={{ color: '#000000',width: wp('8%') }} />
+              <Icon size={25} name="user" style={{ color: '#000000', width: wp('8%') }} />
               <Text style={{ color: '#000000', marginLeft: 20 }}>Manage Employees</Text>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={this.navigateToScreen('AdminUserPreference')}>
             <View style={styles.screenStyle}>
-              <Icon size={25} name="users" style={{ color: '#000000' ,width: wp('8%')}} />
+              <Icon size={25} name="users" style={{ color: '#000000', width: wp('8%') }} />
               <Text style={{ color: '#000000', marginLeft: 20 }}>User Preference</Text>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={this.navigateToScreen('AdminCompletedProjects')}>
             <View style={styles.screenStyle}>
-              <Icon size={25} size={25} name="lightbulb-o" style={{ color: '#000000',width: wp('8%') }} />
+              <Icon size={25} size={25} name="lightbulb-o" style={{ color: '#000000', width: wp('8%') }} />
               <Text style={{ color: '#000000', marginLeft: 20 }}>Completed Projects</Text>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={this.navigateToScreen('Updates1')}>
             <View style={styles.screenStyle}>
-              <Icon size={25} name="history" style={{ color: '#000000' ,width: wp('8%')}} />
+              <Icon size={25} name="history" style={{ color: '#000000', width: wp('8%') }} />
               <Text style={{ color: '#000000', marginLeft: 20 }}>Updates</Text>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={this.logOutOption.bind(this)}>
             <View style={styles.screenStyle}>
-              <Icon size={25} name="sign-out" style={{ color: '#000000',width: wp('8%') }} />
+              <Icon size={25} name="sign-out" style={{ color: '#000000', width: wp('8%') }} />
               <Text style={{ color: '#000000', marginLeft: 20 }}>Logout</Text>
             </View>
           </TouchableOpacity>
@@ -147,7 +153,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     // height: 150,
-    height:hp('23%')
+    height: hp('23%')
   },
   headerText: {
     color: '#fff8f8',

@@ -1,3 +1,9 @@
+/*
+FileName:EditUser.js
+Version:1.0.0
+Purpose:Modify or Edit option for existing Employee
+Devloper:Rishitha,Mahesh
+*/
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, StatusBar, Dimensions, TouchableOpacity, Linking, TextInput, } from 'react-native';
 import { Title, Button, Container, Content, Header, Right, Left, Body, Tab, Tabs, TabHeading, Footer, Item, Input, FooterTab } from 'native-base';
@@ -6,9 +12,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Dropdown } from 'react-native-material-dropdown';
 import RadioGroup from 'react-native-radio-button-group';
 import AsyncStorage from '@react-native-community/async-storage';
-import {API }from "../WebServices/RestClient";
+import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
+import log from '../LogFile/Log';
+import { ScrollView } from 'react-native-gesture-handler';
+
 export default class EditUser extends Component {
 
     constructor(props) {
@@ -32,19 +41,15 @@ export default class EditUser extends Component {
         };
     }
 
-
-
-    
     componentDidMount() {
-        this.empDesignationSearch();
-        this.empRoleSearch();
-         //alert(this.props.navigation.state.params.empId+this.props.navigation.state.params.role+this.props.navigation.state.params.designation)
-
+        log("Debug", "Edit screen is loaded");
+        this.empDesignationSearch();//Getting list of Empdesignation
+        this.empRoleSearch();//Getting Employees list
+        //alert(this.props.navigation.state.params.empId+this.props.navigation.state.params.role+this.props.navigation.state.params.designation)
     }
-
-
     //Update employe profile data
     UpdateEmployee() {
+        log("Info", " getRequestedIdeas(cropcode,empId,name,email,username,mobile,designation,workingStatus,team,role) is used to get all details of user");
         AsyncStorage.getItem("cropcode", (err, res) => {
 
             const cropcode = res;
@@ -57,152 +62,151 @@ export default class EditUser extends Component {
             const { designation } = this.state;
             const { workingStatus } = this.state;
             const { team } = this.state;
-            const {role}=this.state;
+            const { role } = this.state;
 
-
+            //checking the network connection
             NetInfo.fetch().then(state => {
                 if (state.type == "none") {
-                  console.log(state.type);
-                  Snackbar.show({
-                    title: 'No Internet Connection',
-                    backgroundColor: 'red',
-                    duration: Snackbar.LENGTH_LONG,
-                  });
-                }else{
+                    console.log(state.type);
+                    log("Warn", "No internet connection");
+                    Snackbar.show({
+                        title: 'No Internet Connection',
+                        backgroundColor: 'red',
+                        duration: Snackbar.LENGTH_LONG,
+                    });
+                } else {
 
 
-            fetch(API+'add_edit_employee.php', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+                    fetch(API + 'addEditEmployee.php', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            empId: empId,
+                            fullname: name,
+                            email: email,
+                            username: username,
+                            mobile: mobile,
+                            designation: designation,
+                            user_status: workingStatus,
+                            team: team,
+                            action: 'update',
+                            userType: role,
+                            crop: cropcode
+                        })
 
+                    }).then((response) => response.json())
+                        .then((responseJson) => {
+                            if (responseJson.status === 'True') {
+                                   // Showing response message coming from server after inserting records.
+                                alert("Updated successfully");
+                                this.props.navigation.navigate("AdminManageEmployeesTasks")
+                               // alert(JSON.stringify(responseJson));
+                              }
+                         
+                       
 
-
-                    empId: empId,
-
-                    fullname: name,
-
-                    email: email,
-
-                    username: username,
-
-                    mobile: mobile,
-
-                    designation: designation,
-
-                    user_status: workingStatus,
-
-                    team: team,
-
-                    action: 'update',
-                    userType:role,
-                    crop: cropcode
-
-
-
-                })
-
-            }).then((response) => response.json())
-                .then((responseJson) => {
-
-                    // Showing response message coming from server after inserting records.
-                     alert(JSON.stringify(responseJson));
-
-                }).catch((error) => {
-                    console.error(error);
-                });
-            }
-        });
+                        }).catch((error) => {
+                            console.error(error);
+                            log("Error", " Error in Update employe profile data");
+                        });
+                }
+            });
         });
     }
 
 
     //fetch disgnation dropdown 
     empDesignationSearch() {
+        log("Info", " empDesignationSearch(cropcode) is used to fetch disgnation dropdown ");
         AsyncStorage.getItem("cropcode", (err, res) => {
 
             const cropcode = res;
             NetInfo.fetch().then(state => {
                 if (state.type == "none") {
-                  console.log(state.type);
-                  Snackbar.show({
-                    title: 'No Internet Connection',
-                    backgroundColor: 'red',
-                    duration: Snackbar.LENGTH_LONG,
-                  });
-                }else{
-            fetch(API+'spinner.php',
-                {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        crop: cropcode,
-                        // mainTaskId: taskId,
-                        action: 'desig'
-                    })
-                })
-                .then((response) => response.json())
-                .then((responseJson) => {
-
-                    this.setState({
-                        designationData: [...responseJson.data],
+                    console.log(state.type);
+                    log("Warn", "No internet connection");
+                    Snackbar.show({
+                        title: 'No Internet Connection',
+                        backgroundColor: 'red',
+                        duration: Snackbar.LENGTH_LONG,
                     });
+                } else {
+                    fetch(API + 'spinner.php',
+                        {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                crop: cropcode,
+                                // mainTaskId: taskId,
+                                action: 'desig'
+                            })
+                        })
+                        .then((response) => response.json())
+                        .then((responseJson) => {
+
+                            this.setState({
+                                designationData: [...responseJson.data],
+                            });
+                        }
+                        )
+                        .catch((error) => {
+                            console.error(error);
+                            log("Error", "fetch disgnation dropdown  error");
+                        });
                 }
-                )
-                .catch((error) => {
-                    console.error(error);
-                });
-            }
-        });
+            });
         });
 
     }
-  //fetch role dropdown 
+    //fetch role dropdown 
     empRoleSearch() {
+        log("Info", "     empRoleSearc(cropcode) is used to fetch role dropdown  ");
         AsyncStorage.getItem("cropcode", (err, res) => {
 
             const cropcode = res;
             NetInfo.fetch().then(state => {
                 if (state.type == "none") {
-                  console.log(state.type);
-                  Snackbar.show({
-                    title: 'No Internet Connection',
-                    backgroundColor: 'red',
-                    duration: Snackbar.LENGTH_LONG,
-                  });
-                }else{
-            fetch(API+'spinner.php',
-                {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        crop: cropcode,
-                        // mainTaskId: taskId,
-                        action: 'team'
-                    })
-                })
-                .then((response) => response.json())
-                .then((responseJson) => {
-
-                    this.setState({
-                        roleData: [...responseJson.data],
+                    console.log(state.type);
+                    log("Warn", "No internet connection");
+                    Snackbar.show({
+                        title: 'No Internet Connection',
+                        backgroundColor: 'red',
+                        duration: Snackbar.LENGTH_LONG,
                     });
+                } else {
+                    fetch(API + 'spinner.php',
+                        {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                crop: cropcode,
+                                // mainTaskId: taskId,
+                                action: 'team'
+                            })
+                        })
+                        .then((response) => response.json())
+                        .then((responseJson) => {
+
+                            this.setState({
+                                roleData: [...responseJson.data],
+                            });
+                        }
+                        )
+                        .catch((error) => {
+                            console.error(error);
+                            log("Error", "fetch role dropdown  error");
+                        });
                 }
-                )
-                .catch((error) => {
-                    console.error(error);
-                });
-            }
-        });
+            });
         });
 
     }
@@ -236,205 +240,198 @@ export default class EditUser extends Component {
 
                 </Header>
 
-                {/* <Content> */}
-                <View >
+                <Content>
+                    <View>
+                        <ScrollView>
+                            <View >
 
-                    <View style={{ paddingLeft: 10, }}>
-                        <Text style={{ fontSize: 20, color: 'black' }}>Edit Employee Details </Text>
+                                <View style={{ paddingLeft: 10, }}>
+                                    <Text style={{ fontSize: 20, color: 'black' }}>Edit Employee Details </Text>
 
 
 
 
+                                </View>
+                                <View style={{ paddingLeft: 10, }}>
+
+                                    <TextInput style={{ width: wp('95%'), height: 45, borderBottomWidth: 1, }}
+                                        placeholder='Employee ID *'
+                                        underlineColorAndroid='transparent'
+
+
+                                        value={this.state.empId}
+                                        onChangeText={(empId) => this.setState({ empId })}>
+
+                                    </TextInput>
+
+
+                                </View>
+
+                                <View style={{ paddingLeft: 10, }}>
+
+
+                                    <TextInput style={{ width: wp('95%'), height: 45, borderBottomWidth: 1, }}
+                                        placeholder='Full Name *'
+                                      
+                                        underlineColorAndroid='transparent'
+                                       // selectionColor='white'
+                                        value={this.state.name}
+                                        onChangeText={(name) => this.setState({ name })}
+
+                                    />
+                                </View>
+                                <View style={{ paddingLeft: 10, }}>
+
+
+                                    <TextInput style={{ width: wp('95%'), height: 45, borderBottomWidth: 1, }}
+                                        placeholder='Email *'
+                                       
+                                        underlineColorAndroid='transparent'
+                                        //selectionColor='white'
+                                        value={this.state.email}
+                                        onChangeText={(email) => this.setState({ email })}
+
+                                    />
+                                </View>
+                                <View style={{ paddingLeft: 10, }}>
+
+
+                                    <TextInput style={{ width: wp('95%'), height: 45, borderBottomWidth: 1, }}
+                                        placeholder='Username *'
+                                        
+                                        underlineColorAndroid='transparent'
+                                        value={this.state.username}
+                                       // selectionColor='white'
+                                        onChangeText={(username) => this.setState({ username })}
+
+                                    />
+                                </View>
+                                <View style={{ paddingLeft: 10, }}>
+
+
+                                    <TextInput style={{ width: wp('95%'), height: 45, borderBottomWidth: 1, }}
+                                        placeholder='Mobile *'
+                                        underlineColorAndroid='transparent'
+                                        keyboardType={"number-pad"}
+                                        value={this.state.mobile}
+                                      //  selectionColor='white'
+                                        onChangeText={(mobile) => this.setState({ mobile })}
+
+                                    />
+                                </View>
+
+                            </View>
+
+
+                            <Dropdown
+                                //   ref={this.nameRef}
+                                style={{ paddingLeft: 10 }}
+                                value={this.state.designation}
+                                onChangeText={typeValue => this.setState({ designation: typeValue })}
+
+                                data={this.state.designationData}
+                            />
+                            <Dropdown
+                                //   ref={this.nameRef}
+                                style={{ paddingLeft: 10 }}
+                                value={this.state.team}
+                                onChangeText={typeValue => this.setState({ team: typeValue })}
+
+                                data={this.state.roleData}
+                            />
+                            <View style={{ paddingLeft: 10, paddingTop: 10, }}>
+                                <Text>User Account Status</Text>
+                                <View style={{ flexDirection: 'row', paddingTop: 10, }}>
+
+                                    <RadioGroup
+                                        horizontal
+                                        options={[
+                                            {
+                                                id: 'Active',
+                                                labelView: (
+                                                    <Text>
+                                                        <Text style={{ color: 'Black' }}>Active</Text>
+                                                    </Text>
+                                                ),
+                                            },
+                                            {
+                                                id: 'Inactive',
+                                                labelView: (
+                                                    <Text>
+                                                        <Text style={{ color: 'black' }}>In-Active</Text>
+                                                    </Text>
+                                                ),
+                                            },
+
+                                            {
+                                                id: 'Other',
+                                                labelView: (
+                                                    <Text>
+                                                        <Text style={{ color: 'black' }}>Other</Text>
+                                                    </Text>
+                                                ),
+                                            },
+
+                                        ]}
+                                        activeButtonId={this.state.workingStatus}
+                                        value={this.state.workingStatus}
+                                        circleStyle={{ fillColor: 'black', borderColor: 'black' }}
+                                        onChange={(options) => this.setState({ workingStatus: options.id })}
+                                    />
+                                </View>
+                            </View>
+
+                            <View style={{ paddingLeft: 10, paddingTop: 10, }}>
+                                <Text>Select User Type</Text>
+                                <View style={{ flexDirection: 'row', paddingTop: 10, }}>
+
+                                    <RadioGroup
+                                        horizontal
+                                        options={[
+                                            {
+                                                id: 'Manager',
+                                                labelView: (
+                                                    <Text>
+                                                        <Text style={{ color: 'Black' }}>Manager</Text>
+                                                    </Text>
+                                                ),
+                                            },
+                                            {
+                                                id: 'Emp',
+                                                labelView: (
+                                                    <Text>
+                                                        <Text style={{ color: 'black' }}>Employee </Text>
+                                                    </Text>
+                                                ),
+                                            },
+
+                                            {
+                                                id: 'Approver',
+                                                labelView: (
+                                                    <Text>
+                                                        <Text style={{ color: 'black' }}>Approver</Text>
+                                                    </Text>
+                                                ),
+                                            },
+
+                                        ]}
+                                        activeButtonId={this.state.role}
+
+                                        circleStyle={{ fillColor: 'black', borderColor: 'black' }}
+                                        onChange={(options) => this.setState({ role: options.id })}
+                                    />
+                                </View>
+                            </View>
+                            {/* update all data  */}
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
+                                <TouchableOpacity onPress={this.UpdateEmployee.bind(this)} style={{ backgroundColor: '#00A2C1', borderRadius: 5, height: 30, alignItems: "center", justifyContent: 'center' }}>
+                                    <Text style={{ color: 'white' }}> SUBMIT</Text>
+                                </TouchableOpacity>
+
+                            </View>
+                        </ScrollView>
                     </View>
-                    <View style={{ paddingLeft: 10, }}>
-
-                        <TextInput style={{ width: wp('95%'), height: 45, borderBottomWidth: 1, }}
-                            placeholder='Empid *'
-                            underlineColorAndroid='transparent'
-
-
-                            value={this.state.empId}
-                            onChange
-                            onChangeText={(empId) => this.setState({ empId })}>
-
-                        </TextInput>
-
-
-                    </View>
-
-                    <View style={{ paddingLeft: 10, }}>
-
-
-                        <TextInput style={{ width: wp('95%'), height: 45, borderBottomWidth: 1, }}
-                            placeholder='Full Name *'
-                            value={this.state.name}
-                            underlineColorAndroid='transparent'
-                            selectionColor='white'
-                            onChangeText={(name) => this.setState({ name })}
-
-                        />
-                    </View>
-                    <View style={{ paddingLeft: 10, }}>
-
-
-                        <TextInput style={{ width: wp('95%'), height: 45, borderBottomWidth: 1, }}
-                            placeholder='Email *'
-                            value={this.state.email}
-                            underlineColorAndroid='transparent'
-                            selectionColor='white'
-                            onChangeText={(email) => this.setState({ email })}
-
-                        />
-                    </View>
-                    <View style={{ paddingLeft: 10, }}>
-
-
-                        <TextInput style={{ width: wp('95%'), height: 45, borderBottomWidth: 1, }}
-                            placeholder='Username *'
-                            value={this.state.username}
-                            underlineColorAndroid='transparent'
-                            selectionColor='white'
-                            onChangeText={(username) => this.setState({ username })}
-
-                        />
-                    </View>
-                    <View style={{ paddingLeft: 10, }}>
-
-
-                        <TextInput style={{ width: wp('95%'), height: 45, borderBottomWidth: 1, }}
-                            placeholder='Mobile *'
-                            underlineColorAndroid='transparent'
-                            value={this.state.mobile}
-                            selectionColor='white'
-                            onChangeText={(mobile) => this.setState({ mobile })}
-
-                        />
-                    </View>
-
-                </View>
-
-              
-                <Dropdown
-                    //   ref={this.nameRef}
-                    style={{paddingLeft:10}}
-                    value={this.state.designation}
-                    onChangeText={typeValue => this.setState({ designation: typeValue })}
-
-                    data={this.state.designationData}
-                />
-                <Dropdown
-                    //   ref={this.nameRef}
-                    style={{paddingLeft:10}}
-                    value={this.state.team}
-                    onChangeText={typeValue => this.setState({ team: typeValue })}
-
-                    data={this.state.roleData}
-                />
-
-
-
-                <View style={{ paddingLeft: 10, paddingTop: 10, }}>
-                    <Text>User Account Status</Text>
-                    <View style={{ flexDirection: 'row', paddingTop: 10, }}>
-
-                        <RadioGroup
-
-
-                            horizontal
-                            options={[
-                                {
-                                    id: 'Active',
-                                    labelView: (
-                                        <Text>
-                                            <Text style={{ color: 'Black' }}>Active</Text>
-                                        </Text>
-                                    ),
-                                },
-                                {
-                                    id: 'Inactive',
-                                    labelView: (
-                                        <Text>
-                                            <Text style={{ color: 'black' }}>In-Active</Text>
-                                        </Text>
-                                    ),
-                                },
-
-                                {
-                                    id: 'Other',
-                                    labelView: (
-                                        <Text>
-                                            <Text style={{ color: 'black' }}>Other</Text>
-                                        </Text>
-                                    ),
-                                },
-
-                            ]}
-                            activeButtonId={this.state.workingStatus}
-                            value={this.state.workingStatus}
-                            circleStyle={{ fillColor: 'black', borderColor: 'black' }}
-                            onChange={(options) => this.setState({ workingStatus: options.id })}
-                        />
-                    </View>
-                </View>
-
-                <View style={{ paddingLeft: 10, paddingTop: 10, }}>
-                    <Text>Select User Type</Text>
-                    <View style={{ flexDirection: 'row', paddingTop: 10, }}>
-
-                        <RadioGroup
-                            horizontal
-                            options={[
-                                {
-                                    id: 'Manager',
-                                    labelView: (
-                                        <Text>
-                                            <Text style={{ color: 'Black' }}>Manager</Text>
-                                        </Text>
-                                    ),
-                                },
-                                {
-                                    id: 'Emp',
-                                    labelView: (
-                                        <Text>
-                                            <Text style={{ color: 'black' }}>Employee </Text>
-                                        </Text>
-                                    ),
-                                },
-
-                                {
-                                    id: 'Approver',
-                                    labelView: (
-                                        <Text>
-                                            <Text style={{ color: 'black' }}>Approver</Text>
-                                        </Text>
-                                    ),
-                                },
-
-                            ]}
-                            activeButtonId={this.state.role}
-
-                            circleStyle={{ fillColor: 'black', borderColor: 'black' }}
-                            onChange={(options) => this.setState({ role: options.id })}
-                        />
-                    </View>
-                </View>
-
-
-
-                {/* update all data  */}
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
-                    <TouchableOpacity onPress={this.UpdateEmployee.bind(this)} style={{ backgroundColor: '#00A2C1', borderRadius: 5, height: 30, alignItems: "center", justifyContent: 'center' }}>
-                        <Text style={{ color: 'white' }}> SUBMIT</Text>
-                    </TouchableOpacity>
-
-                </View>
-
-
-
-
-
-
-
+                </Content>
             </Container>
         );
     }

@@ -6,7 +6,7 @@ Devloper:Rishitha,Harsha,Mahesh
 */
 
 import React, { Component } from 'react';
-import { Platform, Alert, TextInput, StyleSheet, Text, styles, View, StatusBar, TouchableOpacity, Dimensions, ScrollView, Image, checked, CheckBox, TouchableHighlight, TouchableWithoutFeedback } from 'react-native';
+import { Platform, Alert, TextInput, StyleSheet, Text, View, StatusBar, TouchableOpacity, Dimensions, ScrollView, Image, checked, CheckBox, TouchableHighlight, TouchableWithoutFeedback } from 'react-native';
 import { Title, Button, Container, Content, Header, Right, Left, Body, Tab, Tabs, TabHeading, Footer, Item, Input, FooterTab, Row } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -18,7 +18,7 @@ import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
 import Toast from 'react-native-whc-toast';
-
+import log from '../LogFile/Log';
 var radiogroup_options = [
   { id: 0, label: 'UX' },
   { id: 1, label: 'FrontEnd' },
@@ -36,16 +36,18 @@ export default class UserProjectInfo extends Component {
       dataSource: [],
       isFetching: false,
       open: false,
-      idea_id: "",
+      idea_id: '',
       role: '',
       empId: '',
       action: '',
       userToken: '',
       modifyvisibility: false,
-      acceptvisibility: false
+      acceptvisibility: false,
+      ProjectDescription: this.props.navigation.state.params.ideaDescription,
+      ProjectTitle: this.props.navigation.state.params.projectTitle,
     };
   }
-
+  //To get VisibleActions for Approver
   async VisibleActions() {
 
     AsyncStorage.getItem("emp_role", (err, res) => {
@@ -73,10 +75,10 @@ export default class UserProjectInfo extends Component {
     this.setState({ open: false });
 
   };
-
+  //Visible Actions based on employee id
   Disabling() {
 
-
+    log("Info", "UserProjectInfo:Disabling() method is used to diable accept button based on condition");
     const requestedBy = this.props.navigation.state.params.empId;
     AsyncStorage.getItem("userToken", (err, res) => {
 
@@ -91,7 +93,7 @@ export default class UserProjectInfo extends Component {
 
   }
   componentDidMount() {
-
+    log("Debug", "user project info screen is loaded");
     this.Disabling();
     this.VisibleActions();
   }
@@ -112,7 +114,7 @@ export default class UserProjectInfo extends Component {
 
     if (this.state.modifyvisibility === true) {
       button =
-        <View style={{  paddingTop: 20, shadowOffset: 3, shadowColor: '#fff',marginLeft:10 }}>
+        <View style={{ paddingTop: 20, shadowOffset: 3, shadowColor: '#fff', marginLeft: 10 }}>
 
           <Icon style={{ paddingLeft: 18, paddingTop: 14, backgroundColor: '#fff', borderWidth: 1, borderRadius: 30, width: 60, height: 60 }} name="pencil" size={30} color="black" onPress={() =>
             this.openModal()} disabled={this.state.disable} />
@@ -126,9 +128,9 @@ export default class UserProjectInfo extends Component {
 
     if (this.state.acceptvisibility === true) {
       acceptbutton =
-      <TouchableOpacity style={{ margin: 5, backgroundColor: '#00A2C1', padding: 19, height: 30, alignItems: "center", justifyContent: 'center',borderRadius:5 }} onPress={this.approveIdea}>
-      <Text style={{ color: 'white' }}>Accept</Text>
-    </TouchableOpacity>
+        <TouchableOpacity style={styles.opensave1} onPress={this.approveIdea}>
+          <Text style={{ color: 'white',fontSize:15 }}>Accept</Text>
+        </TouchableOpacity>
     } else {
       acceptbutton = null;
     }
@@ -158,8 +160,8 @@ export default class UserProjectInfo extends Component {
         </Right> */}
 
         </Header>
-        <View style={{ height: 60, backgroundColor: '#00A2C1', flexDirection: 'row' }}>
-          <Text style={{ fontSize: 30, color: '#fff', marginLeft: 10,width:wp('70%') }}>{this.props.navigation.state.params.projectTitle}</Text>
+        <View style={{ backgroundColor: '#00A2C1', flexDirection: 'row',alignSelf: 'baseline'  }}>
+          <Text style={{ fontSize: 25, color: '#fff', marginLeft: 10, width: wp('75%'),}}>{this.props.navigation.state.params.projectTitle}</Text>
 
           {/* <View style={{ alignContent: 'flex-end', marginLeft: 200, paddingTop: 20, shadowOffset: 3, shadowColor: '#fff' }}>
 
@@ -167,23 +169,25 @@ export default class UserProjectInfo extends Component {
             this.openModal()}  disabled={this.state.disable}/>
          
         </View> */}
+        <View style={{ backgroundColor: '#00A2C1', width: wp('25%'),}}>
           {button}
+          </View>
 
         </View>
         <Content>
-        <Toast ref="toast"/>
+          <Toast ref="toast" />
           <View style={{ paddingTop: 40 }}>
-        
+
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
               <View style={{ width: wp('70%') }}>
-                <Text> Requested By  :   {this.props.navigation.state.params.userName}    </Text>
+                <Text> Requested By   :   {this.props.navigation.state.params.userName}    </Text>
               </View>
               <Text style={{ paddingRight: 20 }}>  {this.props.navigation.state.params.createdOn} </Text>
             </View>
             <View style={{ flexDirection: 'row', paddingRight: 40 }}>
 
               <Text style={{ paddingLeft: 7 }}>
-                Description :
+                Description      :
   </Text>
               <ScrollView style={{ paddingRight: 40 }}>
                 <Text style={{ paddingLeft: 25, alignSelf: "baseline", paddingRight: 25 }}>
@@ -195,7 +199,7 @@ export default class UserProjectInfo extends Component {
               <View style={{
                 marginTop: 150, flexDirection: 'row', justifyContent: 'center'
               }}>
-                <RadioGroup
+                {/* <RadioGroup
                   horizontal
                   options={[
                     {
@@ -229,7 +233,7 @@ export default class UserProjectInfo extends Component {
                   //activeButtonId={'user'}
                   circleStyle={{ fillColor: 'black', borderColor: 'black' }}
                 //  onChange={(option) => this.setState({usertype: option.id})}
-                />
+                /> */}
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                 {/* <TouchableOpacity style={{ margin: 5, backgroundColor: 'green', padding: 19, height: 30, alignItems: "center", justifyContent: 'center' }} onPress={this.approveIdea}>
@@ -245,50 +249,53 @@ export default class UserProjectInfo extends Component {
               </View>
             </View>
 
-            {/*For Modifying the project dialog start*/}
-            <Modal
-              offset={this.state.offset}
-              open={this.state.open}
-              modalDidOpen={this.modalDidOpen}
-              modalDidClose={this.modalDidClose}
-              style={{ alignItems: "center" }} >
- 
-              <View style={{ alignItems: "center", paddingBottom: 40 }}>
 
-                <Text>Project Info</Text>
-
-                <TextInput placeholder='Project Title'
-                  style={{ height: 40, borderBottomWidth: 1, borderBottomColor: 'black', width: 300, marginTop: 10 }}
-                  onChangeText={(text) => this.setState({ ProjectTitle: text })}
-                  value={this.state.text} />
-
-                <TextInput placeholder='Project Description'
-                  style={{ height: 40, borderBottomWidth: 1, borderBottomColor: 'black', width: 300, marginTop: 30 }}
-                  onChangeText={(text) => this.setState({ ProjectDescription: text })}
-                  value={this.state.text} />
-
-
-                <View style={{ flexDirection: 'row', marginTop: 30 }}>
-                  <TouchableOpacity style={{ margin: 5, backgroundColor: 'red', padding: 19, height: 30, alignItems: "center", justifyContent: 'center' }} onPress={this.closeModal}>
-                    <Text style={{ color: 'white' }}>CANCEL</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ margin: 5, backgroundColor: 'green', padding: 20, height: 30, alignItems: "center", justifyContent: 'center' }} onPress={this.modifyProject}>
-                    <Text style={{ color: 'white' }}>SAVE</Text>
-
-                  </TouchableOpacity>
-                </View>
-
-              </View>
-            </Modal>
-            {/*For Modifying the project dialog close */}
 
           </View>
         </Content>
-        {/* <Toast ref="toast"/> */}
+       
+
+        {/*For Modifying the project dialog start*/}
+        <Modal
+          offset={this.state.offset}
+          open={this.state.open}
+          modalDidOpen={this.modalDidOpen}
+          modalDidClose={this.modalDidClose}
+          style={{ alignItems: "center" }} >
+
+          <View style={{ alignItems: "center", paddingBottom: 40 }}>
+
+            <Text>Project Info</Text>
+
+            <TextInput placeholder='Project Title'
+              style={{ height: 40, borderBottomWidth: 1, borderBottomColor: 'black', width: 300, marginTop: 10 }}
+              value={this.state.ProjectTitle}
+              onChangeText={(text) => this.setState({ ProjectTitle: text })} />
+
+            <TextInput placeholder='Project Description'
+              style={{ height: 40, borderBottomWidth: 1, borderBottomColor: 'black', width: 300, marginTop: 30 }}
+              value={this.state.ProjectDescription}
+              onChangeText={(text) => this.setState({ ProjectDescription: text })} />
+
+
+            <View style={{ flexDirection: 'row', marginTop: 30 }}>
+              <TouchableOpacity style={styles.opensave} onPress={this.modifyProject}>
+                <Text style={{ color: 'white' }}>SAVE</Text>
+
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.opencancel} onPress={this.closeModal}>
+                <Text style={{ color: 'white' }}>CANCEL</Text>
+              </TouchableOpacity>
+
+            </View>
+
+          </View>
+        </Modal>
+        {/*For Modifying the project dialog close */}
       </Container>
     );
   }
-
+  // Alert for delete action
   deleteAction() {
     Alert.alert(
       'Alert..!',
@@ -321,7 +328,7 @@ export default class UserProjectInfo extends Component {
             duration: Snackbar.LENGTH_LONG,
           });
         } else {
-          fetch(API + 'manage_ideas.php', {
+          fetch(API + 'manageIdeas.php', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
@@ -338,9 +345,10 @@ export default class UserProjectInfo extends Component {
               console.log(JSON.stringify(responseJson));
               console.log(responseJson);
               if (responseJson.status === 'True') {
-
+                this.setState({ open: false, error1: '', error2: '', ProjectDescription: '', ProjectTitle: '' })
                 console.log("done")
                 this.setState({ open: false })
+               // this.refs.toast.showCenter('Project Is Accepted', Toast.Duration.long, Toast.Position.center);
                 this.props.navigation.navigate('UserManageProjects')
               }
             }).catch((error) => {
@@ -348,19 +356,20 @@ export default class UserProjectInfo extends Component {
             });
         }
       });
+      this.refs.toast.showCenter('Approved Successfully');
     });
   };
 
-  toastmsg(){
+  toastmsg() {
     this.refs.toast.show('Project Modified', Toast.Duration.long, Toast.Position.center);
     setTimeout(
-      ()=>{
-          this.props.navigation.navigate('UserManageProjects')
-    
+      () => {
+        this.props.navigation.navigate('UserManageProjects')
+
       },
-    1000
-  );
-    
+      1000
+    );
+
   }
 
   //Modify the project
@@ -376,7 +385,7 @@ export default class UserProjectInfo extends Component {
             duration: Snackbar.LENGTH_LONG,
           });
         } else {
-          fetch(API + 'manage_ideas.php', {
+          fetch(API + 'manageIdeas.php', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
@@ -397,11 +406,12 @@ export default class UserProjectInfo extends Component {
 
               // this.refs.toast.show('Project Modified', Toast.Duration.long, Toast.Position.center);
 
-             // this.refs.toast.showBottom('Project Modified');
+              // this.refs.toast.showBottom('Project Modified');
               if (responseJson.status === 'True') {
                 console.log("done")
+             //   this.refs.toast.show('Project Accepted', Toast.Duration.long, Toast.Position.center);
                 this.setState({ open: false })
-              //  this.refs.toast.show('Project Modified', Toast.Duration.long, Toast.Position.center);
+                //  this.refs.toast.show('Project Modified', Toast.Duration.long, Toast.Position.center);
                 // this.props.navigation.navigate('UserManageProjects')
               }
             }).catch((error) => {
@@ -411,9 +421,9 @@ export default class UserProjectInfo extends Component {
       });
     });
     this.toastmsg();
-    
+
   };
-  
+
 
   //Reject Idea
   rejectIdea = () => {
@@ -429,7 +439,7 @@ export default class UserProjectInfo extends Component {
             duration: Snackbar.LENGTH_LONG,
           });
         } else {
-          fetch(API + 'manage_ideas.php', {
+          fetch(API + 'manageIdeas.php', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
@@ -446,8 +456,10 @@ export default class UserProjectInfo extends Component {
               console.log(JSON.stringify(responseJson));
               console.log(responseJson);
               if (responseJson.status === 'True') {
-                console.log("done")
                 this.setState({ open: false })
+                this.refs.toast.showCenter('Project Is Rejected');
+                this.props.navigation.navigate('UserManageProjects');
+                console.log("done")
               }
             }).catch((error) => {
               console.error(error);
@@ -470,7 +482,7 @@ export default class UserProjectInfo extends Component {
             duration: Snackbar.LENGTH_LONG,
           });
         } else {
-          fetch(API + 'manage_ideas.php', {
+          fetch(API + 'manageIdeas.php', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
@@ -489,6 +501,7 @@ export default class UserProjectInfo extends Component {
               if (responseJson.status === 'True') {
                 console.log("done")
                 this.setState({ open: false })
+                this.refs.toast.showCenter('Project Is Deleted');
                 this.props.navigation.navigate('UserManageProjects');
               }
             }).catch((error) => {
@@ -500,3 +513,44 @@ export default class UserProjectInfo extends Component {
   };
 
 }
+const styles = StyleSheet.create({
+  opencancel: {
+    flex: 1,
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'red', margin: 20, height: 30, alignItems:
+          "center", justifyContent: 'center'
+      },
+      android: {
+        backgroundColor: 'red', margin: 20, height: 30, alignItems:
+          "center", justifyContent: 'center'
+      },
+    }),
+  },
+  opensave: {
+    flex: 1,
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'green', margin: 20, height: 30, alignItems:
+          "center", justifyContent: 'center'
+      },
+      android: {
+        backgroundColor: 'green', margin: 20, height: 30, alignItems:
+          "center", justifyContent: 'center'
+      },
+    }),
+  },
+  opensave1: {
+    flex: 1,
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'green', borderRadius: 5, marginLeft:130,marginRight:130,
+        width:'30%', height: 40, alignItems: "center", justifyContent: 'center' 
+      },
+      android: {
+        backgroundColor: 'green', borderRadius: 5, marginLeft:130,marginRight:130,
+       width:'30%', height: 40, alignItems: "center", justifyContent: 'center' 
+     },
+    }),
+  },
+});

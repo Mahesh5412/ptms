@@ -5,15 +5,16 @@ Purpose:Adding the ReleaseOwner for project
 Devloper:Rishitha,Harsha
 */
 import React, { Component } from 'react';
-import { Text, TouchableHighlight, View, Alert, Button, TextInput, TouchableOpacity } from 'react-native';
+import { Platform, Text, StyleSheet, TouchableHighlight, View, Alert, Button, TextInput, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import AsyncStorage from '@react-native-community/async-storage';
 import Modal from "react-native-simple-modal";
-import {API }from "../WebServices/RestClient";
+import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
 import Toast from 'react-native-whc-toast';
+import log from '../LogFile/Log';
 
 export default class ReleaseOwner extends Component {
 
@@ -37,8 +38,8 @@ export default class ReleaseOwner extends Component {
   openModal = () => this.setState({ open: true });
 
   closeModal = () => {
-    this.props.navigation.goBack();
     this.setState({ open: false });
+    this.props.navigation.goBack(null);
   }
   //Dialog actions close
 
@@ -46,6 +47,7 @@ export default class ReleaseOwner extends Component {
     this.setState({ modalVisible: visible });
   }
   componentDidMount() {
+    log("Debug", "Release Owner");
     this.getEmployeesList();//getting Emloyees List
     this.openModal();
   }
@@ -53,48 +55,52 @@ export default class ReleaseOwner extends Component {
 
   //Getting Employees List for adding releaseowner
   getEmployeesList() {
+    log("Info", " getEmployeesList(role, userToken, cropcode) Getting Employees List for adding releaseowner");
     //crop code
     AsyncStorage.getItem("cropcode", (err, res) => {
       const cropcode = res;
+      //Checking the Network connection
       NetInfo.fetch().then(state => {
         if (state.type == "none") {
           console.log(state.type);
+          log("Warn", "No internet connection");
           Snackbar.show({
             title: 'No Internet Connection',
             backgroundColor: 'red',
             duration: Snackbar.LENGTH_LONG,
           });
-        }else{
-      fetch(API+'getEmployees.php',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            crop: cropcode
-          })
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          if (responseJson.status === 'True') {
-            this.setState({
-              resource: responseJson.data
+        } else {
+          fetch(API + 'getEmployees.php',
+            {
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                crop: cropcode
+              })
+            })
+            .then((response) => response.json())
+            .then((responseJson) => {
+              if (responseJson.status === 'True') {
+                this.setState({
+                  resource: responseJson.data
+                });
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              log("Error", "Getting Employees List for adding releaseowner error");
             });
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      }
-    });
+        }
+      });
     });
   }
 
   //Adding ReleaseOwner for Project start
   selectRO() {
-
+    log("Info", " selectRO(role, userToken, cropcode) Adding ReleaseOwner for Project ");
     const { idea_id } = this.state;
 
     // Alert.alert(ideaid);
@@ -106,56 +112,68 @@ export default class ReleaseOwner extends Component {
       NetInfo.fetch().then(state => {
         if (state.type == "none") {
           console.log(state.type);
+          log("Warn", "No internet connection");
           Snackbar.show({
             title: 'No Internet Connection',
             backgroundColor: 'red',
             duration: Snackbar.LENGTH_LONG,
           });
-        }else{
-      fetch(API+'manage_ideas.php',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            crop: cropcode,
-            action: 'ro',
-            empId: this.state.selectedRo,
-            userType: role,
-            ideaId: idea_id,
-          })
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          this.refs.toast.show('RO Selected', Toast.Duration.long, Toast.Position.center);
-         
+        } else {
+          fetch(API + 'manageIdeas.php',
+            {
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                crop: cropcode,
+                action: 'ro',
+                empId: this.state.selectedRo,
+                userType: role,
+                ideaId: idea_id,
+              })
+            })
+            .then((response) => response.json())
+            .then((responseJson) => {
+              this.refs.toast.show('RO Selected', Toast.Duration.long, Toast.Position.center);
+              alert("RO Selected");
 
-          if (responseJson.status === 'True') {
-           // this.refs.toast.show('RO Selected', Toast.Duration.long, Toast.Position.center);
-           
-            // this.props.navigation.goBack();
-            this.closeModal();
-            // this.setState({
-            //   resource:responseJson.data
-            // });
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      }
-    });
+              if (responseJson.status === 'True') {
+                // this.refs.toast.show('RO Selected', Toast.Duration.long, Toast.Position.center);
+
+                // this.props.navigation.goBack();
+                this.closeModal();
+                // this.setState({
+                //   resource:responseJson.data
+                // });
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              log("Error", "Adding ReleaseOwner for Project error");
+            });
+        }
+      });
     });
 
-  
+
   }
   //Adding ReleaseOwner for Project end
   //Close the dialog
   modalDidClose = () => {
-    // this.props.navigation.goBack();
-    this.props.navigation.navigate("UserManageProjects",{idea_id:this.state.idea_id});
+    AsyncStorage.getItem("emp_role", (err, res) => {
+      const role = res;
+      
+    if(role=="Emp"||role=="Manager"||role=="Approver"){
+      log("Info", "modalDidClose is used to move UserManageProjects screen");
+          this.props.navigation.navigate("UserManageProjects",{idea_id:this.state.idea_id});
+    }
+    else{
+      this.props.navigation.goBack(null);
+    }
+  });
+    //this.props.navigation.navigate("UserManageProjects",{idea_id:this.state.idea_id});
     this.setState({ open: false }); this.setState({ open: false });
   };
 
@@ -166,12 +184,12 @@ export default class ReleaseOwner extends Component {
         open={this.state.open}
         modalDidOpen={this.modalDidOpen}
         modalDidClose={this.modalDidClose}
-        style={{ alignItems: "center",backgroundColor:'#fff' }} >
+        style={{ alignItems: "center", backgroundColor: '#fff' }} >
 
-        <View style={{ alignItems: "center", paddingBottom: 40,backgroundColor:'#fff' }}>
-        <Toast ref="toast"/>
+        <View style={{ alignItems: "center", paddingBottom: 40, backgroundColor: '#fff' }}>
+          <Toast ref="toast" />
           <View style={{ marginTop: 30, marginLeft: 10, width: '100%', }}>
-            <Text style={{paddingLeft:5,color:'#c0c0c0'}} >Select Resources</Text>
+            <Text style={{ paddingLeft: 5, color: 'black' }} >Select Resources</Text>
             <View style={{ justifyContent: 'center', marginRight: 15 }}>
 
               <SearchableDropdown
@@ -206,18 +224,15 @@ export default class ReleaseOwner extends Component {
           </View>
 
           <View style={{ flexDirection: 'row', marginTop: 30 }}>
-            <TouchableOpacity style={{
-              margin: 5,borderRadius:5, backgroundColor: '#00A2C1', padding: 19, height: 30, alignItems: "center",
-              justifyContent: 'center'
-            }} onPress={this.closeModal}>
-              <Text style={{ color: 'white',fontWeight:'bold' }}>CANCEL</Text>
+
+            <TouchableOpacity onPress={() => this.selectRO()} style={styles.opensave} >
+              <Text style={{ color: 'white', fontWeight: 'bold' }}>SAVE</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.selectRO()} style={{
-              margin: 5,borderRadius:5, backgroundColor: '#00A2C1', padding: 20, height: 30, alignItems: "center",
-              justifyContent: 'center'
-            }} >
-              <Text style={{ color: 'white',fontWeight:'bold' }}>SAVE</Text>
+
+            <TouchableOpacity style={styles.opencancel} onPress={this.closeModal}>
+              <Text style={{ color: 'white', fontWeight: 'bold' }}>CANCEL</Text>
             </TouchableOpacity>
+
           </View>
 
         </View>
@@ -225,3 +240,32 @@ export default class ReleaseOwner extends Component {
     );
   }
 }
+//Styles for UI
+const styles = StyleSheet.create({
+  opencancel: {
+    flex: 1,
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'red', margin: 20, height: 30, alignItems:
+          "center", justifyContent: 'center'
+      },
+      android: {
+        backgroundColor: 'red', margin: 20, height: 30, alignItems:
+          "center", justifyContent: 'center'
+      },
+    }),
+  },
+  opensave: {
+    flex: 1,
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'green', margin: 20, height: 30, alignItems:
+          "center", justifyContent: 'center'
+      },
+      android: {
+        backgroundColor: 'green', margin: 20, height: 30, alignItems:
+          "center", justifyContent: 'center'
+      },
+    }),
+  },
+});

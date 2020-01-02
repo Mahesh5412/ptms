@@ -2,22 +2,106 @@
 FileName:UserCompletedProjects.js
 Version:1.0.0
 Purpose:Getting the List of completed Projects list
-Devloper:Raju
+Devloper:Raju,Naveen(Reopenproject)
 */
 import React, { Component } from 'react';
 import { Alert, Platform, StyleSheet, Text, View, TouchableOpacity, Dimensions, FlatList, TouchableHighlight, Image } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Title, Button, Container, Content, Header, Right, Left, Body, Tab, Tabs, TabHeading, Footer, Item, Input, FooterTab } from 'native-base';
+import { Title, Button, Container, Content, Header, Right, Left, Body, Tab, Tabs, TabHeading, Footer, Item, Input, FooterTab, Subtitle } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
-
+import log from '../LogFile/Log';
 class ListItem extends React.Component {
+    //alert for project ReOpen
+    ReOpenProjectAction() {
+        log("Info", "ReOpenProject() method is used to give alert");
+        const { item } = this.props;
+
+        Alert.alert(
+            'Alert..!',
+            'Do you want to ReOpen the Project ?',
+            [
+                {
+                    text: 'NO',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'NO',
+                },
+                { text: 'YES', onPress: () => this.ReOpenProject(item.idea_id) },
+            ],
+            { cancelable: false },
+        );
+
+    }
+
+
+    //project verification 
+    ReOpenProject(projectid) {
+        log("Info", "ProjectReOpen(projectid) method is used to Re Open project");
+        AsyncStorage.getItem("cropcode", (err, res) => {
+            const cropcode = res;
+
+            NetInfo.fetch().then(state => {
+                if (state.type == "none") {
+                    console.log(state.type);
+                    Snackbar.show({
+                        title: 'No Internet Connection',
+                        backgroundColor: 'red',
+                        duration: Snackbar.LENGTH_LONG,
+                    });
+                } else {
+                    fetch(API + 'getIdeas.php',
+                        {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                crop: cropcode,
+                                ideaId: projectid,
+                                action: 'reopen'
+
+                            })
+                        })
+                        .then((response) => response.json())
+                        .then((responseJson) => {
+                            if (responseJson.status == 'True') {
+                                alert("Project Re Opened")
+                            } else {
+                                alert(responseJson.message);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            log("Error", "Project Reopen Error");
+                        });
+                }
+            });
+        });
+    }
 
     render() {
         const { item } = this.props;
+        AsyncStorage.getItem("emp_role", (err, res) => {
+            this.setState({
+              roledata:res
+            })
+           
+          });
+          if (this.state.roledata == 'Approver' || this.state.roledata == 'Admin') {
+            console.warn(this.state.roledata + "role");
+            button = <TouchableOpacity style={{ width: 100, marginRight: 5 }} onPress={() => { this.MaintaskVerify() }}>
+             <Text style={styles.signUpText02} >{item.completeStatus} </Text>
+            </TouchableOpacity>
+          } else {
+            console.warn("HELLO"+this.state.roledata)
+            button = <TouchableOpacity style={{ width: 100, marginRight: 5 }} >
+           <Text style={styles.signUpText02} >{item.completeStatus} </Text>
+          </TouchableOpacity>
+          }
         return (
             <View style={styles.container}>
                 <TouchableOpacity onPress={this.props.Module}>
@@ -39,10 +123,14 @@ class ListItem extends React.Component {
                             />
 
                             <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-                                <Text style={styles.signUpText4} >Title:</Text>
-                                <Text style={styles.signUpText3} >{item.idea_title}</Text>
-                                <TouchableOpacity style={{ width: 100, backgroundColor: '#6cbb3f', marginLeft: 220,marginTop:15 }}>
-                <Text style={{ color: '#fff', textAlign: 'center' }}>Re Open</Text></TouchableOpacity>
+                                <View style={{ width: wp('70%'), flexDirection: 'row' }}>
+                                    <Text style={styles.signUpText4} >Title:</Text>
+                                    <Text style={styles.signUpText3} >{item.idea_title}</Text>
+                                </View>
+                                <View>
+                                    <TouchableOpacity style={{ width: 100, backgroundColor: '#6cbb3f', marginEnd: 100, marginTop: 15 }} onPress={() => { this.ReOpenProjectAction() }}>
+                                        <Text style={{ color: '#fff', textAlign: 'center' }}>Re Open</Text></TouchableOpacity>
+                                </View>
                             </View>
 
                             <View style={{ flexDirection: 'row', paddingRight: 25 }}>
@@ -74,11 +162,13 @@ export default class UserCompletedProjects extends Component {
         }
         this.arrayholder = [];
     }
+    //Refresh the List Of userCompletedProjects
     onRefresh() {
-        this.setState({ isFetching: true }, function () { this.userCompletedProjects() });
-      }
+        this.setState({ isFetching: true }, function () { this.userCompletedProjects(this.state.role, this.state.userToken, this.state.cropcode) });
+    }
+    //Getting the Details Like role,usertoken and corpcode
     async componentDidMount() {
-
+        log("Debug", "user completed projects screen is loaded");
         await AsyncStorage.getItem("emp_role", (err, res) => {
             console.log(res);
             this.setState({ role: res });
@@ -101,67 +191,70 @@ export default class UserCompletedProjects extends Component {
     //get AdminApprovedProjects list start
     userCompletedProjects(role, userToken, cropcode) {
 
-        console.log(userToken);
-        console.log(role);
-    
-            NetInfo.fetch().then(state => {
-                if (state.type == "none") {
-                  console.log(state.type);
-                  Snackbar.show({
+        log("Info", "UserCompletedProjects:userCompletedProjects(role, userToken, cropcode) method used to get all completed projects at user side");
+        //Checking the Internet Connection
+        NetInfo.fetch().then(state => {
+            if (state.type == "none") {
+                console.log(state.type);
+                Snackbar.show({
                     title: 'No Internet Connection',
                     backgroundColor: 'red',
                     duration: Snackbar.LENGTH_LONG,
-                  });
-                }else{
-        fetch(API + 'ReactgetIdeas.php',
-            {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    crop: cropcode,
-                    action: 'completed',
-                    empId: userToken,
-                    userType: role,
-                    // empId:empId
-                })
-            })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                   //alert(JSON.stringify(responseJson));
-                console.log(responseJson)
-                if(responseJson.status=='True'){
-                
-                
-                this.setState({
-                    isLoading: false,
-                    dataSource: responseJson.data,
-                    isFetching: false
-                }, function () {
-
                 });
-                this.arrayholder = responseJson.data;
-            }
-            else{
-                Snackbar.show({
-                    title: 'No CompletedProjects',
-                    backgroundColor: '#3BB9FF',
-                    duration: Snackbar.LENGTH_LONG,
-                  });
-            }
-            })
-            .catch((error) => {
-                //console.error(error);
-            });
-        }
-    });
-}
+            } else {
+                fetch(API + 'getIdeas.php',
+                    {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            crop: cropcode,
+                            action: 'completed',
+                            empId: userToken,
+                            userType: role,
+                            // empId:empId
+                        })
+                    })
+                    .then((response) => response.json())
+                    .then((responseJson) => {
+                        //alert(JSON.stringify(responseJson));
+                        console.log(responseJson)
+                        if (responseJson.status == 'True') {
 
 
+                            this.setState({
+                                isLoading: false,
+                                dataSource: responseJson.data,
+                                isFetching: false
+                            }, function () {
+
+                            });
+                            this.arrayholder = responseJson.data;
+                        }
+                        else {
+                            log("Info", "no completed projects at user side");
+                            this.arrayholder = [];
+                            this.setState({
+                                isLoading: false,
+                            })
+                            Snackbar.show({
+                                title: 'No CompletedProjects',
+                                backgroundColor: '#3BB9FF',
+                                duration: Snackbar.LENGTH_LONG,
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        //console.error(error);
+                        log("Error", "Error in getting completed projects at user side");
+                    });
+            }
+        });
+    }
+    //seperate the list data
     FlatListItemSeparator = Module = (item, index) => {
-
         return (
             <View
                 style={{
@@ -172,9 +265,7 @@ export default class UserCompletedProjects extends Component {
             />
         );
     }
-
-
-
+    //For Empty data
     _listEmptyComponent = () => {
         return (
             <View style={{ width: '90%', height: '80%' }}>
@@ -182,9 +273,9 @@ export default class UserCompletedProjects extends Component {
             </View>
         )
     }
-
     //For Search 
     SearchFilterFunction(text) {
+        log("Info", "UserCompletedProjects:SearchFilterFunction(text) method used for search functionality");
         console.log(text);
         const newData = this.arrayholder.filter(function (item) {
             const idea_id = item.idea_id.toUpperCase()
@@ -197,44 +288,38 @@ export default class UserCompletedProjects extends Component {
             return idea_id.indexOf(idea_id1) > -1 ||
                 idea_title.indexOf(idea_title1) > -1 ||
                 userName.indexOf(userName1) > -1
-
         })
         this.setState({
             dataSource: newData,
             text: text
         })
     }
-
-
     render() {
-
         return (
             <Container style={{ height: Dimensions.get('window').height }}>
-                   <Header
-          androidStatusBarColor="#00A2C1"
+                <Header
+                    androidStatusBarColor="#00A2C1"
 
-          style={{
-            backgroundColor: '#00A2C1',
-            height: 80,
-            width: Dimensions.get('window').width,
-            borderBottomColor: '#ffffff',
-            justifyContent: 'space-between',
-          }}>
-          <Left>
-            <Icon size={25} name="navicon" style={{ color: '#fff' }} onPress={() =>
-              this.props.navigation.toggleDrawer()} />
-          </Left>
-          <Body>
-            <Title style={{ color: '#fff', fontWeight: '600', }}>Completed Ideas    </Title>
-          </Body>
-
-
-        </Header>
-
+                    style={{
+                        backgroundColor: '#00A2C1',
+                        height: 80,
+                        width: Dimensions.get('window').width,
+                        borderBottomColor: '#ffffff',
+                        justifyContent: 'space-between',
+                    }}>
+                    <Icon name="navicon" size={25} style={{ color: '#fff', paddingTop: 17 }} onPress={() =>
+                        this.props.navigation.toggleDrawer()} />
+                    <Body style={{ paddingLeft: 30, }}>
+                        <Title style={{ color: '#fff', fontWeight: '600' }}>Completed Projects</Title>
+                        <Subtitle></Subtitle>
+                    </Body>
+                    <Icon name="home" size={25} style={{ color: '#fff', paddingTop: 17 }} onPress={() =>
+                        this.props.navigation.navigate('UserProfile')} />
+                </Header>
                 <Item>
                     <Input placeholder="Search"
                         onChangeText={(text) => this.SearchFilterFunction(text)} />
-                    <Icon name="search" />
+                    <Icon size={25} name="search" />
                 </Item>
                 <Content>
                     <View>
@@ -257,7 +342,7 @@ export default class UserCompletedProjects extends Component {
 
                                         <ListItem navigation={this.props.navigation}
                                             item={item}
-                                        
+                                            ReOpenProjectAction={() => this.ReOpenProjectAction(item, index)}//For ReOpen Project
                                         />
                                     </View>
                                 }
@@ -275,6 +360,7 @@ export default class UserCompletedProjects extends Component {
         );
     }
 }
+//Styles for UI
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -359,22 +445,22 @@ const styles = StyleSheet.create({
 
     },
     signUpText2: {
-        fontSize: 10,
-        marginLeft: 200,
         fontSize: 13,
+        marginLeft: 200,
+       
         color: 'green',
         paddingTop: 10,
     },
     signUpText3: {
 
-        fontSize: 12,
+        fontSize: 13,
         paddingTop: 10,
         paddingLeft: 10,
 
         alignItems: 'center',
     },
     signUpText4: {
-        fontSize: 12,
+        fontSize: 13,
         paddingTop: 10,
 
 
@@ -405,7 +491,7 @@ const styles = StyleSheet.create({
 
     },
     signUpText: {
-        fontSize: 20,
+        fontSize: 13,
         justifyContent: 'center',
 
 

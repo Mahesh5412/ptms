@@ -1,7 +1,7 @@
 /*
 FileName:UserApprovedProjects.js
 Version:1.0.0
-Purpose:Getting the List of ApprovedProjects and also verify the project by role
+Purpose:Getting the List of ApprovedProjects and also verify the project by role and Add RO
 Devloper:Rishitha,Harsha
 */
 import React, { Component } from 'react';
@@ -15,6 +15,7 @@ import SearchableDropdown from 'react-native-searchable-dropdown';
 import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
+import log from '../LogFile/Log';
 import {
   BallIndicator,
   BarIndicator,
@@ -31,7 +32,7 @@ class ListItem extends React.Component {
   // to verify the project in user based like approver 
   // it just validation 
   ProjectVerify() {
-
+    log("Info", "ProjectVerify() method is used to give alert");
     const { item } = this.props;
 
     Alert.alert(
@@ -52,7 +53,7 @@ class ListItem extends React.Component {
 
   //to verify the project in user based projects
   ProjectVerification(projectid) {
-
+    log("Info", "ProjectVerification(projectid) method is used to verify approved project");
     AsyncStorage.getItem("cropcode", (err, res) => {
       const cropcode = res;
       NetInfo.fetch().then(state => {
@@ -64,7 +65,7 @@ class ListItem extends React.Component {
             duration: Snackbar.LENGTH_LONG,
           });
         } else {
-          fetch(API + 'manage_ideas.php',
+          fetch(API + 'manageIdeas.php',
             {
               method: 'POST',
               headers: {
@@ -90,6 +91,7 @@ class ListItem extends React.Component {
             })
             .catch((error) => {
               console.error(error);
+              log("Error", "ProjectVerification Error");
             });
         }
       });
@@ -191,14 +193,17 @@ export default class Aproved extends Component {
 
   //lifecycle method to call api methods 
   componentDidMount() {
+    log("Debug", "User Approved projects screen is loaded");
     //userApprovedProjects getting
     this.userApprovedProjects()
     this.getResource()
+
+   
   }
 
   //to get the user approved projects in to the list 
   getResource() {
-
+    log("Info", "UserApprovedProjects:getResource() method is used to get all employee list");
     const { ModuleId } = this.state;
     const { ideaid } = this.state;
 
@@ -234,6 +239,7 @@ export default class Aproved extends Component {
             })
             .catch((error) => {
               console.error(error);
+              log("Error", "error in listing employees");
             });
         }
       });
@@ -242,25 +248,13 @@ export default class Aproved extends Component {
 
   //to refreshthe data in user apprroved projects
   onRefresh() {
-    this.setState({ isFetching: true }, function () { this.userApprovedProjects() });
+  this.userApprovedProjects() ;
   }
 
 
-  // //to set the release owner to perticular project in user role
-  // ReleaseOwner = (item, index) => {
-
-  //   // this.openModal();
-  //   // this.setState({ideaid:item.idea_id});
-
-  //   this.props.navigation.navigate('ReleaseOwner');
-
-  // }
-
-  //
+  //Set the RO
   setRO(ideaid) {
-
-    //Alert.alert(ideaid);
-
+    log("Info", "UserApprovedProjects:setRO(ideaid) method is used to set release owner");
     AsyncStorage.multiGet(["cropcode", "userToken", "emp_role"], (err, response) => {
       const cropcode = response[0][1];
       const userToken = response[1][1];
@@ -275,7 +269,7 @@ export default class Aproved extends Component {
             duration: Snackbar.LENGTH_LONG,
           });
         } else {
-          fetch(API + 'manage_ideas.php',
+          fetch(API + 'manageIdeas.php',
             {
               method: 'POST',
               headers: {
@@ -310,6 +304,7 @@ export default class Aproved extends Component {
             })
             .catch((error) => {
               console.error(error);
+              log("Error", "error in Release owner setting");
             });
         }
       });
@@ -317,12 +312,12 @@ export default class Aproved extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    console.log("re loading...........")
+
     this.userApprovedProjects();
   }
   //userApprovedProjects getting
   userApprovedProjects() {
+    log("Info", "UserApprovedProjects:setRO(userApprovedProjects() method is used to list the user approved projects");
     AsyncStorage.multiGet(["cropcode", "userToken", "emp_role"], (err, response) => {
       const cropcode = response[0][1];
       const userToken = response[1][1];
@@ -337,7 +332,7 @@ export default class Aproved extends Component {
             duration: Snackbar.LENGTH_LONG,
           });
         } else {
-          fetch(API + 'ReactgetIdeas.php',
+          fetch(API + 'getIdeas.php',
             {
               method: 'POST',
               headers: {
@@ -354,6 +349,7 @@ export default class Aproved extends Component {
             .then((response) => response.json())
             .then((responseJson) => {
               //    alert(JSON.stringify(responseJson));
+              if (responseJson.status === 'True') {
               console.log(responseJson)
               this.setState({
                 isLoading: false,
@@ -363,9 +359,22 @@ export default class Aproved extends Component {
 
               });
               this.arrayholder = responseJson.data;
-            })
+            } else {
+              this.arrayholder = [];
+              this.setState({
+                isLoading: false,
+              })
+              Snackbar.show({
+                title: 'No UserApproved Projects',
+                backgroundColor: '#3BB9FF',
+                duration: Snackbar.LENGTH_LONG,
+              });
+            }
+          
+          })
             .catch((error) => {
               console.error(error);
+              log("Error", "error in listing approved projects at user side");
             });
         }
       });
@@ -374,23 +383,22 @@ export default class Aproved extends Component {
 
 
 
-  //Relese the owner
+  //Relese the owner Navigation
   ReleaseOwner = (item, index) => {
+    log("Info", "UserApprovedProjects:ReleaseOwner = (item, index) method used to navigate to Release owner screen");
     this.props.navigation.navigate('ReleaseOwner', { idea_id: item.idea_id });
 
   }
 
-
+//Navigate to AddModule sctreen
   Module = (item, index) => {
-
+    log("Info", "UserApprovedProjects:Module() method is used to move module listing screen");
     console.log(item);
     console.log(index);
-    this.props.navigation.navigate("AddModule", { idea_id: item.idea_id });
+    this.props.navigation.navigate("AddModule", { idea_id: item.idea_id,idea_title:item.idea_title });
 
   }
-
-
-
+  //list seperator
   FlatListItemSeparator = () => {
     return (
       <View
@@ -402,9 +410,7 @@ export default class Aproved extends Component {
       />
     );
   }
-
-
-
+  //List data for Empty
   _listEmptyComponent = () => {
     return (
       <View style={{ width: '90%', height: '80%' }}>
@@ -416,6 +422,7 @@ export default class Aproved extends Component {
 
   //to filter the search in put by user 
   SearchFilterFunction(text) {
+    log("Info", "UserApprovedProjects:SearchFilterFunction(text) method is used for search functionality");
     console.log(text);
     const newData = this.arrayholder.filter(function (item) {
       const idea_id = item.idea_id.toUpperCase()
@@ -546,17 +553,11 @@ export default class Aproved extends Component {
                 </View>
               </View>
 
-              <View style={{ flexDirection: 'row', marginTop: 30 }}>
-                <TouchableOpacity style={{
-                  margin: 5, backgroundColor: 'red', padding: 19, height: 30, alignItems: "center",
-                  justifyContent: 'center'
-                }} onPress={this.closeModal}>
+              <View style={{ flexDirection: 'row', marginTop: 30,justifyContent:"space-between" }}>
+                <TouchableOpacity style={styles.opencancel} onPress={this.closeModal}>
                   <Text style={{ color: 'white' }}>CANCEL</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => { this.setRO(this.state.ideaid) }} style={{
-                  margin: 5, backgroundColor: 'green', padding: 20, height: 30, alignItems: "center",
-                  justifyContent: 'center'
-                }} >
+                <TouchableOpacity onPress={() => { this.setRO(this.state.ideaid) }} style={styles.opensave} >
                   <Text style={{ color: 'white' }}>SAVE</Text>
                 </TouchableOpacity>
               </View>
@@ -569,6 +570,7 @@ export default class Aproved extends Component {
     );
   }
 }
+//Styles for UI
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -594,7 +596,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     color: 'white',
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     alignItems: 'center',
     fontSize: 18,
   },
@@ -621,14 +623,14 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: 'green',
     paddingTop: 10,
-    fontWeight:"bold",
+   // fontWeight:"bold",
 
   },
   signUpText1: {
     fontSize: 13,
     color: 'green',
     paddingTop: 10,
-    fontWeight:"bold",
+    // fontWeight:"bold",
      paddingLeft: 10,
   },
   end: {
@@ -655,9 +657,9 @@ const styles = StyleSheet.create({
 
   },
   signUpText2: {
-    fontSize: 10,
- //marginLeft: 200,
     fontSize: 13,
+ //marginLeft: 200,
+    // fontSize: 13,
     color: 'black',
     paddingTop: 10,
 
@@ -666,7 +668,7 @@ const styles = StyleSheet.create({
 
   },
   listgap: {
-    fontSize: 12,
+    fontSize: 13,
     paddingTop: 10,
 // paddingLeft: 130,
 
@@ -675,7 +677,7 @@ const styles = StyleSheet.create({
   },
   signUpText03: {
     width: '25%',
-    fontSize: 12,
+    fontSize: 13,
     paddingTop: 10,
     paddingLeft: 10,
 
@@ -683,26 +685,26 @@ const styles = StyleSheet.create({
   },
   signUpText3: {
 
-    fontSize: 12,
+    fontSize: 13,
     paddingTop: 10,
      paddingLeft: 10,
-    fontWeight:"bold",
+    // fontWeight:"bold",
     alignItems: 'center',
   },
   signUpText4: {
-    fontSize: 12,
+    fontSize: 13,
     paddingTop: 10,
 
-    color:'#000000',
-    fontWeight:"bold",
+    color:'black',
+    // fontWeight:"bold",
     alignItems: 'center',
   },
   signUpText9: {
-    fontSize: 12,
+    fontSize: 13,
     paddingTop: 10,
 width:wp('45%'),
-    color:'#000000',
-    fontWeight:"bold",
+    color:'black',
+    // fontWeight:"bold",
     alignItems: 'center',
   },
   signup: {
@@ -731,11 +733,38 @@ width:wp('45%'),
 
   },
   signUpText: {
-    fontSize: 20,
+    fontSize: 13,
     justifyContent: 'center',
 
 
     color: 'white',
     alignSelf: 'center',
+  },
+   //Based ON Platform
+   opencancel: {
+    flex: 1,
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'red', margin:20,height:30, alignItems:
+        "center", justifyContent: 'center'
+      },
+      android: {
+         backgroundColor: 'red',margin:20,height:30, alignItems:
+      "center", justifyContent: 'center'
+      },
+    }),
+  },
+  opensave: {
+    flex: 1,
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'green',margin:20,height:30,  alignItems:
+        "center", justifyContent: 'center'
+      },
+      android: {
+         backgroundColor: 'green',margin:20,height:30, alignItems:
+      "center", justifyContent: 'center'
+      },
+    }),
   },
 });

@@ -14,10 +14,13 @@ import Modal from "react-native-simple-modal";
 import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
 import RadioGroup from 'react-native-radio-button-group';
 import SearchableDropdown from 'react-native-searchable-dropdown';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
+import log from '../LogFile/Log';
+import { NavigationEvents } from 'react-navigation';
+
 
 FOOTER_MAX_HEIGHT = 50
 FOOTER_MIN_HEIGHT = 40
@@ -28,41 +31,31 @@ class ListItem extends React.Component {
     super(props)
 
     this.state = {
-      days:'',
-      hours:'',
-
+      days: '',
+      hours: '',
       deletevisibility: false
     }
+
   }
 
   componentDidMount() {
-
+    log("Debug", "View SubTask screen is loaded");
     this.VisibleActions();
   }
-
+  //Visable Actions Based on Rolle
   async VisibleActions() {
-
     AsyncStorage.getItem("emp_role", (err, res) => {
-
-      //Alert.alert(res);
-
       if (res == 'Emp' || res == 'Manager' || res == 'Approver') {
-
         this.setState({ deletevisibility: true });
       } else {
-
         this.setState({ deletevisibility: false });
       }
-
     });
-
   }
 
   //Alert for Verify the Subtasks 
   SubtaskVerify() {
-
     const { item } = this.props;
-
     Alert.alert(
       'Alert..!',
       'Do you want to Verify Task',
@@ -81,19 +74,20 @@ class ListItem extends React.Component {
 
   //verifying the subtask start
   SubtaskVerification(subtaskid) {
-
+    log("Info", " SubtaskVerification(cropcode) is used to verifying the subtask");
     AsyncStorage.getItem("cropcode", (err, res) => {
       const cropcode = res;
       NetInfo.fetch().then(state => {
         if (state.type == "none") {
           console.log(state.type);
+          log("Warn", "No internet connection");
           Snackbar.show({
             title: 'No Internet Connection',
             backgroundColor: 'red',
             duration: Snackbar.LENGTH_LONG,
           });
         } else {
-          fetch(API + 'managesubtasks.php',
+          fetch(API + 'manageSubtasks.php',
             {
               method: 'POST',
               headers: {
@@ -119,47 +113,63 @@ class ListItem extends React.Component {
             })
             .catch((error) => {
               console.error(error);
+              log("Error", "verifying the subtask error");
             });
         }
       });
     });
   }
+
   //verifying the subtask close
 
   render() {
     const { item } = this.props;
 
     let button;
+    let button1;
+    let colors;
 
     if (this.state.deletevisibility === false) {
       button =
-        <TouchableOpacity style={{ width: 60, backgroundColor: 'red',  }} onPress={this.props.deleteAction}>
-          <Text style={{ color: '#fff', textAlign: 'center', }}>DELETE</Text></TouchableOpacity>
+        <TouchableOpacity style={{ width: 55, backgroundColor: 'red', paddingRight:10 }} onPress={this.props.deleteAction}>
+          <Text style={{ color: '#fff', textAlign: 'center', }}>Delete</Text></TouchableOpacity>
     } else {
       button = null;
     }
+    
+   // let colors;
 
+  //  if (role==='Approver' || 'Admin') {
+    AsyncStorage.getItem("emp_role", (err, res) => {
+      if (res == 'Approver' || res == 'Admin' ) {
+        this.setState({ deletevisibility: true });
+      
+    button1 =
+      // <TouchableOpacity style={{ width: 70, backgroundColor: 'red', paddingRight: 10 }} onPress={this.props.deleteAction}>
+      <TouchableOpacity onPress={() => { this.SubtaskVerify()  }}>
+        {/* <Text style={{ color: '#fff', textAlign: 'center', }}>Delete</Text> */}
+        </TouchableOpacity>
+  } else {
+    button = null;
+  }
+});
     return (
 
-      <Collapse style={styles.container}>
+      // <Collapse   style={[item.cDate>=item.targetDate?styles.container:styles.container1]}>
+<View>
+      <Collapse style={[item.taskstatus == 'pending' ? [item.cDate >= item.targetDate ? styles.container : styles.container1] : styles.container1]}>
         <CollapseHeader style={styles.boxheader}>
 
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.signUpText0} >TASK ID:</Text>
+          <View style={{ flexDirection: 'row', }}>
+            <Text style={styles.signUpText0} >Task-Id:</Text>
             <Text style={styles.signUpText1} >{item.subTaskId}</Text>
-            {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
           </View>
-          <Text style={styles.signUpText2} >{item.date}</Text>
-
-
-
-
-          <View style={{ flexDirection: 'row',}}>
+          {/* <Text style={styles.signUpText2} >{item.date}</Text> */}
+          <View style={{ flexDirection: 'row', }}>
             <Text style={styles.signUpText4} >Main Task Title:</Text>
-            <Text style={styles.signUpText3} >{item.mainTaskTitle}</Text>
-            <View style={{ marginLeft: 80 }}
-            >
-              <RadioGroup
+            <Text style={styles.signUpText3} >  {item.mainTaskTitle}</Text>
+            {/* <View style={{ marginLeft: 80, }}> */}
+              {/* <RadioGroup
                 horizontal
                 options={[
                   {
@@ -173,13 +183,32 @@ class ListItem extends React.Component {
                   },
 
                 ]}
-                //activeButtonId={'user'}
                 circleStyle={{ fillColor: 'black', borderColor: 'black' }}
-              //  onChange={(option) => this.setState({usertype: option.id})}
-              />
+              /> */}
+            {/* </View> */}
+
+
+          </View>
+
+          <View style={styles.box1}>
+
+            <View style={{ flexDirection: 'row',marginBottom:10 }}>
+              <Text style={styles.signUpText00} >Task Title:</Text>
+              <Text style={styles.signUpText11} >{item.taskTitle}</Text>
+              {button1}
+              {/* <TouchableOpacity onPress={() => { this.SubtaskVerify() }}> */}
+                <Text style={styles.signUpText03} >{item.taskstatus}</Text>
+              {/* </TouchableOpacity> */}
             </View>
+          </View>
 
+        </CollapseHeader>
+        <CollapseBody>
 
+          <View style={{ flexDirection: 'row', paddingRight: 35, }}>
+            <Text style={styles.signUpText44} >Description :</Text>
+            <Text style={styles.signUpText33} >{item.taskDesc}</Text>
+            {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
           </View>
 
 
@@ -187,95 +216,78 @@ class ListItem extends React.Component {
 
           <View style={styles.box1}>
 
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={styles.signUpText00} >Task Title:</Text>
-              <Text style={styles.signUpText11} >{item.taskTitle}</Text>
-              <TouchableOpacity onPress={() => { this.SubtaskVerify() }}>
-                <Text style={styles.signUpText03} >{item.taskstatus}</Text>
-              </TouchableOpacity>
+            <View style={{ flexDirection: 'row', width: wp('45%'),paddingRight:50 }}>
+              <Text style={styles.signUpText000} >Target Time:</Text>
+              <Text style={styles.signUpText111} >{item.targetDate}</Text>
+           
             </View>
+            {/* <View styles={{ paddingRight: 40, width: '40%' }}> */}
+              <Text style={styles.signUpText002} >Task Status:{item.taskStatusPercentage}% completed  </Text>
+              {/* <Text style={styles.signUpText111} >{item.taskStatusPercentage}% completed </Text> */}
+            {/* </View> */}
+
+          </View>
+          <View style={styles.box1}>
+
+            <View style={{ flexDirection: 'row', width: wp('50%'), paddingRight: 50, }}>
+              <Text style={styles.signUpText000text} >Assigned To:{item.assignedTo}</Text>
+              {/* <Text style={styles.signUpText111} ></Text> */}
+              {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
             </View>
+            <Text style={styles.signUpText000} >Assigned By:{item.assignedBy}</Text>
+            {/* <Text style={styles.signUpText111} >{item.assignedBy}</Text> */}
 
-            
-      
+          </View>
 
-            <View style={{ flexDirection: 'row', paddingRight: 35, }}>
-              <Text style={styles.signUpText44} >Description :</Text>
-              <Text style={styles.signUpText33} >{item.taskDesc}</Text>
-              {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
+          <View style={{ flexDirection: 'row', paddingRight: 25, }}>
+            <Text style={styles.signUpText44} >Assigned On:</Text>
+            <Text style={styles.signUpText33} >{item.assignedDate}</Text>
+            {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
+          </View>
+
+
+          <View style={styles.box1}>
+
+            <View style={{ flexDirection: 'row', width: wp('50%'), paddingRight: 50, }}>
+              <Text style={styles.signUpText000} >Time Left:</Text>
+              <Text style={styles.signUpText111} >{item.timeLeft}</Text>
+              {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
             </View>
+            <Text style={styles.signUpText000text} >Updated On:{item.taskEndDate} </Text>
 
-            </CollapseHeader>
+          </View>
 
-<CollapseBody>
-            <View style={styles.box1}>
+          <View style={styles.box1}>
 
-              <View style={{ flexDirection: 'row', width: wp('50%'), paddingRight: 50, }}>
-                <Text style={styles.signUpText000} >Target Time:</Text>
-                <Text style={styles.signUpText111} >{item.targetDate}</Text>
-                {/* <Text style={styles.signUpText1} >Task Status:0% completed</Text>  */}
-              </View>
-              <View styles={{ paddingRight: 40, width: '40%' }}>
-                <Text style={styles.signUpText000text} >Task Status:{item.taskStatusPercentage}% completed  </Text>
-                {/* <Text style={styles.signUpText111} >{item.taskStatusPercentage}% completed </Text> */}
-              </View>
-
+            <View style={{ flexDirection: 'row', width: wp('50%'), paddingRight: 50, }}>
+              <Text style={styles.signUpText000} >Dependency:</Text>
+              <Text style={styles.signUpText111} >{item.dependencyTitle}</Text>
+              {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
             </View>
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row', width: wp('50%'), paddingRight: 50, }}>
-                <Text style={styles.signUpText000text} >Assigned To:</Text>
-                <Text style={styles.signUpText111} >{item.assignedTo}</Text>
-                {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-              </View>
-              <Text style={styles.signUpText000} >Assigned By:{item.assignedBy}</Text>
-              {/* <Text style={styles.signUpText111} >{item.assignedBy}</Text> */}
-
+            <View style={{width:wp('40%'),paddingRight:20,}}>
+            <Text style={styles.signUpText000text} >Dependent:{item.dependencyUser}</Text>
+            {/* <Text style={styles.signUpText111} >{item.assignedBy}</Text> */}
             </View>
-
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-              <Text style={styles.signUpText44} >Assigned On:</Text>
-              <Text style={styles.signUpText33} >{item.assignedDate}</Text>
-              {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
-            </View>
+          </View>
 
 
-            <View style={styles.box1}>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' ,}}>
+            {/* <TouchableOpacity style={{ width: 120, backgroundColor: '#6cbb3f', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center' }}>VIEW SUB TASK</Text></TouchableOpacity> */}
+            <Icon size={22} style={{ paddingLeft: 10, paddingTop: 4, paddingRight: 10, }} name="comments-o" onPress={() => { this.props.TaskChat() }}></Icon>
+            <TouchableOpacity onPress={this.props.RoadBlock} style={{ width: 20, backgroundColor: 'black',marginRight:10 }}><Text style={{ color: '#fff', textAlign: 'center' }}>?</Text></TouchableOpacity>
+            <TouchableOpacity style={{ width: 65, backgroundColor: 'black', paddingRight: 10, marginRight:10 }} onPress={() => this.props.Module()}>
+              <Text style={{ color: '#fff', textAlign: 'center', marginLeft: 10 }}>Modify</Text></TouchableOpacity>
 
-              <View style={{ flexDirection: 'row', width: wp('50%'), paddingRight: 50, }}>
-                <Text style={styles.signUpText000} >Time Left:</Text>
-                <Text style={styles.signUpText111} >{item.timeLeft}</Text>
-                {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-              </View>
-              <Text style={styles.signUpText000text} >Updated On:{item.taskEndDate} </Text>
+            {button}
+          </View>
+<View style={{height:hp('1%')}}>
+  <Text></Text>
+</View>
+        </CollapseBody>
 
-            </View>
-
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row', width: wp('50%'), paddingRight: 50, }}>
-                <Text style={styles.signUpText000} >Dependency:</Text>
-                <Text style={styles.signUpText111} >{item.dependencyTitle}</Text>
-                {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-              </View>
-              <Text style={styles.signUpText000text} >Dependent:{item.dependencyUser}</Text>
-              {/* <Text style={styles.signUpText111} >{item.assignedBy}</Text> */}
-
-            </View>
-
-
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-              {/* <TouchableOpacity style={{ width: 120, backgroundColor: '#6cbb3f', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center' }}>VIEW SUB TASK</Text></TouchableOpacity> */}
-              <TouchableOpacity style={{ width: 60, backgroundColor: 'black', marginLeft: 10, }} onPress={() => this.props.Module()}>
-                <Text style={{ color: '#fff', textAlign: 'center', }}>MODIFY</Text></TouchableOpacity>
-              
-              {button}
-              </View>
-
-              </CollapseBody>
-
-</Collapse>
-
+      </Collapse>
+      <View style={{ backgroundColor: '#f8f8f8', height: 3 }}></View>
+</View>
     )
   }
 }
@@ -302,6 +314,7 @@ export default class ViewSubTasks extends React.Component {
       //   moduleId:this.props.navigation.state.params.moduleId,
       taskId: this.props.navigation.state.params.taskId,
     };
+    this.arrayholder = [];
   }
 
   modalDidOpen = () => {
@@ -315,6 +328,7 @@ export default class ViewSubTasks extends React.Component {
     });
 
   }
+  //Close the Dialog
   modalDidClose = () => {
 
     this.setState({ open: false });
@@ -326,6 +340,7 @@ export default class ViewSubTasks extends React.Component {
   resetPosition = () => this.setState({ offset: 0 });
 
   openModal = (item, index) => {
+    //Estimated Hours split into days and hours
     const time = item.estimatedHours;
     const days = Number(time / 24);
     const hours = Number(time % 24);
@@ -356,23 +371,28 @@ export default class ViewSubTasks extends React.Component {
 
   //refresh subtasktasks list
   onRefresh() {
-    this.setState({ isFetching: true }, function () { this.getSubTasksList() });
+    this.setState({
+      dataSource: [],
+    })
+        this.getSubTasksList();
   }
   Module(item, index) {
     let time = item.estimatedHours;
-    
+
     let days1 = (Number(time / 24)).toString().split(".");
-    days=days1[0];
-     //alert(days1[0]);
-     hours = Number(time % 24);
+    days = days1[0];
+    //alert(days1[0]);
+    hours = Number(time % 24);
     console.log(item);
     console.log(index);
     // alert(days+"    "+hours+"     "+item.estimatedHours);
-    
 
-    this.props.navigation.navigate('ModifySubTask', { callHome: this.getSubTasksList.bind(this),
-      action: 'modify', subTask: item.taskTitle, description: item.taskDesc,person:item.assignedTo,
-  name:item.assignedBy,subTaskId:item.subTaskId,days:days,hours:hours });
+    //navigate to ModifySubtask
+    this.props.navigation.navigate('ModifySubTask', {
+      callHome: this.getSubTasksList.bind(this),
+      action: 'modify', subTask: item.taskTitle, description: item.taskDesc, person: item.assignedTo,
+      name: item.assignedBy, subTaskId: item.subTaskId, days: days, hours: hours
+    });
 
   }
 
@@ -382,15 +402,19 @@ export default class ViewSubTasks extends React.Component {
 
     this.getSubTasksList();
   }
-
+  //Navigate to RoadBlock Screen
   RoadBlock(item, index) {
     this.props.navigation.navigate("RoadBlocks", { subtaskid: item.subTaskId });
+  }
+  //Navigates to TaskChat Screen
+  TaskChat(item, index) {
+    this.props.navigation.navigate("TaskChat", { taskid: item.subTaskId, action: "subtask" });
   }
 
   //Getting the subtasks list
   getSubTasksList() {
     const { taskId } = this.state;
-
+    log("Info", "getSubTasksList(taskId) method is used to Getting the subtasks ");
     //alert("ideaid" + taskId);
 
     AsyncStorage.getItem("cropcode", (err, res) => {
@@ -401,13 +425,14 @@ export default class ViewSubTasks extends React.Component {
       NetInfo.fetch().then(state => {
         if (state.type == "none") {
           console.log(state.type);
+          log("Warn", "No internet connection");
           Snackbar.show({
             title: 'No Internet Connection',
             backgroundColor: 'red',
             duration: Snackbar.LENGTH_LONG,
           });
         } else {
-          fetch(API + 'get_subtasks.php',
+          fetch(API + 'getSubtasks.php',
             {
               method: 'POST',
               headers: {
@@ -422,21 +447,38 @@ export default class ViewSubTasks extends React.Component {
             })
             .then((response) => response.json())
             .then((responseJson) => {
-              //alert(JSON.stringify(responseJson));
-              console.log(responseJson)
-              this.setState({
-                isLoading: false,
-                dataSource: responseJson.data,
-                isFetching: false
-              }, function () {
+              if (responseJson.status == 'true') {
+                //alert(JSON.stringify(responseJson));
+                console.log(responseJson)
+                this.setState({
+                  isLoading: false,
+                  dataSource: responseJson.data,
+                  isFetching: false
+                }, function () {
 
-              });
+                });
+                this.arrayholder = responseJson.data;
+              }
+              else {
+                log("Warn", "no Subtasks found");
+                this.arrayholder = [];
+                this.setState({
+                  isLoading: false
+                })
+                Snackbar.show({
+                  title: 'No SubTasks',
+                  backgroundColor: '#3bb9ff',
+                  duration: Snackbar.LENGTH_LONG,
+                });
+              }
             })
             .catch((error) => {
               console.error(error);
+              log("Error", "Getting the subtasks list error");
             });
         }
       });
+
     });
   }
 
@@ -452,7 +494,7 @@ export default class ViewSubTasks extends React.Component {
       />
     );
   }
- 
+
 
   //delete alert for subtask start
   deleteAction(item, index) {
@@ -474,18 +516,20 @@ export default class ViewSubTasks extends React.Component {
 
   //Delete Subtask strat
   deleteSubtask = (item) => {
+    log("Info", " deleteSubtask(item) is used to Delete Subtask");
     AsyncStorage.getItem("cropcode", (err, res) => {
       const crop = res;
       NetInfo.fetch().then(state => {
         if (state.type == "none") {
           console.log(state.type);
+          log("Warn", "No internet connection");
           Snackbar.show({
             title: 'No Internet Connection',
             backgroundColor: 'red',
             duration: Snackbar.LENGTH_LONG,
           });
         } else {
-          fetch(API + 'managesubtasks.php', {
+          fetch(API + 'manageSubtasks.php', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
@@ -508,8 +552,10 @@ export default class ViewSubTasks extends React.Component {
                 this.setState({ open: false })
                 // this.props.navigation.navigate('AdminManageProjects');
               }
+
             }).catch((error) => {
               console.error(error);
+              log("Error", "Delete Subtask  error");
             });
         }
       });
@@ -525,6 +571,82 @@ export default class ViewSubTasks extends React.Component {
       </View>
     )
   }
+
+
+  //For Search 
+  SearchFilterFunction(text) {
+    log("Info", "SearchFilterFunction(text) method  used for searching");
+    console.warn(this.arrayholder);
+    const newData = this.arrayholder.filter(function (item) {
+
+      const subTaskId = item.subTaskId.toUpperCase()
+      const subTaskId1 = text.toUpperCase()
+      // const date = item.date.toUpperCase()
+      // const date1 = text.toUpperCase()
+
+      const mainTaskTitle = item.mainTaskTitle.toUpperCase()
+      const mainTaskTitle1 = text.toUpperCase()
+
+
+
+      const taskTitle = item.taskTitle.toUpperCase()
+      const taskTitle1 = text.toUpperCase()
+      const taskstatus = item.taskstatus.toUpperCase()
+      const taskstatus1 = text.toUpperCase()
+      const taskDesc = item.taskDesc.toUpperCase()
+      const taskDesc1 = text.toUpperCase()
+
+
+      const targetDate = item.targetDate.toUpperCase()
+      const targetDate1 = text.toUpperCase()
+      const taskStatusPercentage = item.taskStatusPercentage.toUpperCase()
+      const taskStatusPercentage1 = text.toUpperCase()
+      const assignedTo = item.assignedTo.toUpperCase()
+      const assignedTo1 = text.toUpperCase()
+
+      const assignedBy = item.assignedBy.toUpperCase()
+      const assignedBy1 = text.toUpperCase()
+      const assignedDate = item.assignedDate.toUpperCase()
+      const assignedDate1 = text.toUpperCase()
+      const timeLeft = item.timeLeft.toUpperCase()
+      const timeLeft1 = text.toUpperCase()
+      const taskEndDate = item.taskEndDate.toUpperCase()
+      const taskEndDate1 = text.toUpperCase()
+      // const dependencyTitle = item.dependencyTitle.toUpperCase()
+      // const dependencyTitle1 = text.toUpperCase()
+      // const dependencyUser = item.dependencyUser.toUpperCase()
+      // const dependencyUser1 = text.toUpperCase()
+
+      return taskTitle.indexOf(taskTitle1) > -1 ||
+        taskstatus.indexOf(taskstatus1) > -1 ||
+        taskDesc.indexOf(taskDesc1) > -1 ||
+
+        // date.indexOf(date1) > -1 ||
+        subTaskId.indexOf(subTaskId1) > -1 ||
+        mainTaskTitle.indexOf(mainTaskTitle1) > -1 ||
+
+        targetDate.indexOf(targetDate1) > -1 ||
+        taskStatusPercentage.indexOf(taskStatusPercentage1) > -1 ||
+
+        assignedTo.indexOf(assignedTo1) > -1 ||
+        assignedBy.indexOf(assignedBy1) > -1 ||
+        assignedDate.indexOf(assignedDate1) > -1 ||
+        timeLeft.indexOf(timeLeft1) > -1 ||
+
+        taskEndDate.indexOf(taskEndDate1) > -1
+      // dependencyTitle.indexOf(dependencyTitle1) > -1 ||
+      // dependencyUser.indexOf(dependencyUser1) > -1 
+
+
+    })
+    this.setState({
+      dataSource: newData,
+      text: text
+    })
+  }
+
+
+
 
   render() {
 
@@ -546,18 +668,21 @@ export default class ViewSubTasks extends React.Component {
 
           </Left>
           <Body>
-            <Title style={{ color: '#fff', fontWeight: '600' }}>Sub Tasks List</Title>
+            <Title style={{ color: '#fff', fontWeight: '600' }}>Subtasks List</Title>
           </Body>
           <Right></Right>
         </Header>
         <Item>
+        <NavigationEvents
+                            onDidFocus={() => this.onRefresh()}
+                        />
           <Input placeholder="Search"
             onChangeText={(text) => this.SearchFilterFunction(text)} />
-          <Icon style={{marginRight:5}} size={25} name="magnify" />
+          <Icon style={{ marginRight: 5 }} size={25} name="search" />
         </Item>
         <View style={styles.MainContainer}>
 
-          <View style={{ height: '100%' }}>
+          <View style={{ height: '98%' }}>
 
             <FlatList
 
@@ -581,7 +706,7 @@ export default class ViewSubTasks extends React.Component {
                     deleteAction={() => this.deleteAction(item, index)}//Delete Subtask
 
                     RoadBlock={() => this.RoadBlock(item, index)}
-
+                    TaskChat={() => this.TaskChat(item, index)}//For Chat
 
                   />
                 </View>
@@ -591,10 +716,6 @@ export default class ViewSubTasks extends React.Component {
             />
 
           </View>
-
-        
-
-
         </View>
       </Container>
 
@@ -603,86 +724,99 @@ export default class ViewSubTasks extends React.Component {
   }
 
 }
+//Styles for UI
 const styles = StyleSheet.create({
   MainContainer:
   {
- 
+
     flex: 1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height
-  
+
+  },
+  container: {
+    backgroundColor: '#ffcccc',
+    paddingTop: 5,
+    paddingRight: 20,
+  },
+  container1: {
+    backgroundColor: '#ffffff',
+    paddingTop: 5,
+    paddingRight: 20,
   },
   buttonContainer: {
     width: wp('95%'),
-   
-   
+
+
     color: '#d2691e',
-   
+
     marginLeft: 4,
 
 
   },
   signupButton: {
- 
+
 
   },
   subcontainer: {
     flex: 2,
     flexDirection: 'row',
-  
+
   },
   signUpText0: {
     fontSize: 14,
-   
-     fontWeight: 'bold',
+
+  //  fontWeight: 'bold',
     color: 'green',
     paddingLeft: 10,
   },
   signUpText1: {
-  
-     fontWeight: 'bold',
+
+   // fontWeight: 'bold',
     color: 'green',
- 
+
   },
 
   signUpText00: {
     fontSize: 14,
-     color: '#C0C0C0',
-    
+    color: 'black',
+
     paddingLeft: 10,
   },
   signUpText11: {
     fontSize: 14,
-   
-    width: wp('60%'),
+
+    width: wp('65%'),
     color: 'black',
-   
+
   },
   signUpText000: {
-    fontSize: 12,
-  color:'#C0C0C0',
+    fontSize: 14,
+    color: 'black',
 
     paddingLeft: 10,
   },
   signUpText000text: {
-    fontSize: 12,
-     color:'#c0c0c0',
+    fontSize: 14,
+    color: 'black',
     paddingLeft: 10,
+    width:wp('40%'),
+    // paddingRight:80
   },
   signUpText000text1: {
-    fontSize: 12,
+    fontSize: 14,
     paddingLeft: 10,
   },
   textStyle: {
 
     color: '#fff',
-    fontSize: 22
+    fontSize: 14,
   },
   signUpText111: {
-    fontSize: 12,
+    fontSize: 14,
 
     color: 'black',
-    paddingLeft: 23,
+    paddingLeft: 6,
   },
   end: {
 
@@ -691,8 +825,8 @@ const styles = StyleSheet.create({
   },
   end1: {
     flex: 1,
-   
-  
+
+
 
     flexDirection: 'row',
   },
@@ -711,18 +845,18 @@ const styles = StyleSheet.create({
   signUpText2: {
     fontSize: 14,
     paddingRight: 10,
-  
+
     paddingLeft: 23,
     color: 'black',
 
-  
+
     justifyContent: 'center',
 
   },
   signUpText02: {
     fontSize: 14,
     paddingRight: 10,
- 
+
     paddingLeft: 23,
     color: 'blue',
 
@@ -730,12 +864,12 @@ const styles = StyleSheet.create({
 
   },
   signUpText002: {
-    fontSize: 12,
+    fontSize: 14,
     paddingRight: 10,
-  
+
     paddingLeft: 23,
-  
-    justifyContent: 'center',
+
+//    justifyContent: 'center',
 
   },
   bottomView: {
@@ -752,44 +886,51 @@ const styles = StyleSheet.create({
 
   signUpText3: {
 
-   
+
     fontSize: 14,
-    width: wp('90%'),
-     fontWeight: 'bold',
- 
-    width: wp('40%'),
+   // width: wp('90%'),
+   // fontWeight: 'bold',
+
+    width: wp('60%'),
   },
   signUpText4: {
-  color:'#C0C0C0',
+    color: 'black',
     paddingLeft: 10,
 
     fontSize: 14,
-   
+
   },
 
 
   signUpText33: {
 
- 
-    fontSize: 12,
-width:'80%',
+
+    fontSize: 14,
+    width: '80%',
+    alignItems: 'center',
+  },
+   signUpText33: {
+
+
+    fontSize: 14,
+    width: '80%',
     alignItems: 'center',
   },
   signUpText44: {
- 
+
     paddingLeft: 10,
-  color:'#C0C0C0',
+    color: 'black',
     fontSize: 14,
     alignItems: 'center',
   },
 
   signup: {
-   
+
     color: "#FFF",
   },
   boxone: {
     flex: 1,
-   
+
 
   },
   boxtwo: {
@@ -801,10 +942,10 @@ width:'80%',
 
   },
   box: {
-    
+
     flexDirection: 'row',
-  
- 
+
+
 
   },
   box1: {
@@ -815,7 +956,7 @@ width:'80%',
 
   },
   signUpText: {
-    fontSize: 20,
+    fontSize: 14,
     justifyContent: 'center',
 
 
@@ -828,13 +969,13 @@ width:'80%',
     color: 'red',
     paddingLeft: -10,
     alignSelf: 'flex-end',
-    fontWeight:'bold',
+  //  fontWeight: 'bold',
 
 
     alignItems: 'center',
   },
   boxheader: {
-    
+
     flexDirection: 'column',
 
 

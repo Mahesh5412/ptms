@@ -11,6 +11,7 @@ import { widthPercentageToDP } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { createStackNavigator, createSwitchNavigator, createAppContainer, createDrawerNavigator } from 'react-navigation';
 import Login from '../LaunchScreens/Login';
+import Maintenance from '../Maintenance/Maintenance'
 import drawerContentComponents from './UserDrawerComponents';
 
 import AdminDrawerComponents from '../Navigation/AdminDrawerComponents';
@@ -36,6 +37,7 @@ import UserManageTask from '../UserComponents/UserManageTask';
 import UserPreference from '../UserComponents/UserPreference';
 import UserCompletedProjects from '../UserComponents/UserCompletedProjects';
 import UserProjectInfo from '../UserComponents/UserProjectInfo';
+import UserManageEmployeesTasks from '../UserComponents/UserManageEmployeesTasks';
 
 import AddModule from '../CommonComponents/AddModule';
 import AddMainTask from '../CommonComponents/AddMainTask';
@@ -49,7 +51,24 @@ import ReleaseOwner from '../CommonComponents/ReleaseOwner';
 import ModifySubTask from '../CommonComponents/ModifySubTask';
 import AddSubTaskModal from '../CommonComponents/AddSubTaskModal';
 import RoadBlocks from '../CommonComponents/RoadBlock';
+import TaskChat from '../CommonComponents/TaskChat';
 
+import RoadBlockList from '../CommonComponents/RoadBlockList';
+import CriticalRoadBlockList from '../CommonComponents/CriticalRoadBlockList';
+import SolvedRoadBlockList from '../CommonComponents/SolvedRoadBlockList';
+import OfflineCheck from '../Maintenance/OfflineCheck';
+import EmployeeInfo from '../CommonComponents/EmployeeInfo';
+import { API } from "../WebServices/RestClient";
+import { nullLiteral } from '@babel/types';
+import ManageProjects from "../EmployeeInfo/ManageProjects";
+import ProjectInfo from "../EmployeeInfo/ProjectInfo";
+import RequestedProjects from "../EmployeeInfo/RequestedProjects";
+import ApprovedProjects from "../EmployeeInfo/ApprovedProjects";
+import EmployeeModules from "../EmployeeInfo/EmployeeModules";
+import EmployeeManageTask from "../EmployeeInfo/EmployeeManageTask";
+import EmployeePendingManageTask from "../EmployeeInfo/EmployeePendingManageTask";
+import EmployeeCompletedManageTask from "../EmployeeInfo/EmployeeCompletedManageTask";
+import RoadBlockInfo from '../EmployeeInfo/RoadBlockInfo';
 
 
 class NavigationRouter extends Component {
@@ -57,8 +76,29 @@ class NavigationRouter extends Component {
   constructor() {
     super();
     this._bootstrapAsync();
-
   }
+
+  //Maintanace Page for Checking the Heathcheck
+  Maintenance = () => {
+
+    fetch(API + "healthCheck.php")
+      .then((response) => response.json())
+      .then((responseJson) => {
+
+        if (responseJson.status === 'True') {
+
+          this._bootstrapAsync();
+        }
+        else {
+          this.props.navigation.navigate('Maintenance');
+        }
+      })
+      .catch((error) => {
+
+        console.log(error);
+
+      });
+  };
 
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
@@ -66,7 +106,7 @@ class NavigationRouter extends Component {
     const userToken = await AsyncStorage.getItem('userToken');
 
     const role = await AsyncStorage.getItem('emp_role');
-    
+
 
 
     console.log(userToken);
@@ -88,7 +128,7 @@ class NavigationRouter extends Component {
   // Render any loading content that you like here
   render() {
     return (
-      <View></View>
+      <View><OfflineCheck /></View>
       // <AppContainer/>
 
     );
@@ -101,15 +141,17 @@ const AdminDrawer = createDrawerNavigator(
     AdminManageProjects: { screen: AdminManageProjects },
     AdminManageTask: { screen: AdminManageTask },
     AdminManageEmployees: { screen: AdminManageEmployees },
-    AdminUserPreference: { screen: AdminUserPreference },
+    AdminUserPreference: { screen: AdminUserPreference},
     AdminCompletedProjects: { screen: AdminCompletedProjects },
     Updates1: { screen: Updates1 },
-    // AddMainTask: { screen: AddMainTask },
+    RoadBlockList: { screen: RoadBlockList },
+    //EmployeeInfo: { screen: EmployeeInfo },
+    //EmployeeManageTask: { screen: EmployeeManageTask },
     // AddModule : {screen: AddModule},
     Logout: { screen: Login },
   },
   {
-
+    drawerWidth: widthPercentageToDP('65%'),
     contentComponent: AdminDrawerComponents
   }
 
@@ -122,17 +164,20 @@ const UserDrawer = createDrawerNavigator(
     UserManageProjects: { screen: UserManageProjects },
     UserProfile: { screen: UserProfile },
     UserManageTask: { screen: UserManageTask },
+    //EmployeeInfo: { screen: EmployeeInfo },
     UserManageEmployees: { screen: UserManageEmployees },
     UserPreference: { screen: UserPreference },
     UserCompletedProjects: { screen: UserCompletedProjects },
+    RoadBlockList: { screen: RoadBlockList },
+    //EmployeeManageTask: { screen: EmployeeManageTask },
     // AddModule : {screen: AddModule},
     Updates: { screen: Updates },
     Logout: { screen: Login },
 
   }, {
-
-    contentComponent: UserDrawerComponents
-  }
+  drawerWidth: widthPercentageToDP('65%'),
+  contentComponent: UserDrawerComponents
+}
 
 
 );
@@ -183,6 +228,14 @@ const adminAppStack = createStackNavigator({
       header: null,
     },
   },
+  Maintenance: {
+    screen: Maintenance,
+    navigationOptions: {
+      header: null,
+    },
+  },
+
+
   ModuleAdd: {
     screen: ModuleAdd,
     navigationOptions: {
@@ -237,6 +290,96 @@ const adminAppStack = createStackNavigator({
       header: null,
     },
   },
+  RoadBlockList: {
+    screen: RoadBlockList,
+    navigationOptions: {
+      header: null,
+    },
+
+  },
+
+  CriticalRoadBlockList: {
+    screen: CriticalRoadBlockList,
+    navigationOptions: {
+      header: null,
+    },
+
+  },
+  SolvedRoadBlockList: {
+    screen: SolvedRoadBlockList,
+    navigationOptions: {
+      header: null,
+    },
+
+  },
+  TaskChat: {
+    screen: TaskChat,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  EmployeeInfo: {
+    screen: EmployeeInfo,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  // Projects Information of Employees Start
+  ManageProjects: {
+    screen: ManageProjects,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  RequestedProjects: {
+    screen: RequestedProjects,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  ApprovedProjects: {
+    screen: ApprovedProjects,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  ProjectInfo: {
+    screen: ProjectInfo,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  EmployeeModules: {
+    screen: EmployeeModules,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  EmployeeManageTask: {
+    screen: EmployeeManageTask,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  EmployeePendingManageTask: {
+    screen: EmployeePendingManageTask,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  EmployeeCompletedManageTask: {
+    screen: EmployeeCompletedManageTask,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  RoadBlockInfo: {
+    screen: RoadBlockInfo,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  //Projects Information of Employees End
 });
 
 //User Navigation classes 
@@ -314,8 +457,8 @@ const userAppStack = createStackNavigator({
       header: null,
     },
   },
- 
- 
+
+
   UpdateEmployee: {
     screen: UpdateEmployee,
     navigationOptions: {
@@ -328,7 +471,102 @@ const userAppStack = createStackNavigator({
       header: null,
     },
   },
-  
+  TaskChat: {
+    screen: TaskChat,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  UserManageEmployeesTasks: {
+    screen: UserManageEmployeesTasks,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  RoadBlockList: {
+    screen: RoadBlockList,
+    navigationOptions: {
+      header: null,
+    },
+
+  },
+  CriticalRoadBlockList: {
+    screen: CriticalRoadBlockList,
+    navigationOptions: {
+      header: null,
+    },
+
+  },
+  SolvedRoadBlockList: {
+    screen: SolvedRoadBlockList,
+    navigationOptions: {
+      header: null,
+    },
+
+  },
+  EmployeeInfo: {
+    screen: EmployeeInfo,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  // Projects Information of Employees Start
+  ManageProjects: {
+    screen: ManageProjects,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  RequestedProjects: {
+    screen: RequestedProjects,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  ApprovedProjects: {
+    screen: ApprovedProjects,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  ProjectInfo: {
+    screen: ProjectInfo,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  EmployeeModules: {
+    screen: EmployeeModules,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  EmployeeManageTask: {
+    screen: EmployeeManageTask,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  EmployeePendingManageTask: {
+    screen: EmployeePendingManageTask,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  EmployeeCompletedManageTask: {
+    screen: EmployeeCompletedManageTask,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  RoadBlockInfo: {
+    screen: RoadBlockInfo,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  //Projects Information of Employees End
+
 });
 
 //Authentication to Login Screen

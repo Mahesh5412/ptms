@@ -1,8 +1,8 @@
 /*
-FileName:ModuleAdd.js
+FileName:ModifySubTask.js
 Version:1.0.0
-Purpose:Modify the existing module
-Devloper:Naveen
+Purpose:Modify the existing Subtask based on TaskId
+Devloper:Raju,Mahesh,Naveen
 */
 import React, { Component } from 'react';
 import Requesteddata from '../AdminComponets/AdminRequestedDataProjects';
@@ -16,6 +16,7 @@ import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import Toast from 'react-native-simple-toast';
+import log from '../LogFile/Log';
 
 export default class ModifySubTask extends React.Component {
 
@@ -33,18 +34,19 @@ export default class ModifySubTask extends React.Component {
       modalVisible: false,
       taskttitle: '',
       days: this.props.navigation.state.params.days,
-      hours:'',
-      time:this.props.navigation.state.params.hours,
-      person:'',
-      subTaskId:this.props.navigation.state.params.subTaskId,
-      dependencyid:'',
+      hours: '',
+      time: this.props.navigation.state.params.hours,
+      person: '',
+      subTaskId: this.props.navigation.state.params.subTaskId,
+      dependencyid: '',
       action: this.props.navigation.state.params.action,//getting action
       subTask: this.props.navigation.state.params.subTask,//idea id
-      name:this.props.navigation.state.params.name,
+      name: this.props.navigation.state.params.name,
       // person:this.props.navigation.state.params.person,
 
       description: this.props.navigation.state.params.description,
-      error1:'',error2:'',error3:'',error4:'',error5:'',
+      error1: '', error2: '', error3: '', error4: '', error5: '',
+      itemPressedDisabled:false,
     };
 
   }
@@ -70,26 +72,27 @@ export default class ModifySubTask extends React.Component {
     this.setState({ open: true })
 
   };
-
+  //Close the dialog
   closeModal = () => {
-    this.setState({ open: false,
-      error1:'',error2:'',error3:'',error4:'',error5:'',
+    this.setState({
+      open: false,
+      error1: '', error2: '', error3: '', error4: '', error5: '',
     });
     // this.props.navigation.goBack();
-    const{params} = this.props.navigation.state;
-          const{goBack} = this.props.navigation;
-          params.callHome();
-          goBack();
+    const { params } = this.props.navigation.state;
+    const { goBack } = this.props.navigation;
+    params.callHome();
+    goBack();
   }
   //Dialog actions end
   componentDidMount() {
+    log("Debug", "modify Sub Task screen is loaded");
+    this.empSearch();//Getting the Employees List
+    this.dependencySearch();//Getting the Dependency Task List
+    this.openModal();//open dialog
 
-    this.empSearch();
-    this.dependencySearch();
-    this.openModal();
-   
     // alert(this.props.navigation.state.params.person);
-    
+
   }
 
   //Refresh data
@@ -99,200 +102,207 @@ export default class ModifySubTask extends React.Component {
 
   //Text field validation method
   isValid() {
-    const {person,  subTask, description, days, time,} = this.state;
+    const { person, subTask, description, days, time, } = this.state;
     let valid = false;
 
-     if(subTask.length===0){
-      // ToastAndroid.showWithGravity('"Enter sub Task', ToastAndroid.SHORT,ToastAndroid.CENTER);
+    if (subTask.length === 0) {
+      log("Warn", " subTask should not be empty");
       this.setState({ error1: 'Enter sub Task ' });
     }
     else if (description.length === 0) {
-      // alert("Enter Description");
-      // ToastAndroid.showWithGravity('"Enter Description', ToastAndroid.SHORT,ToastAndroid.CENTER);
+      log("Warn", " description should not be empty");
       this.setState({ error2: 'Enter Description ' });
     }
-    else if(days.length===0){
-      // ToastAndroid.showWithGravity('"Enter Days', ToastAndroid.SHORT,ToastAndroid.CENTER);
+    else if (days.length === 0) {
+      log("Warn", " days should not be empty");
       this.setState({ error3: 'Enter Days' });
     }
-    else if(time.length===0){
-      // ToastAndroid.showWithGravity('"Enter Time', ToastAndroid.SHORT,ToastAndroid.CENTER);
+    else if (time.length === 0) {
+      log("Warn", " time should not be empty");
       this.setState({ error4: 'Enter Time ' });
     }
-    else if(person.length===0){
-      // ToastAndroid.showWithGravity('"Enter Source', ToastAndroid.SHORT,ToastAndroid.CENTER);
+    else if (person.length === 0) {
+      log("Warn", " person should not be empty");
       this.setState({ error5: 'Enter Source ' });
     }
-    
+
     else {
       valid = true;
     }
     return valid;
   }//isValid method close
 
-  isUpdatedSucess(){
-    Toast.show("Sub Task Updated",Toast.LONG);
+  isUpdatedSucess() {
+    Toast.show("Sub Task Updated", Toast.LONG);
   }
 
   //Add the subtask start
   addSubTask = () => {
-
+    log("Info", " addSubTask( person, item, dependencyid, subTask, description, days, time, ) is used to Add the subtask");
     const { person, item, dependencyid, subTask, description, days, time, } = this.state;
     console.log(person);
     // console.log(dependency);
     console.log(subTask);
     console.log(item);
-    // console.log(item.taskid);
-    // alert(person+dependencyid);
-
-
+ 
     let EstHours = Number(days * 24) + Number(time);
 
     //employee id
     AsyncStorage.getItem("empId", (err, res) => {
       const empId = res;
-    
+
       //cropcode
       AsyncStorage.getItem("cropcode", (err, res) => {
         const cropcode = res;
         NetInfo.fetch().then(state => {
           if (state.type == "none") {
             console.log(state.type);
+            log("Warn", "No internet connection");
             Snackbar.show({
               title: 'No Internet Connection',
               backgroundColor: 'red',
               duration: Snackbar.LENGTH_LONG,
             });
-          }else{
-            if(this.isValid()){
-        fetch(API+'managesubtasks.php', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+          } else {
+            if (this.isValid()) {
+              this.setState({ itemPressedDisabled: true })
+              fetch(API + 'manageSubtasks.php', {
+                method: 'POST',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
 
-            title: this.state.subTask,
-            description: description,
-            days: days,
-            assignedBy: empId,
-            assignedTo: person,
-            dependencyId: this.state.dependencyid,
-            action: "modify",
-            days: this.state.days,
-            hours: this.state.time,
-            subtaskid:this.state.subTaskId,
-            empId: empId,
-            crop: cropcode,
+                  title: this.state.subTask,
+                  description: description,
+                  days: days,
+                  assignedBy: empId,
+                  assignedTo: person,
+                  dependencyId: this.state.dependencyid,
+                  action: "modify",
+                  days: this.state.days,
+                  hours: this.state.time,
+                  subtaskid: this.state.subTaskId,
+                  empId: empId,
+                  crop: cropcode,
 
-          })
-        }).then((response) => response.json())
-          .then((responseJson) => {
-            // alert(JSON.stringify(responseJson));
-            console.log(days);
-            console.log(description);
-            console.log(person);
-            console.log(responseJson);
-            if (responseJson.status === 'true') {
-              console.log("done")
-              this.setState({ open: false })
-            } else {
-              alert("task not modified");
+                })
+              }).then((response) => response.json())
+                .then((responseJson) => {
+                  // alert(JSON.stringify(responseJson));
+                  console.log(days);
+                  console.log(description);
+                  console.log(person);
+                  console.log(responseJson);
+                  if (responseJson.status === 'true') {
+                    this.setState({ itemPressedDisabled: false })
+                    console.log("done")
+                    this.setState({ open: false })
+                  } else {
+                    log("Warn", "task not modified");
+                    alert("task not modified");
+                  }
+                }).catch((error) => {
+                  console.error(error);
+                  log("Error", "Add the subtask error");
+                });
+              this.closeModal();
+              this.isUpdatedSucess();
             }
-          }).catch((error) => {
-            console.error(error);
-          });
-          this.closeModal();
-          this.isUpdatedSucess();
-        }
-      }
-      });
+          }
+        });
       });
     });
-    
-  };
 
+  };
+  //Getting the Employees List start
   empSearch() {
+    log("Info", " empSearch(cropcode) is used to Getting the Employees List");
     AsyncStorage.getItem("cropcode", (err, res) => {
       const crop = res;
       NetInfo.fetch().then(state => {
         if (state.type == "none") {
           console.log(state.type);
+          log("Warn", "No internet connection");
           Snackbar.show({
             title: 'No Internet Connection',
             backgroundColor: 'red',
             duration: Snackbar.LENGTH_LONG,
           });
-        }else{
-      fetch(API+'getEmployees.php', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: "add",
-          crop: crop //Async
-        })
-      })
-        .then((response) => response.json())
-        .then((responseJson) => {
+        } else {
+          fetch(API + 'getEmployees.php', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              action: "add",
+              crop: crop //Async
+            })
+          })
+            .then((response) => response.json())
+            .then((responseJson) => {
 
-          this.setState({
-            empData: [...responseJson.data],
-          });
+              this.setState({
+                empData: [...responseJson.data],
+              });
+            }
+            )
+            .catch((error) => {
+              console.error(error);
+              log("Error", "Getting the Employees error");
+            });
         }
-        )
-        .catch((error) => {
-          console.error(error);
-        });
-      }
-    });
+      });
     });
   }
   //Getting Employees List end
 
   //Getting dependency task list start
   dependencySearch() {
+    log("Info", " dependencySearch(cropcode) is used to Getting the Dependency List");
     AsyncStorage.getItem("cropcode", (err, res) => {
       const crop = res;
       NetInfo.fetch().then(state => {
         if (state.type == "none") {
           console.log(state.type);
+          log("Warn", "No internet connection");
           Snackbar.show({
             title: 'No Internet Connection',
             backgroundColor: 'red',
             duration: Snackbar.LENGTH_LONG,
           });
-        }else{
-      fetch(API+'get_subtasks.php', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: "setdependency",
-          crop: crop //Async
-        })
-      })
-        .then((response) => response.json())
-        .then((responseJson) => {
+        } else {
+          fetch(API + 'getSubtasks.php', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              action: "setdependency",
+              crop: crop //Async
+            })
+          })
+            .then((response) => response.json())
+            .then((responseJson) => {
 
-          this.setState({
-            dependencyData: [...responseJson.data],
-          });
+              this.setState({
+                dependencyData: [...responseJson.data],
+              });
+            }
+            )
+            .catch((error) => {
+              console.error(error);
+              log("Error", "Getting the Dependency error");
+            });
         }
-        )
-        .catch((error) => {
-          console.error(error);
-        });
-      }
-    });
+      });
     });
   }
-  
+
 
   render() {
 
@@ -307,11 +317,11 @@ export default class ModifySubTask extends React.Component {
         <View style={{ alignItems: "center", backgroundColor: 'white' }}>
 
           <View style={{ marginLeft: 10, width: '100%', backgroundColor: 'white' }}>
-          <Text style={{color:'red'}}>{this.state.error1}</Text>
+            <Text style={{ color: 'red' }}>{this.state.error1}</Text>
             <TextInput placeholder="Sub Task Title" style={{ width: '90%', borderBottomWidth: 0.5 }}
               value={this.state.subTask}
               onChangeText={(text) => this.setState({ subTask: text })}></TextInput>
-               <Text style={{color:'red'}}>{this.state.error2}</Text>
+            <Text style={{ color: 'red' }}>{this.state.error2}</Text>
             <TextInput placeholder="Description" style={{ width: '90%', borderBottomWidth: 0.5 }}
               value={this.state.description}
               onChangeText={(text) => this.setState({ description: text })}></TextInput>
@@ -320,30 +330,30 @@ export default class ModifySubTask extends React.Component {
           <View style={{ marginLeft: 10, width: '100%', }}>
             <Text style={{ paddingTop: 10 }}>Estimated Time</Text>
             <View style={{ flexDirection: 'row', marginTop: 10, }}>
-              <Text style={{color:'red'}}>{this.state.error3}</Text>
-              <Text style={{color:'red',marginLeft: 50}}>{this.state.error4}</Text>
-              </View>
+              <Text style={{ color: 'red' }}>{this.state.error3}</Text>
+              <Text style={{ color: 'red', marginLeft: 50 }}>{this.state.error4}</Text>
+            </View>
             <View style={{ flexDirection: 'row', marginTop: 10 }}>
-           
+
               <TextInput style={{ width: '20%', height: '80%', borderWidth: 0.2 }}
-                 numeric value keyboardType={'numeric'}
+                numeric value keyboardType={'numeric'}
                 value={this.state.days.toString()}
                 onChangeText={(text) => this.setState({ days: text })}></TextInput>
               <Text style={{ paddingLeft: 10, paddingTop: 10 }}>Days</Text>
-              
+
               <TextInput style={{ marginLeft: 10, width: '20%', height: '80%', borderWidth: 0.2 }}
                 // value={this.state.hours}
                 numeric value keyboardType={'numeric'}
                 value={this.state.time.toString()}
                 onChangeText={(text) => this.setState({ time: text })}></TextInput>
               <Text style={{ paddingLeft: 10, paddingTop: 10 }}>Hours</Text>
-              
+
             </View>
           </View>
           <Text style={{ paddingTop: 10 }}>Select Resources</Text>
-          <Text style={{color:'red'}}>{this.state.error5}</Text>
+          <Text style={{ color: 'red' }}>{this.state.error5}</Text>
           <SearchableDropdown
-            onTextChange={ this.state.name}
+            onTextChange={this.state.name}
             // value={this.props.navigation.state.params.name}
             items={this.state.name}
             // onItemSelect={item =>item.name}
@@ -381,7 +391,7 @@ export default class ModifySubTask extends React.Component {
             items={this.state.empData}
             // onTextChange={(text)=>this.props.navigation.state.params.name}
             //  defaultIndex={this.props.navigation.state.params.name}        
-                placeholder="          SELECT RESOURCE"
+            placeholder="          SELECT RESOURCE"
 
             underlineColorAndroid="transparent"
           />
@@ -434,16 +444,10 @@ export default class ModifySubTask extends React.Component {
 
 
           <View style={{ flexDirection: 'row', marginTop: 30 }}>
-            <TouchableOpacity style={{
-              margin: 5, backgroundColor: 'red', padding: 19, height: 30, alignItems:
-                "center", justifyContent: 'center'
-            }} onPress={this.closeModal}>
+            <TouchableOpacity style={styles.opencancel} onPress={this.closeModal}>
               <Text style={{ color: 'white' }}>CANCEL</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{
-              margin: 5, backgroundColor: 'green', padding: 20, height: 30, alignItems:
-                "center", justifyContent: 'center'
-            }} onPress={this.addSubTask}>
+            <TouchableOpacity style={styles.opensave} onPress={this.addSubTask} disabled={this.state.itemPressedDisabled}>
               <Text style={{ color: 'white' }}>SAVE</Text>
 
             </TouchableOpacity>
@@ -452,13 +456,10 @@ export default class ModifySubTask extends React.Component {
         </View>
 
       </Modal>
-
-
     );
-
   }
-
 }
+//Styles for UI
 const styles = StyleSheet.create(
   {
     MainContainer:
@@ -506,7 +507,7 @@ const styles = StyleSheet.create(
     },
     footerText: {
       color: 'white',
-      fontWeight: 'bold',
+  
       alignItems: 'center',
       fontSize: 18,
     },
@@ -572,9 +573,6 @@ const styles = StyleSheet.create(
       color: 'green',
       paddingTop: 10,
 
-      //  marginRight: 10,
-      //textAlign: "right"
-
     },
     signUpText3: {
 
@@ -623,6 +621,32 @@ const styles = StyleSheet.create(
 
       color: 'white',
       alignSelf: 'center',
+    },
+    opencancel: {
+      flex: 1,
+      ...Platform.select({
+        ios: {
+          backgroundColor: 'red', margin: 20, height: 30, alignItems:
+            "center", justifyContent: 'center'
+        },
+        android: {
+          backgroundColor: 'red', margin: 20, height: 30, alignItems:
+            "center", justifyContent: 'center'
+        },
+      }),
+    },
+    opensave: {
+      flex: 1,
+      ...Platform.select({
+        ios: {
+          backgroundColor: 'green', margin: 20, height: 30, alignItems:
+            "center", justifyContent: 'center'
+        },
+        android: {
+          backgroundColor: 'green', margin: 20, height: 30, alignItems:
+            "center", justifyContent: 'center'
+        },
+      }),
     },
   });
 

@@ -1,242 +1,309 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
-INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
-INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
-INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
-MERGED from [:@react-native-community_async-storage] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/@react-native-community/async-storage/android/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-9:12
-MERGED from [:@react-native-community_netinfo] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-12:12
-MERGED from [:react-native-mail-launcher] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/react-native-mail-launcher/android/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-11:12
-MERGED from [:react-native-snackbar] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/react-native-snackbar/android/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-11:12
-MERGED from [:react-native-vector-icons] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/react-native-vector-icons/android/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-11:12
-MERGED from [com.facebook.react:react-native:0.60.4] /home/cadrac/.gradle/caches/transforms-2/files-2.1/50b856f535236f3c665c87b65e8f01ba/AndroidManifest.xml:2:1-13:12
-MERGED from [org.webkit:android-jsc:r245459] /home/cadrac/.gradle/caches/transforms-2/files-2.1/1422c931782313a6e9652d3f259e4109/AndroidManifest.xml:2:1-11:12
-MERGED from [:react-native-gesture-handler] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/react-native-gesture-handler/android/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-11:12
-MERGED from [com.google.android.material:material:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e8738277b92d415ab56c47c4f19b06a3/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.appcompat:appcompat:1.0.2] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cb8a16ecd844de5a8b9b1e1d9c738103/AndroidManifest.xml:17:1-22:12
-MERGED from [com.facebook.fresco:fresco:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/b61adcfe2343d13c361bc172bac3f4ed/AndroidManifest.xml:2:1-9:12
-MERGED from [com.facebook.fresco:imagepipeline-okhttp3:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/827d5a7e68c20d5cac7e3fd977ceaa85/AndroidManifest.xml:2:1-9:12
-MERGED from [com.facebook.fresco:drawee:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e6130ddc9a0fe353f90579cb16c12e1e/AndroidManifest.xml:2:1-9:12
-MERGED from [com.facebook.fresco:nativeimagefilters:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/494d91b32a0e95effeaf65a8233d1089/AndroidManifest.xml:2:1-9:12
-MERGED from [com.facebook.fresco:imagepipeline:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/dc9d358698695e5885567e83ea1c4de2/AndroidManifest.xml:2:1-9:12
-MERGED from [com.facebook.fresco:nativeimagetranscoder:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/eecae062179d12487a3d279b0d35a01f/AndroidManifest.xml:2:1-9:12
-MERGED from [com.facebook.fresco:imagepipeline-base:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d9490c5d4fa068fc0ef1ffa9ff58d4ab/AndroidManifest.xml:2:1-9:12
-MERGED from [com.facebook.soloader:soloader:0.6.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a524471ee48e87dc7c4a23df47050fdc/AndroidManifest.xml:2:1-13:12
-MERGED from [androidx.fragment:fragment:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9b61219a74de102330df8201ef9e3551/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/6668eb091b21254a18d6e6edc6b88f7d/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.recyclerview:recyclerview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/786bf20eeec72d0c26a6ad95ae6267b0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ef8c8f529fe70697aaa63e34743b665d/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/69382bfe045bd9aefab072e232e43716/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/901901156fdf0f5535b62eef72a4fc73/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.transition:transition:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/85202cff5c809d7bae25ebfcb279d693/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.loader:loader:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f2e65844c0154ddb2f7af56ab35be91e/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.viewpager:viewpager:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a012e71060ba5dd7a5c1c092eeae5d18/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d9b0cb30f99393f88307e0851ef4f221/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/350cfdc6ec2afce5580f203e15e1e9ce/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f79034eafbcfcdd07abd1c637491e855/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.customview:customview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f0ee2fc25339db6f5cbbc2dc1632a16f/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/da588e313b9dda1d5495f91f890fb432/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f2817a6c1bbbc11d48549beb2d508108/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.core:core:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9aef0f4c8ca43f07e1d06fd768f82986/AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/59414ffa7aab3a509f781c960ef21420/AndroidManifest.xml:17:1-25:12
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/8b80c0099a1c992af22db6190a3ccb99/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.cardview:cardview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a5604138bed2ca16ba237c5f517e4d96/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e6a83c98dc5901809d443ad20515a84c/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.documentfile:documentfile:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/47aeaafc726c419dbf9595b339978cc0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bdebd7daa70c779a7fb04b097c93b3d6/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.print:print:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/eb5579a22f8628582de08696ca15272d/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ab13d1cd81f13e01d724212f30e1829d/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.interpolator:interpolator:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f9f87aeb916cb45bb80b94bde8a17843/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/979107f6db00cae83bc97600584addee/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2e5f07f3f59f51e73b9e5ce43445aa95/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.arch.core:core-runtime:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d1e5d0356723e3ded5999501e925629d/AndroidManifest.xml:17:1-22:12
-MERGED from [com.facebook.fresco:fbcore:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/09a4c3c4c0c00b73cd7366f869ebed6e/AndroidManifest.xml:2:1-9:12
-INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
-INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
-INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
+ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
+INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
+INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
+INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
+MERGED from [:@react-native-community_netinfo] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-12:12
+MERGED from [:@react-native-community_async-storage] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/async-storage/android/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-9:12
+MERGED from [:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-22:12
+MERGED from [:react-native-mail-launcher] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-mail-launcher/android/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-11:12
+MERGED from [:react-native-snackbar] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-snackbar/android/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-11:12
+MERGED from [:react-native-vector-icons] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-vector-icons/android/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-11:12
+MERGED from [com.facebook.react:react-native:0.60.4] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9bec7fa3b08a18b3a0fb7f46bafd770e/jetified-react-native-0.60.4/AndroidManifest.xml:2:1-13:12
+MERGED from [androidx.multidex:multidex:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cf5bb25c241819ce26d452227629c79a/multidex-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [org.webkit:android-jsc:r245459] /home/cadrac/.gradle/caches/transforms-2/files-2.1/7641105dea446ae5537c60dc45dc7187/android-jsc-r245459/AndroidManifest.xml:2:1-11:12
+MERGED from [:react-native-gesture-handler] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-gesture-handler/android/build/intermediates/library_manifest/release/AndroidManifest.xml:2:1-11:12
+MERGED from [com.google.android.material:material:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2946ca0ea6c89dab7d7d9fbc18e54292/material-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat:1.0.2] /home/cadrac/.gradle/caches/transforms-2/files-2.1/906744c4ddcbc384c5a8d2d69414f8fa/appcompat-1.0.2/AndroidManifest.xml:17:1-22:12
+MERGED from [com.facebook.fresco:fresco:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ce4f9537e8cc7fb08472508f2b5b43b0/fresco-2.0.0/AndroidManifest.xml:2:1-9:12
+MERGED from [com.facebook.fresco:imagepipeline-okhttp3:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f2bf713e218183c457b42a259f41558c/imagepipeline-okhttp3-2.0.0/AndroidManifest.xml:2:1-9:12
+MERGED from [com.facebook.fresco:drawee:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/640602193e9b13554b35979b0839c23d/drawee-2.0.0/AndroidManifest.xml:2:1-9:12
+MERGED from [com.facebook.fresco:nativeimagefilters:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/1bd0c5f7c73feca3508db3a96423e9fd/nativeimagefilters-2.0.0/AndroidManifest.xml:2:1-9:12
+MERGED from [com.facebook.fresco:imagepipeline:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/34b9f944e68c8c013aadc0afa91cfdb0/imagepipeline-2.0.0/AndroidManifest.xml:2:1-9:12
+MERGED from [com.facebook.fresco:nativeimagetranscoder:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/5745c68994c278f4f440fe04eb2c6a77/nativeimagetranscoder-2.0.0/AndroidManifest.xml:2:1-9:12
+MERGED from [com.facebook.fresco:imagepipeline-base:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d23f5a8c0bfad9f19edcd7b40c306b7d/imagepipeline-base-2.0.0/AndroidManifest.xml:2:1-9:12
+MERGED from [com.facebook.soloader:soloader:0.6.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/63485d62c79e8ef1f927ac7c7df87ee2/soloader-0.6.0/AndroidManifest.xml:2:1-13:12
+MERGED from [com.google.android.gms:play-services-iid:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3a79ab3de196ddd8dfd992461e77167b/play-services-iid-17.0.0/AndroidManifest.xml:17:1-28:12
+MERGED from [com.google.android.gms:play-services-base:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bd8a4935a17dde33dc1d62d4f9914d3b/play-services-base-17.0.0/AndroidManifest.xml:17:1-29:12
+MERGED from [com.google.android.gms:play-services-stats:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ffb6fe2bfdcaed2e475e1c22ecb75422/play-services-stats-17.0.0/AndroidManifest.xml:2:1-9:12
+MERGED from [com.google.android.gms:play-services-tasks:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/b198d367166617ab038c04401afd7dd4/play-services-tasks-17.0.0/AndroidManifest.xml:2:1-9:12
+MERGED from [com.google.android.gms:play-services-basement:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cfa1bf63187087ece6cbe3c423aa9fbc/jetified-play-services-basement-17.0.0/AndroidManifest.xml:17:1-28:12
+MERGED from [androidx.fragment:fragment:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/61015dda0f41d63be36764ccaeacf3e4/fragment-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/0a80afa9ca98134d5ce7f6232c71e0a7/vectordrawable-animated-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.recyclerview:recyclerview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ca3ed72cfdc57fc3a102e462c0327875/recyclerview-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/8d97f43c730baedb50b76131bea8976c/legacy-support-core-ui-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/65eb695d8f60c47c48deea4b4bc97d22/legacy-support-core-utils-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/03329b05586f0caae0d184468b2f23e5/vectordrawable-1.0.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.transition:transition:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e553813983e46838e58f4d5c941751e0/transition-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/7e3b4c2f83e256517b094f844ce7d668/loader-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/863b030a4ef24c5e89f12cd832de155e/viewpager-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3b95216347b91b0d0d6d33ef33ac3197/coordinatorlayout-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2dd52bdeda96a748df5d7e83cece6c38/drawerlayout-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/8069b605758f8fcc2cf1372e87a50a23/slidingpanelayout-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2fe66d8bec3c90b690bace4d7b7b6157/customview-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/6bb482d4edfb8945df7454050b78aa75/swiperefreshlayout-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/4848834a580ecbbeaa84b2c68ac1663a/asynclayoutinflater-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/c0a39027978b83a483a047f5c31d0c4e/core-1.0.1/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/45ed680b1ca2374827549d4e2c9e1a90/versionedparcelable-1.0.0/AndroidManifest.xml:17:1-25:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/01d333055a983e736e0a5fac950ffa8f/cursoradapter-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.cardview:cardview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f64c8351ef0c9a7a800019d28185706c/cardview-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a0e6ae58238c1d1ff8cccab3415a6d19/lifecycle-runtime-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.documentfile:documentfile:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/b432947d09f38291043b1b7278108b44/documentfile-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/8cf450d11667f9427b289f08c2115f5c/localbroadcastmanager-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.print:print:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d31a9dbc3f8404c541e987748c42963b/print-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2bd63e96b82e4254cd6653dc8da764d4/lifecycle-viewmodel-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/699bc310780b1730bce8fe271ffeca8b/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/df65787e67fe4b4bc0635deed9695797/lifecycle-livedata-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a1f5477cd6fd5fad9baa3e263bec7d60/lifecycle-livedata-core-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.arch.core:core-runtime:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/60b50828def4ba3859898ffb4c971c21/core-runtime-2.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [com.facebook.fresco:fbcore:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/c27f1567dd3d3dc9d2f44421cdf86e5a/jetified-fbcore-2.0.0/AndroidManifest.xml:2:1-9:12
+INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
+INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
+INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
 	package
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:2:3-22
-		INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
-		INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:2:3-22
+		INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
 	android:versionName
-		INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
-		INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
+		INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
 	android:versionCode
-		INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
-		INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:1-27:12
+		INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
 	xmlns:android
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:11-69
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:1:11-69
 uses-permission#android.permission.INTERNET
-ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:4:5-67
+ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:4:5-67
+MERGED from [com.google.android.gms:play-services-iid:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3a79ab3de196ddd8dfd992461e77167b/play-services-iid-17.0.0/AndroidManifest.xml:24:5-67
+MERGED from [com.google.android.gms:play-services-iid:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3a79ab3de196ddd8dfd992461e77167b/play-services-iid-17.0.0/AndroidManifest.xml:24:5-67
 	android:name
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:4:22-64
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:4:22-64
 application
-ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:6:5-25:19
-MERGED from [com.facebook.react:react-native:0.60.4] /home/cadrac/.gradle/caches/transforms-2/files-2.1/50b856f535236f3c665c87b65e8f01ba/AndroidManifest.xml:11:5-20
-MERGED from [com.facebook.react:react-native:0.60.4] /home/cadrac/.gradle/caches/transforms-2/files-2.1/50b856f535236f3c665c87b65e8f01ba/AndroidManifest.xml:11:5-20
-MERGED from [com.google.android.material:material:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e8738277b92d415ab56c47c4f19b06a3/AndroidManifest.xml:22:5-20
-MERGED from [com.google.android.material:material:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e8738277b92d415ab56c47c4f19b06a3/AndroidManifest.xml:22:5-20
-MERGED from [com.facebook.soloader:soloader:0.6.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a524471ee48e87dc7c4a23df47050fdc/AndroidManifest.xml:11:5-20
-MERGED from [com.facebook.soloader:soloader:0.6.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a524471ee48e87dc7c4a23df47050fdc/AndroidManifest.xml:11:5-20
-MERGED from [androidx.core:core:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9aef0f4c8ca43f07e1d06fd768f82986/AndroidManifest.xml:22:5-89
-MERGED from [androidx.core:core:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9aef0f4c8ca43f07e1d06fd768f82986/AndroidManifest.xml:22:5-89
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/59414ffa7aab3a509f781c960ef21420/AndroidManifest.xml:22:5-23:19
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/59414ffa7aab3a509f781c960ef21420/AndroidManifest.xml:22:5-23:19
+ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:6:5-25:19
+MERGED from [:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:11:5-20:19
+MERGED from [:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:11:5-20:19
+MERGED from [com.facebook.react:react-native:0.60.4] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9bec7fa3b08a18b3a0fb7f46bafd770e/jetified-react-native-0.60.4/AndroidManifest.xml:11:5-20
+MERGED from [com.facebook.react:react-native:0.60.4] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9bec7fa3b08a18b3a0fb7f46bafd770e/jetified-react-native-0.60.4/AndroidManifest.xml:11:5-20
+MERGED from [com.google.android.material:material:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2946ca0ea6c89dab7d7d9fbc18e54292/material-1.0.0/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.material:material:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2946ca0ea6c89dab7d7d9fbc18e54292/material-1.0.0/AndroidManifest.xml:22:5-20
+MERGED from [com.facebook.soloader:soloader:0.6.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/63485d62c79e8ef1f927ac7c7df87ee2/soloader-0.6.0/AndroidManifest.xml:11:5-20
+MERGED from [com.facebook.soloader:soloader:0.6.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/63485d62c79e8ef1f927ac7c7df87ee2/soloader-0.6.0/AndroidManifest.xml:11:5-20
+MERGED from [com.google.android.gms:play-services-iid:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3a79ab3de196ddd8dfd992461e77167b/play-services-iid-17.0.0/AndroidManifest.xml:26:5-20
+MERGED from [com.google.android.gms:play-services-iid:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3a79ab3de196ddd8dfd992461e77167b/play-services-iid-17.0.0/AndroidManifest.xml:26:5-20
+MERGED from [com.google.android.gms:play-services-base:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bd8a4935a17dde33dc1d62d4f9914d3b/play-services-base-17.0.0/AndroidManifest.xml:22:5-27:19
+MERGED from [com.google.android.gms:play-services-base:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bd8a4935a17dde33dc1d62d4f9914d3b/play-services-base-17.0.0/AndroidManifest.xml:22:5-27:19
+MERGED from [com.google.android.gms:play-services-stats:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ffb6fe2bfdcaed2e475e1c22ecb75422/play-services-stats-17.0.0/AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-stats:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ffb6fe2bfdcaed2e475e1c22ecb75422/play-services-stats-17.0.0/AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-tasks:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/b198d367166617ab038c04401afd7dd4/play-services-tasks-17.0.0/AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-tasks:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/b198d367166617ab038c04401afd7dd4/play-services-tasks-17.0.0/AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-basement:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cfa1bf63187087ece6cbe3c423aa9fbc/jetified-play-services-basement-17.0.0/AndroidManifest.xml:22:5-26:19
+MERGED from [com.google.android.gms:play-services-basement:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cfa1bf63187087ece6cbe3c423aa9fbc/jetified-play-services-basement-17.0.0/AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.core:core:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/c0a39027978b83a483a047f5c31d0c4e/core-1.0.1/AndroidManifest.xml:22:5-89
+MERGED from [androidx.core:core:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/c0a39027978b83a483a047f5c31d0c4e/core-1.0.1/AndroidManifest.xml:22:5-89
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/45ed680b1ca2374827549d4e2c9e1a90/versionedparcelable-1.0.0/AndroidManifest.xml:22:5-23:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/45ed680b1ca2374827549d4e2c9e1a90/versionedparcelable-1.0.0/AndroidManifest.xml:22:5-23:19
 	android:appComponentFactory
-		ADDED from [androidx.core:core:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9aef0f4c8ca43f07e1d06fd768f82986/AndroidManifest.xml:22:18-86
+		ADDED from [androidx.core:core:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/c0a39027978b83a483a047f5c31d0c4e/core-1.0.1/AndroidManifest.xml:22:18-86
 	android:label
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:8:7-39
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:8:7-39
 	android:roundIcon
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:10:7-52
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:10:7-52
 	android:icon
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:9:7-41
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:9:7-41
 	android:allowBackup
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:11:7-34
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:11:7-34
 	android:theme
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:13:7-38
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:13:7-38
 	android:usesCleartextTraffic
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:12:7-42
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:12:7-42
 	android:name
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:7:7-38
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:7:7-38
 activity#com.qptms.MainActivity
-ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:14:7-23:18
+ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:14:7-23:18
 	android:label
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:16:9-41
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:16:9-41
 	android:windowSoftInputMode
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:18:9-51
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:18:9-51
 	android:configChanges
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:17:9-79
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:17:9-79
 	android:name
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:15:9-37
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:15:9-37
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:19:9-22:25
+ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:19:9-22:25
 action#android.intent.action.MAIN
-ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:20:13-65
+ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:20:13-65
 	android:name
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:20:21-62
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:20:21-62
 category#android.intent.category.LAUNCHER
-ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:21:13-73
+ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:21:13-73
 	android:name
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:21:23-70
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:21:23-70
 activity#com.facebook.react.devsupport.DevSettingsActivity
-ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:24:7-84
+ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:24:7-84
 	android:name
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml:24:17-81
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:24:17-81
 uses-sdk
-INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
-INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
-MERGED from [:@react-native-community_async-storage] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/@react-native-community/async-storage/android/build/intermediates/library_manifest/release/AndroidManifest.xml:5:5-7:41
-MERGED from [:@react-native-community_async-storage] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/@react-native-community/async-storage/android/build/intermediates/library_manifest/release/AndroidManifest.xml:5:5-7:41
-MERGED from [:@react-native-community_netinfo] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:5:5-7:41
-MERGED from [:@react-native-community_netinfo] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:5:5-7:41
-MERGED from [:react-native-mail-launcher] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/react-native-mail-launcher/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
-MERGED from [:react-native-mail-launcher] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/react-native-mail-launcher/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
-MERGED from [:react-native-snackbar] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/react-native-snackbar/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
-MERGED from [:react-native-snackbar] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/react-native-snackbar/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
-MERGED from [:react-native-vector-icons] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/react-native-vector-icons/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
-MERGED from [:react-native-vector-icons] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/react-native-vector-icons/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
-MERGED from [com.facebook.react:react-native:0.60.4] /home/cadrac/.gradle/caches/transforms-2/files-2.1/50b856f535236f3c665c87b65e8f01ba/AndroidManifest.xml:7:5-9:41
-MERGED from [com.facebook.react:react-native:0.60.4] /home/cadrac/.gradle/caches/transforms-2/files-2.1/50b856f535236f3c665c87b65e8f01ba/AndroidManifest.xml:7:5-9:41
-MERGED from [org.webkit:android-jsc:r245459] /home/cadrac/.gradle/caches/transforms-2/files-2.1/1422c931782313a6e9652d3f259e4109/AndroidManifest.xml:7:5-9:41
-MERGED from [org.webkit:android-jsc:r245459] /home/cadrac/.gradle/caches/transforms-2/files-2.1/1422c931782313a6e9652d3f259e4109/AndroidManifest.xml:7:5-9:41
-MERGED from [:react-native-gesture-handler] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/react-native-gesture-handler/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
-MERGED from [:react-native-gesture-handler] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/react-native-gesture-handler/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
-MERGED from [com.google.android.material:material:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e8738277b92d415ab56c47c4f19b06a3/AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.material:material:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e8738277b92d415ab56c47c4f19b06a3/AndroidManifest.xml:20:5-44
-MERGED from [androidx.appcompat:appcompat:1.0.2] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cb8a16ecd844de5a8b9b1e1d9c738103/AndroidManifest.xml:20:5-44
-MERGED from [androidx.appcompat:appcompat:1.0.2] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cb8a16ecd844de5a8b9b1e1d9c738103/AndroidManifest.xml:20:5-44
-MERGED from [com.facebook.fresco:fresco:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/b61adcfe2343d13c361bc172bac3f4ed/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:fresco:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/b61adcfe2343d13c361bc172bac3f4ed/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:imagepipeline-okhttp3:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/827d5a7e68c20d5cac7e3fd977ceaa85/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:imagepipeline-okhttp3:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/827d5a7e68c20d5cac7e3fd977ceaa85/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:drawee:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e6130ddc9a0fe353f90579cb16c12e1e/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:drawee:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e6130ddc9a0fe353f90579cb16c12e1e/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:nativeimagefilters:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/494d91b32a0e95effeaf65a8233d1089/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:nativeimagefilters:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/494d91b32a0e95effeaf65a8233d1089/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:imagepipeline:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/dc9d358698695e5885567e83ea1c4de2/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:imagepipeline:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/dc9d358698695e5885567e83ea1c4de2/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:nativeimagetranscoder:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/eecae062179d12487a3d279b0d35a01f/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:nativeimagetranscoder:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/eecae062179d12487a3d279b0d35a01f/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:imagepipeline-base:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d9490c5d4fa068fc0ef1ffa9ff58d4ab/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:imagepipeline-base:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d9490c5d4fa068fc0ef1ffa9ff58d4ab/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.soloader:soloader:0.6.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a524471ee48e87dc7c4a23df47050fdc/AndroidManifest.xml:7:5-9:41
-MERGED from [com.facebook.soloader:soloader:0.6.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a524471ee48e87dc7c4a23df47050fdc/AndroidManifest.xml:7:5-9:41
-MERGED from [androidx.fragment:fragment:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9b61219a74de102330df8201ef9e3551/AndroidManifest.xml:20:5-44
-MERGED from [androidx.fragment:fragment:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9b61219a74de102330df8201ef9e3551/AndroidManifest.xml:20:5-44
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/6668eb091b21254a18d6e6edc6b88f7d/AndroidManifest.xml:20:5-44
-MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/6668eb091b21254a18d6e6edc6b88f7d/AndroidManifest.xml:20:5-44
-MERGED from [androidx.recyclerview:recyclerview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/786bf20eeec72d0c26a6ad95ae6267b0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.recyclerview:recyclerview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/786bf20eeec72d0c26a6ad95ae6267b0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ef8c8f529fe70697aaa63e34743b665d/AndroidManifest.xml:20:5-44
-MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ef8c8f529fe70697aaa63e34743b665d/AndroidManifest.xml:20:5-44
-MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/69382bfe045bd9aefab072e232e43716/AndroidManifest.xml:20:5-44
-MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/69382bfe045bd9aefab072e232e43716/AndroidManifest.xml:20:5-44
-MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/901901156fdf0f5535b62eef72a4fc73/AndroidManifest.xml:20:5-44
-MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/901901156fdf0f5535b62eef72a4fc73/AndroidManifest.xml:20:5-44
-MERGED from [androidx.transition:transition:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/85202cff5c809d7bae25ebfcb279d693/AndroidManifest.xml:20:5-44
-MERGED from [androidx.transition:transition:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/85202cff5c809d7bae25ebfcb279d693/AndroidManifest.xml:20:5-44
-MERGED from [androidx.loader:loader:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f2e65844c0154ddb2f7af56ab35be91e/AndroidManifest.xml:20:5-44
-MERGED from [androidx.loader:loader:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f2e65844c0154ddb2f7af56ab35be91e/AndroidManifest.xml:20:5-44
-MERGED from [androidx.viewpager:viewpager:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a012e71060ba5dd7a5c1c092eeae5d18/AndroidManifest.xml:20:5-44
-MERGED from [androidx.viewpager:viewpager:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a012e71060ba5dd7a5c1c092eeae5d18/AndroidManifest.xml:20:5-44
-MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d9b0cb30f99393f88307e0851ef4f221/AndroidManifest.xml:20:5-44
-MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d9b0cb30f99393f88307e0851ef4f221/AndroidManifest.xml:20:5-44
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/350cfdc6ec2afce5580f203e15e1e9ce/AndroidManifest.xml:20:5-44
-MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/350cfdc6ec2afce5580f203e15e1e9ce/AndroidManifest.xml:20:5-44
-MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f79034eafbcfcdd07abd1c637491e855/AndroidManifest.xml:20:5-44
-MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f79034eafbcfcdd07abd1c637491e855/AndroidManifest.xml:20:5-44
-MERGED from [androidx.customview:customview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f0ee2fc25339db6f5cbbc2dc1632a16f/AndroidManifest.xml:20:5-44
-MERGED from [androidx.customview:customview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f0ee2fc25339db6f5cbbc2dc1632a16f/AndroidManifest.xml:20:5-44
-MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/da588e313b9dda1d5495f91f890fb432/AndroidManifest.xml:20:5-44
-MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/da588e313b9dda1d5495f91f890fb432/AndroidManifest.xml:20:5-44
-MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f2817a6c1bbbc11d48549beb2d508108/AndroidManifest.xml:20:5-44
-MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f2817a6c1bbbc11d48549beb2d508108/AndroidManifest.xml:20:5-44
-MERGED from [androidx.core:core:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9aef0f4c8ca43f07e1d06fd768f82986/AndroidManifest.xml:20:5-44
-MERGED from [androidx.core:core:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9aef0f4c8ca43f07e1d06fd768f82986/AndroidManifest.xml:20:5-44
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/59414ffa7aab3a509f781c960ef21420/AndroidManifest.xml:20:5-44
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/59414ffa7aab3a509f781c960ef21420/AndroidManifest.xml:20:5-44
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/8b80c0099a1c992af22db6190a3ccb99/AndroidManifest.xml:20:5-44
-MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/8b80c0099a1c992af22db6190a3ccb99/AndroidManifest.xml:20:5-44
-MERGED from [androidx.cardview:cardview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a5604138bed2ca16ba237c5f517e4d96/AndroidManifest.xml:20:5-44
-MERGED from [androidx.cardview:cardview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a5604138bed2ca16ba237c5f517e4d96/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e6a83c98dc5901809d443ad20515a84c/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e6a83c98dc5901809d443ad20515a84c/AndroidManifest.xml:20:5-44
-MERGED from [androidx.documentfile:documentfile:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/47aeaafc726c419dbf9595b339978cc0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.documentfile:documentfile:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/47aeaafc726c419dbf9595b339978cc0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bdebd7daa70c779a7fb04b097c93b3d6/AndroidManifest.xml:20:5-44
-MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bdebd7daa70c779a7fb04b097c93b3d6/AndroidManifest.xml:20:5-44
-MERGED from [androidx.print:print:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/eb5579a22f8628582de08696ca15272d/AndroidManifest.xml:20:5-44
-MERGED from [androidx.print:print:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/eb5579a22f8628582de08696ca15272d/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ab13d1cd81f13e01d724212f30e1829d/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ab13d1cd81f13e01d724212f30e1829d/AndroidManifest.xml:20:5-44
-MERGED from [androidx.interpolator:interpolator:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f9f87aeb916cb45bb80b94bde8a17843/AndroidManifest.xml:20:5-44
-MERGED from [androidx.interpolator:interpolator:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f9f87aeb916cb45bb80b94bde8a17843/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/979107f6db00cae83bc97600584addee/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/979107f6db00cae83bc97600584addee/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2e5f07f3f59f51e73b9e5ce43445aa95/AndroidManifest.xml:20:5-44
-MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2e5f07f3f59f51e73b9e5ce43445aa95/AndroidManifest.xml:20:5-44
-MERGED from [androidx.arch.core:core-runtime:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d1e5d0356723e3ded5999501e925629d/AndroidManifest.xml:20:5-44
-MERGED from [androidx.arch.core:core-runtime:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d1e5d0356723e3ded5999501e925629d/AndroidManifest.xml:20:5-44
-MERGED from [com.facebook.fresco:fbcore:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/09a4c3c4c0c00b73cd7366f869ebed6e/AndroidManifest.xml:5:5-7:41
-MERGED from [com.facebook.fresco:fbcore:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/09a4c3c4c0c00b73cd7366f869ebed6e/AndroidManifest.xml:5:5-7:41
-INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
-INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+MERGED from [:@react-native-community_netinfo] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:5:5-7:41
+MERGED from [:@react-native-community_netinfo] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:5:5-7:41
+MERGED from [:@react-native-community_async-storage] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/async-storage/android/build/intermediates/library_manifest/release/AndroidManifest.xml:5:5-7:41
+MERGED from [:@react-native-community_async-storage] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/async-storage/android/build/intermediates/library_manifest/release/AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
+MERGED from [:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
+MERGED from [:react-native-mail-launcher] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-mail-launcher/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
+MERGED from [:react-native-mail-launcher] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-mail-launcher/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
+MERGED from [:react-native-snackbar] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-snackbar/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
+MERGED from [:react-native-snackbar] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-snackbar/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
+MERGED from [:react-native-vector-icons] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-vector-icons/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
+MERGED from [:react-native-vector-icons] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-vector-icons/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
+MERGED from [com.facebook.react:react-native:0.60.4] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9bec7fa3b08a18b3a0fb7f46bafd770e/jetified-react-native-0.60.4/AndroidManifest.xml:7:5-9:41
+MERGED from [com.facebook.react:react-native:0.60.4] /home/cadrac/.gradle/caches/transforms-2/files-2.1/9bec7fa3b08a18b3a0fb7f46bafd770e/jetified-react-native-0.60.4/AndroidManifest.xml:7:5-9:41
+MERGED from [androidx.multidex:multidex:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cf5bb25c241819ce26d452227629c79a/multidex-2.0.0/AndroidManifest.xml:20:5-43
+MERGED from [androidx.multidex:multidex:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cf5bb25c241819ce26d452227629c79a/multidex-2.0.0/AndroidManifest.xml:20:5-43
+MERGED from [org.webkit:android-jsc:r245459] /home/cadrac/.gradle/caches/transforms-2/files-2.1/7641105dea446ae5537c60dc45dc7187/android-jsc-r245459/AndroidManifest.xml:7:5-9:41
+MERGED from [org.webkit:android-jsc:r245459] /home/cadrac/.gradle/caches/transforms-2/files-2.1/7641105dea446ae5537c60dc45dc7187/android-jsc-r245459/AndroidManifest.xml:7:5-9:41
+MERGED from [:react-native-gesture-handler] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-gesture-handler/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
+MERGED from [:react-native-gesture-handler] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-gesture-handler/android/build/intermediates/library_manifest/release/AndroidManifest.xml:7:5-9:41
+MERGED from [com.google.android.material:material:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2946ca0ea6c89dab7d7d9fbc18e54292/material-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.material:material:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2946ca0ea6c89dab7d7d9fbc18e54292/material-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.0.2] /home/cadrac/.gradle/caches/transforms-2/files-2.1/906744c4ddcbc384c5a8d2d69414f8fa/appcompat-1.0.2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.0.2] /home/cadrac/.gradle/caches/transforms-2/files-2.1/906744c4ddcbc384c5a8d2d69414f8fa/appcompat-1.0.2/AndroidManifest.xml:20:5-44
+MERGED from [com.facebook.fresco:fresco:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ce4f9537e8cc7fb08472508f2b5b43b0/fresco-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:fresco:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ce4f9537e8cc7fb08472508f2b5b43b0/fresco-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:imagepipeline-okhttp3:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f2bf713e218183c457b42a259f41558c/imagepipeline-okhttp3-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:imagepipeline-okhttp3:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f2bf713e218183c457b42a259f41558c/imagepipeline-okhttp3-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:drawee:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/640602193e9b13554b35979b0839c23d/drawee-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:drawee:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/640602193e9b13554b35979b0839c23d/drawee-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:nativeimagefilters:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/1bd0c5f7c73feca3508db3a96423e9fd/nativeimagefilters-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:nativeimagefilters:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/1bd0c5f7c73feca3508db3a96423e9fd/nativeimagefilters-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:imagepipeline:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/34b9f944e68c8c013aadc0afa91cfdb0/imagepipeline-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:imagepipeline:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/34b9f944e68c8c013aadc0afa91cfdb0/imagepipeline-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:nativeimagetranscoder:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/5745c68994c278f4f440fe04eb2c6a77/nativeimagetranscoder-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:nativeimagetranscoder:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/5745c68994c278f4f440fe04eb2c6a77/nativeimagetranscoder-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:imagepipeline-base:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d23f5a8c0bfad9f19edcd7b40c306b7d/imagepipeline-base-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:imagepipeline-base:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d23f5a8c0bfad9f19edcd7b40c306b7d/imagepipeline-base-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.soloader:soloader:0.6.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/63485d62c79e8ef1f927ac7c7df87ee2/soloader-0.6.0/AndroidManifest.xml:7:5-9:41
+MERGED from [com.facebook.soloader:soloader:0.6.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/63485d62c79e8ef1f927ac7c7df87ee2/soloader-0.6.0/AndroidManifest.xml:7:5-9:41
+MERGED from [com.google.android.gms:play-services-iid:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3a79ab3de196ddd8dfd992461e77167b/play-services-iid-17.0.0/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-iid:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3a79ab3de196ddd8dfd992461e77167b/play-services-iid-17.0.0/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-base:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bd8a4935a17dde33dc1d62d4f9914d3b/play-services-base-17.0.0/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-base:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bd8a4935a17dde33dc1d62d4f9914d3b/play-services-base-17.0.0/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-stats:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ffb6fe2bfdcaed2e475e1c22ecb75422/play-services-stats-17.0.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-stats:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ffb6fe2bfdcaed2e475e1c22ecb75422/play-services-stats-17.0.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-tasks:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/b198d367166617ab038c04401afd7dd4/play-services-tasks-17.0.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-tasks:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/b198d367166617ab038c04401afd7dd4/play-services-tasks-17.0.0/AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-basement:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cfa1bf63187087ece6cbe3c423aa9fbc/jetified-play-services-basement-17.0.0/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-basement:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cfa1bf63187087ece6cbe3c423aa9fbc/jetified-play-services-basement-17.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/61015dda0f41d63be36764ccaeacf3e4/fragment-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/61015dda0f41d63be36764ccaeacf3e4/fragment-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/0a80afa9ca98134d5ce7f6232c71e0a7/vectordrawable-animated-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/0a80afa9ca98134d5ce7f6232c71e0a7/vectordrawable-animated-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ca3ed72cfdc57fc3a102e462c0327875/recyclerview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/ca3ed72cfdc57fc3a102e462c0327875/recyclerview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/8d97f43c730baedb50b76131bea8976c/legacy-support-core-ui-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/8d97f43c730baedb50b76131bea8976c/legacy-support-core-ui-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/65eb695d8f60c47c48deea4b4bc97d22/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/65eb695d8f60c47c48deea4b4bc97d22/legacy-support-core-utils-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/03329b05586f0caae0d184468b2f23e5/vectordrawable-1.0.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/03329b05586f0caae0d184468b2f23e5/vectordrawable-1.0.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.transition:transition:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e553813983e46838e58f4d5c941751e0/transition-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.transition:transition:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/e553813983e46838e58f4d5c941751e0/transition-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/7e3b4c2f83e256517b094f844ce7d668/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/7e3b4c2f83e256517b094f844ce7d668/loader-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/863b030a4ef24c5e89f12cd832de155e/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/863b030a4ef24c5e89f12cd832de155e/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3b95216347b91b0d0d6d33ef33ac3197/coordinatorlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3b95216347b91b0d0d6d33ef33ac3197/coordinatorlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2dd52bdeda96a748df5d7e83cece6c38/drawerlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2dd52bdeda96a748df5d7e83cece6c38/drawerlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/8069b605758f8fcc2cf1372e87a50a23/slidingpanelayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/8069b605758f8fcc2cf1372e87a50a23/slidingpanelayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2fe66d8bec3c90b690bace4d7b7b6157/customview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2fe66d8bec3c90b690bace4d7b7b6157/customview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/6bb482d4edfb8945df7454050b78aa75/swiperefreshlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/6bb482d4edfb8945df7454050b78aa75/swiperefreshlayout-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/4848834a580ecbbeaa84b2c68ac1663a/asynclayoutinflater-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/4848834a580ecbbeaa84b2c68ac1663a/asynclayoutinflater-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/c0a39027978b83a483a047f5c31d0c4e/core-1.0.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/c0a39027978b83a483a047f5c31d0c4e/core-1.0.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/45ed680b1ca2374827549d4e2c9e1a90/versionedparcelable-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/45ed680b1ca2374827549d4e2c9e1a90/versionedparcelable-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/01d333055a983e736e0a5fac950ffa8f/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/01d333055a983e736e0a5fac950ffa8f/cursoradapter-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f64c8351ef0c9a7a800019d28185706c/cardview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/f64c8351ef0c9a7a800019d28185706c/cardview-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a0e6ae58238c1d1ff8cccab3415a6d19/lifecycle-runtime-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a0e6ae58238c1d1ff8cccab3415a6d19/lifecycle-runtime-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/b432947d09f38291043b1b7278108b44/documentfile-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/b432947d09f38291043b1b7278108b44/documentfile-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/8cf450d11667f9427b289f08c2115f5c/localbroadcastmanager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/8cf450d11667f9427b289f08c2115f5c/localbroadcastmanager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d31a9dbc3f8404c541e987748c42963b/print-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/d31a9dbc3f8404c541e987748c42963b/print-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2bd63e96b82e4254cd6653dc8da764d4/lifecycle-viewmodel-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/2bd63e96b82e4254cd6653dc8da764d4/lifecycle-viewmodel-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/699bc310780b1730bce8fe271ffeca8b/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/699bc310780b1730bce8fe271ffeca8b/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/df65787e67fe4b4bc0635deed9695797/lifecycle-livedata-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/df65787e67fe4b4bc0635deed9695797/lifecycle-livedata-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a1f5477cd6fd5fad9baa3e263bec7d60/lifecycle-livedata-core-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/a1f5477cd6fd5fad9baa3e263bec7d60/lifecycle-livedata-core-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/60b50828def4ba3859898ffb4c971c21/core-runtime-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/60b50828def4ba3859898ffb4c971c21/core-runtime-2.0.0/AndroidManifest.xml:20:5-44
+MERGED from [com.facebook.fresco:fbcore:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/c27f1567dd3d3dc9d2f44421cdf86e5a/jetified-fbcore-2.0.0/AndroidManifest.xml:5:5-7:41
+MERGED from [com.facebook.fresco:fbcore:2.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/c27f1567dd3d3dc9d2f44421cdf86e5a/jetified-fbcore-2.0.0/AndroidManifest.xml:5:5-7:41
+INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
-		INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
-		ADDED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
-		INJECTED from /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+		ADDED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
 uses-permission#android.permission.ACCESS_NETWORK_STATE
-ADDED from [:@react-native-community_netinfo] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:9:5-79
+ADDED from [:@react-native-community_netinfo] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:9:5-79
 	android:name
-		ADDED from [:@react-native-community_netinfo] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:9:22-76
+		ADDED from [:@react-native-community_netinfo] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:9:22-76
 uses-permission#android.permission.ACCESS_WIFI_STATE
-ADDED from [:@react-native-community_netinfo] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:10:5-76
+ADDED from [:@react-native-community_netinfo] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:10:5-76
 	android:name
-		ADDED from [:@react-native-community_netinfo] /home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:10:22-73
+		ADDED from [:@react-native-community_netinfo] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:10:22-73
+receiver#com.learnium.RNDeviceInfo.RNDeviceReceiver
+ADDED from [:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:12:9-19:20
+	android:enabled
+		ADDED from [:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:14:13-35
+	android:exported
+		ADDED from [:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:15:13-36
+	android:name
+		ADDED from [:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:13:13-70
+intent-filter#action:name:com.android.vending.INSTALL_REFERRER
+ADDED from [:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:16:13-18:29
+action#com.android.vending.INSTALL_REFERRER
+ADDED from [:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:17:17-79
+	android:name
+		ADDED from [:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:17:25-76
+uses-permission#com.google.android.c2dm.permission.RECEIVE
+ADDED from [com.google.android.gms:play-services-iid:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3a79ab3de196ddd8dfd992461e77167b/play-services-iid-17.0.0/AndroidManifest.xml:23:5-82
+	android:name
+		ADDED from [com.google.android.gms:play-services-iid:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3a79ab3de196ddd8dfd992461e77167b/play-services-iid-17.0.0/AndroidManifest.xml:23:22-79
+activity#com.google.android.gms.common.api.GoogleApiActivity
+ADDED from [com.google.android.gms:play-services-base:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bd8a4935a17dde33dc1d62d4f9914d3b/play-services-base-17.0.0/AndroidManifest.xml:23:9-26:75
+	android:exported
+		ADDED from [com.google.android.gms:play-services-base:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bd8a4935a17dde33dc1d62d4f9914d3b/play-services-base-17.0.0/AndroidManifest.xml:25:13-37
+	android:theme
+		ADDED from [com.google.android.gms:play-services-base:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bd8a4935a17dde33dc1d62d4f9914d3b/play-services-base-17.0.0/AndroidManifest.xml:26:13-72
+	android:name
+		ADDED from [com.google.android.gms:play-services-base:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bd8a4935a17dde33dc1d62d4f9914d3b/play-services-base-17.0.0/AndroidManifest.xml:24:13-79
+meta-data#com.google.android.gms.version
+ADDED from [com.google.android.gms:play-services-basement:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cfa1bf63187087ece6cbe3c423aa9fbc/jetified-play-services-basement-17.0.0/AndroidManifest.xml:23:9-25:69
+	android:value
+		ADDED from [com.google.android.gms:play-services-basement:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cfa1bf63187087ece6cbe3c423aa9fbc/jetified-play-services-basement-17.0.0/AndroidManifest.xml:25:13-66
+	android:name
+		ADDED from [com.google.android.gms:play-services-basement:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cfa1bf63187087ece6cbe3c423aa9fbc/jetified-play-services-basement-17.0.0/AndroidManifest.xml:24:13-58

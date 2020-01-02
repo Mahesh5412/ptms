@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/home/cadrac/Desktop/PTMS/GIT/Git/ptms-react/android/app/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-h720dp-v13/values-h720dp-v13.xml",
+            "outputFile": "/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/build/intermediates/incremental/mergeReleaseResources/merged.dir/values-h720dp-v13/values-h720dp-v13.xml",
             "map": [
                 {
-                    "source": "/home/cadrac/.gradle/caches/transforms-2/files-2.1/cb8a16ecd844de5a8b9b1e1d9c738103/res/values-h720dp-v13/values-h720dp-v13.xml",
+                    "source": "/home/cadrac/.gradle/caches/transforms-2/files-2.1/906744c4ddcbc384c5a8d2d69414f8fa/appcompat-1.0.2/res/values-h720dp-v13/values-h720dp-v13.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

@@ -1,0 +1,102 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.qptms"
+4    android:versionCode="4"
+5    android:versionName="1.3" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="16"
+8-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="28" />
+9-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:4:5-67
+11-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:4:22-64
+12    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+12-->[:@react-native-community_netinfo] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:9:5-79
+12-->[:@react-native-community_netinfo] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:9:22-76
+13    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Required by older versions of Google Play services to create IID tokens -->
+13-->[:@react-native-community_netinfo] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:10:5-76
+13-->[:@react-native-community_netinfo] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/@react-native-community/netinfo/android/build/intermediates/library_manifest/release/AndroidManifest.xml:10:22-73
+14    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+14-->[com.google.android.gms:play-services-iid:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3a79ab3de196ddd8dfd992461e77167b/play-services-iid-17.0.0/AndroidManifest.xml:23:5-82
+14-->[com.google.android.gms:play-services-iid:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/3a79ab3de196ddd8dfd992461e77167b/play-services-iid-17.0.0/AndroidManifest.xml:23:22-79
+15
+16    <application
+16-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:6:5-25:19
+17        android:name="com.qptms.MainApplication"
+17-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:7:7-38
+18        android:allowBackup="false"
+18-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:11:7-34
+19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+19-->[androidx.core:core:1.0.1] /home/cadrac/.gradle/caches/transforms-2/files-2.1/c0a39027978b83a483a047f5c31d0c4e/core-1.0.1/AndroidManifest.xml:22:18-86
+20        android:icon="@mipmap/ic_launcher"
+20-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:9:7-41
+21        android:label="@string/app_name"
+21-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:8:7-39
+22        android:roundIcon="@mipmap/ic_launcher_round"
+22-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:10:7-52
+23        android:theme="@style/AppTheme"
+23-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:13:7-38
+24        android:usesCleartextTraffic="true" >
+24-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:12:7-42
+25        <activity
+25-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:14:7-23:18
+26            android:name="com.qptms.MainActivity"
+26-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:15:9-37
+27            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+27-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:17:9-79
+28            android:label="@string/app_name"
+28-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:16:9-41
+29            android:windowSoftInputMode="adjustResize" >
+29-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:18:9-51
+30            <intent-filter>
+30-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:19:9-22:25
+31                <action android:name="android.intent.action.MAIN" />
+31-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:20:13-65
+31-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:20:21-62
+32
+33                <category android:name="android.intent.category.LAUNCHER" />
+33-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:21:13-73
+33-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:21:23-70
+34            </intent-filter>
+35        </activity>
+36        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+36-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:24:7-84
+36-->/home/cadrac/Desktop/ptmsgit/Git/ptms-react/android/app/src/main/AndroidManifest.xml:24:17-81
+37
+38        <receiver
+38-->[:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:12:9-19:20
+39            android:name="com.learnium.RNDeviceInfo.RNDeviceReceiver"
+39-->[:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:13:13-70
+40            android:enabled="true"
+40-->[:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:14:13-35
+41            android:exported="true" >
+41-->[:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:15:13-36
+42            <intent-filter>
+42-->[:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:16:13-18:29
+43                <action android:name="com.android.vending.INSTALL_REFERRER" />
+43-->[:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:17:17-79
+43-->[:react-native-device-info] /home/cadrac/Desktop/ptmsgit/Git/ptms-react/node_modules/react-native-device-info/android/build/intermediates/library_manifest/release/AndroidManifest.xml:17:25-76
+44            </intent-filter>
+45        </receiver>
+46
+47        <activity
+47-->[com.google.android.gms:play-services-base:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bd8a4935a17dde33dc1d62d4f9914d3b/play-services-base-17.0.0/AndroidManifest.xml:23:9-26:75
+48            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+48-->[com.google.android.gms:play-services-base:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bd8a4935a17dde33dc1d62d4f9914d3b/play-services-base-17.0.0/AndroidManifest.xml:24:13-79
+49            android:exported="false"
+49-->[com.google.android.gms:play-services-base:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bd8a4935a17dde33dc1d62d4f9914d3b/play-services-base-17.0.0/AndroidManifest.xml:25:13-37
+50            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+50-->[com.google.android.gms:play-services-base:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/bd8a4935a17dde33dc1d62d4f9914d3b/play-services-base-17.0.0/AndroidManifest.xml:26:13-72
+51
+52        <meta-data
+52-->[com.google.android.gms:play-services-basement:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cfa1bf63187087ece6cbe3c423aa9fbc/jetified-play-services-basement-17.0.0/AndroidManifest.xml:23:9-25:69
+53            android:name="com.google.android.gms.version"
+53-->[com.google.android.gms:play-services-basement:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cfa1bf63187087ece6cbe3c423aa9fbc/jetified-play-services-basement-17.0.0/AndroidManifest.xml:24:13-58
+54            android:value="@integer/google_play_services_version" />
+54-->[com.google.android.gms:play-services-basement:17.0.0] /home/cadrac/.gradle/caches/transforms-2/files-2.1/cfa1bf63187087ece6cbe3c423aa9fbc/jetified-play-services-basement-17.0.0/AndroidManifest.xml:25:13-66
+55    </application>
+56
+57</manifest>

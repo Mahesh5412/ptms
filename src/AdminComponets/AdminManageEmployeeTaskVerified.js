@@ -10,9 +10,20 @@ import { Icon, Left, Button, Container, Header, Content, Item, Input } from 'nat
 import AsyncStorage from '@react-native-community/async-storage';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
-import {API }from "../WebServices/RestClient";
+import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
+import log from '../LogFile/Log';
+import {
+  BallIndicator,
+  BarIndicator,
+  DotIndicator,
+  MaterialIndicator,
+  PacmanIndicator,
+  PulseIndicator,
+  SkypeIndicator,
+  UIActivityIndicator
+} from 'react-native-indicators';
 
 class ListItem extends React.Component {
   render() {
@@ -48,7 +59,7 @@ class ListItem extends React.Component {
                 <Text style={styles.signUpText00} >Project Title:</Text>
                 <Text style={styles.signUpText11} >{item.mainTaskTitle}</Text>
                 {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-                <Text style={{fontWeight:'bold',color:'#00FF00'}}>verified</Text>
+                <Text style={{ fontWeight: 'bold', color: '#00FF00' }}>verified</Text>
               </View>
               {/* <Text style={styles.signUpText022} >{item.assignedDate} </Text> */}
 
@@ -82,7 +93,7 @@ class ListItem extends React.Component {
 
             <View style={styles.box1}>
 
-              <View style={{ flexDirection: 'row', paddingRight: 35, }}>
+              <View style={{ flexDirection: 'row', paddingRight: 35,width:wp('55%') }}>
                 <Text style={styles.signUpText000} >Target Time:</Text>
                 <Text style={styles.signUpText111} >{item.targetDate}</Text>
                 {/* <Text style={styles.signUpText1} >Task Status:0% completed</Text>  */}
@@ -125,7 +136,7 @@ class ListItem extends React.Component {
 
             <View style={styles.box1}>
 
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: 'row',width:('6u0%') }}>
                 <Text style={styles.signUpText000} >Dependency:</Text>
                 <Text style={styles.signUpText111} >{item.dependencyId}</Text>
                 {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
@@ -145,6 +156,8 @@ class ListItem extends React.Component {
           </CollapseBody>
 
         </Collapse>
+        <View style={{ backgroundColor: '#fff', height: 5 }}>
+          </View>
       </View>
     )
   }
@@ -158,30 +171,30 @@ export default class Verified extends Component {
       dataSource: [],
       isFetching: false,
       result: '',
-      empid:''
+      empid: ''
     }
   }
 
 
   componentDidMount() {
-
+    log("Debug", "Admin Manageemployee view verified tasks screen is loaded");
     this.getEmployeesPendingTaskList()
   }
 
+  //Refresh The data 
   onRefresh() {
-    this.setState({ isFetching: true }, function () { this.getEmployeesPendingTaskList() });
+this.getEmployeesPendingTaskList() ;
   }
 
 
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    console.log("re loading...........")
+
     this.getEmployeesPendingTaskList();
   }
-//Getting the employee pending maintask list start
+  //Getting the employee pending maintask list start
   getEmployeesPendingTaskList() {
-
+    log("Info", "AdminManageEmployeeTaskVerified:getEmployeesPendingTaskList() method is used to get employee verified tasks");
     AsyncStorage.getItem("cropcode", (err, res) => {
       const cropcode = res;
 
@@ -201,37 +214,49 @@ export default class Verified extends Component {
                 backgroundColor: 'red',
                 duration: Snackbar.LENGTH_LONG,
               });
-            }else{
-          fetch(API+'get_subtasks.php',
-            {
-              method: 'POST',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                crop: cropcode,
-                action: "verified",
-                userType: emp_role,
-                empId: this.props.navigation.state.params.empId
-              })
-            })
-            .then((response) => response.json())
-            .then((responseJson) => {
-              console.log(responseJson);
-              console.log(JSON.stringify(responseJson))
-              this.setState({
-                isLoading: false,
-                dataSource: responseJson.data,
-                isFetching: false
-              }, function () {
-              });
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-          }
-        });
+            } else {
+              fetch(API + 'getSubtasks.php',
+                {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    crop: cropcode,
+                    action: "verified",
+                    userType: emp_role,
+                    empId: this.props.navigation.state.params.empId
+                  })
+                })
+                .then((response) => response.json())
+                .then((responseJson) => {
+                  console.log(responseJson);
+                  console.log(JSON.stringify(responseJson))
+                  if (responseJson.status === 'True') {
+                    this.setState({
+                      isLoading: false,
+                      dataSource: responseJson.data,
+                      isFetching: false
+                    }, function () {
+                    });
+                  } else {
+                    this.setState({
+                      isLoading: false,
+                    })
+                    Snackbar.show({
+                      title: 'No Verified Subtasks',
+                      backgroundColor: '#3BB9FF',
+                      duration: Snackbar.LENGTH_LONG,
+                    });
+                  }
+                })
+                .catch((error) => {
+                  console.error(error);
+                  log("Error", "Error in getting employee verified tasks at admin side");
+                });
+            }
+          });
         });
 
       });
@@ -241,7 +266,7 @@ export default class Verified extends Component {
 
 
   }
-//Getting the employee pending maintask list end
+  //Getting the employee pending maintask list end
 
   FlatListItemSeparator = () => {
     return (
@@ -256,6 +281,7 @@ export default class Verified extends Component {
   }
 
 
+  //if data is empty in flatlist we will use _listEmptyComponent method
 
   _listEmptyComponent = () => {
     return (
@@ -271,13 +297,7 @@ export default class Verified extends Component {
 
 
   render() {
-    // if (this.state.isLoading) {
-    //   return (
-    //     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    //       <DotIndicator color='#ed7070' />
-    //     </View>
-    //   );
-    // }
+
     return (
       <Container style={{ height: Dimensions.get('window').height }}>
         <Item>
@@ -324,20 +344,6 @@ export default class Verified extends Component {
 
 
 
-          {/* <View style={{flex:1}}>
-<View style={{backgroundColor:'green'}}>
-  <Text>hello</Text>
-</View>
-
-<View style={{backgroundColor:'blue'}}>
-  <Text>hello</Text>
-</View>
-<View style={{backgroundColor:'red'}}>
-  <Text>hello</Text>
-</View>
-
-</View> */}
-
         </Content>
 
 
@@ -346,11 +352,13 @@ export default class Verified extends Component {
     );
   }
 }
+
+//Styles for UI
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
-  
+
     paddingRight: 20,
   },
   buttonContainer: {
@@ -359,54 +367,55 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: '#d2691e',
     backgroundColor: '#fadbd8',
- 
+
     marginLeft: 4,
-  
+
 
   },
   signupButton: {
-   
+
 
   },
   subcontainer: {
     flex: 2,
     flexDirection: 'row',
-   
+
   },
   signUpText0: {
     fontSize: 14,
-  
-    fontWeight: 'bold',
+
+    // fontWeight: 'bold',
     color: 'green',
     paddingLeft: 10,
   },
   signUpText1: {
     fontSize: 14,
 
-     fontWeight: 'bold',
+    // fontWeight: 'bold',
     color: 'green',
 
   },
 
   signUpText00: {
     fontSize: 14,
-    color:'#C0C0C0',
+    color: 'black',
     paddingLeft: 10,
   },
   signUpText11: {
     fontSize: 14,
     color: 'black',
-    width:'65%'
+    width: '65%'
   },
   signUpText000: {
     fontSize: 14,
     paddingLeft: 10,
-    color:'#C0C0C0'
+    color: 'black',
   },
   signUpText111: {
-    fontSize: 12,
+    fontSize: 14,
     paddingLeft: -20,
-  },
+     paddingTop:2,
+    },
   end: {
 
     alignItems: 'flex-end',
@@ -431,20 +440,20 @@ const styles = StyleSheet.create({
 
   },
   signUpText2: {
-    fontSize: 15,
+    fontSize: 14,
     paddingRight: 10,
-  
+
     paddingLeft: 23,
     color: 'black',
 
-  
+
     justifyContent: 'center',
 
   },
   signUpText02: {
-    fontSize: 15,
+    fontSize: 14,
     paddingRight: 10,
- 
+
     paddingLeft: 23,
     color: 'red',
 
@@ -452,29 +461,25 @@ const styles = StyleSheet.create({
 
   },
   signUpText022: {
-    fontSize: 15,
- 
+    fontSize: 14,
+
     paddingLeft: 23,
     color: 'green',
- 
-   
+
+
     justifyContent: 'center',
 
   },
   signUpText002: {
- 
-  
+
+
 
 
     justifyContent: 'center',
 
   },
   signUpText0002: {
-    fontSize: 13,
-  
-
-
- 
+    fontSize: 14,
     justifyContent: 'center',
 
   },
@@ -482,36 +487,33 @@ const styles = StyleSheet.create({
 
     paddingLeft: 23,
     fontSize: 15,
-  
-
     alignItems: 'center',
   },
   signUpText4: {
 
     paddingLeft: 20,
-  
-    fontSize: 15,
+
+    fontSize: 14,
     alignItems: 'center',
   },
-
 
   signUpText33: {
 
 
-    paddingLeft: 23,
-    fontSize: 12,
+   // paddingLeft: 23,
+    fontSize: 14,
     // paddingRight:hp('-10%'),
     paddingRight: 35,
     // fontWeight: 'bold',
-    // paddingTop: -10,
+     paddingTop: 2,
     alignItems: 'center',
   },
   signUpText44: {
-  
+
     paddingLeft: 10,
-    
-    paddingTop: -10,
-    color: '#C0C0C0',
+
+    // paddingTop: -10,
+    color: 'black',
     fontSize: 14,
     alignItems: 'center',
   },
@@ -537,18 +539,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     position: 'relative',
- 
+
 
   },
   box1: {
-    
+
     flexDirection: 'row',
     position: 'relative',
-   
+
     paddingRight: 25,
   },
   signUpText: {
-    fontSize: 20,
+    fontSize: 14,
     justifyContent: 'center',
 
 
@@ -556,10 +558,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   boxheader: {
- 
+
     flexDirection: 'column',
     position: 'relative',
-   
+
 
   },
 });

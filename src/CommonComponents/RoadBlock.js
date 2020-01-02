@@ -5,8 +5,8 @@ Purpose:listing Roadblocks
 Devloper:Rishitha
 */
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Dimensions, TouchableOpacity, FlatList, TextInput, Alert,ToastAndroid} from 'react-native';
-import { Left, Button, Container, Header,Body,Title, Content, Item, Input, Right } from 'native-base';
+import { Platform, StyleSheet, Text, View, Dimensions, TouchableOpacity, FlatList, TextInput, Alert, ToastAndroid } from 'react-native';
+import { Left, Button, Container, Header, Body, Title, Content, Item, Input, Right } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Modal from "react-native-simple-modal";
@@ -15,14 +15,15 @@ import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
 import RadioGroup from 'react-native-radio-button-group';
+import log from '../LogFile/Log';
 
 FOOTER_MAX_HEIGHT = 50
 FOOTER_MIN_HEIGHT = 40
 
 class ListItem extends React.Component {
-
-  UpdateRoadBlock(){
-
+  //Update the Roadblock start
+  UpdateRoadBlock() {
+    log("Info", " UpdateRoadBlock(cropcode) is used to Update the Roadblock ");
     const { item } = this.props;
 
     AsyncStorage.getItem("cropcode", (err, res) => {
@@ -30,39 +31,42 @@ class ListItem extends React.Component {
       NetInfo.fetch().then(state => {
         if (state.type == "none") {
           console.log(state.type);
+          log("Warn", "No internet connection");
           Snackbar.show({
             title: 'No Internet Connection',
             backgroundColor: 'red',
             duration: Snackbar.LENGTH_LONG,
           });
-        }else{
-      fetch(API + 'roadblock.php', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-      
-          action:"solved",
-          crop: crop,
-          subTaskId:item.subTaskId,
-          sno:item.sno
+        } else {
+          fetch(API + 'roadBlock.php', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
 
-        })
-      }).then((response) => response.json())
-        .then((responseJson) => {
-          //console.log(JSON.stringify(responseJson));
-          console.log(responseJson);
-          if (responseJson.status == 'true') {
-          }
-        }).catch((error) => {
-          console.error(error);
-        });
-      }
-    });
+              action: "solved",
+              crop: crop,
+              subTaskId: item.subTaskId,
+              sno: item.sno
+
+            })
+          }).then((response) => response.json())
+            .then((responseJson) => {
+              //console.log(JSON.stringify(responseJson));
+              console.log(responseJson);
+              if (responseJson.status == 'true') {
+              }
+            }).catch((error) => {
+              console.error(error);
+              log("Error", "Update the Roadblockerror");
+            });
+        }
+      });
     });
   };
+  //Update the Roadblock end
   render() {
     const { item } = this.props;
     return (
@@ -71,35 +75,35 @@ class ListItem extends React.Component {
         <TouchableOpacity >
           <View style={styles.signup}>
             <View style={[styles.buttonContainer, styles.signupButton]} >
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
+              <View style={{ flexDirection: 'row', paddingRight: 25, }}>
                 <Text style={styles.signUpText4} >#RoadBlockID:</Text>
                 <Text style={styles.signUpText3} >{item.sno}</Text>
               </View>
               <View style={styles.box}>
 
-            
+
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.signUpText0} >Description:</Text>
                   <Text style={styles.signUpText1} >{item.roadBlockDescription}</Text>
                 </View>
                 <View >
-                <RadioGroup 
-                      options={[
+                  <RadioGroup
+                    options={[
                       {
-                      id: 'solved',
-                      labelView: (
-                      <Text>
-                      <Text style={{ color: 'Green' }}></Text>
-                      </Text>
-                      ),
+                        id: 'solved',
+                        labelView: (
+                          <Text>
+                            <Text style={{ color: 'Green' }}></Text>
+                          </Text>
+                        ),
                       },
-                      ]}
-                       activeButtonId={item.roadBlockStatus}
-                       value={item.roadBlockStatus}
-                      //circleStyle={{ fillColor: 'black', borderColor: 'black' }} 
-                      // onChange={() => this.userActiveTaskStatusUpdate()}
-                      onChange={(options) => {this.UpdateRoadBlock()}}
-                      />
+                    ]}
+                    activeButtonId={item.roadBlockStatus}
+                    value={item.roadBlockStatus}
+                    //circleStyle={{ fillColor: 'black', borderColor: 'black' }} 
+                    // onChange={() => this.userActiveTaskStatusUpdate()}
+                    onChange={(options) => { this.UpdateRoadBlock() }}
+                  />
                 </View>
               </View>
             </View>
@@ -123,7 +127,8 @@ export default class Roadblock extends Component {
       roadblockdescription: "",
       role: '',
       userToken: '',
-      subtaskId:this.props.navigation.state.params.subtaskid
+      subtaskId: this.props.navigation.state.params.subtaskid,
+      itemPressedDisabled:false,
 
     };
   }
@@ -139,10 +144,11 @@ export default class Roadblock extends Component {
 
   openModal = () => this.setState({ open: true });
 
-  closeModal = () => this.setState({ open: false });
+  closeModal = () => this.setState({ open: false ,error1:''});
   //dialog actions close
 
   componentDidMount() {
+    log("Debug", "Road Block screen is loaded");
     this.ideas();
   }
 
@@ -161,7 +167,7 @@ export default class Roadblock extends Component {
       console.log(res);
       this.setState({ cropcode: res });
     });
-
+    //Getting the Roadblocks List
     this.getRoadBlocks(this.state.role, this.state.userToken, this.state.cropcode);
   }
 
@@ -169,120 +175,143 @@ export default class Roadblock extends Component {
   onRefresh() {
     this.setState({ isFetching: true }, function () { this.ideas() });
   }
- 
-  //getting the Requested projects List
-  getRoadBlocks(role, userToken, cropcode) {
 
+  //getting the RoadBlocks List
+  getRoadBlocks(role, userToken, cropcode) {
+    log("Info", " getRoadBlocks(role, userToken, cropcode) is used to getting the RoadBlocks");
     NetInfo.fetch().then(state => {
       if (state.type == "none") {
         console.log(state.type);
+        log("Warn", "No internet connection");
         Snackbar.show({
           title: 'No Internet Connection',
           backgroundColor: 'red',
           duration: Snackbar.LENGTH_LONG,
         });
-      }else{
-    fetch(API + 'roadblock.php',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          crop: cropcode,
-          action: 'getting',
-          subTaskId:this.state.subtaskId,
-        })
-      })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        console.log(responseJson)
-        this.setState({
-          isLoading: false,
-          dataSource: responseJson.data,
-          isFetching: false
-        }, function () {
+      } else {
+        fetch(API + 'roadBlock.php',
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              crop: cropcode,
+              action: 'getting',
+              subTaskId: this.state.subtaskId,
+            })
+          })
+          .then((response) => response.json())
+          .then((responseJson) => {
+            console.log(responseJson)
+            this.setState({
+              isLoading: false,
+              dataSource: responseJson.data,
+              isFetching: false
+            }, function () {
 
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    }
-  });
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+            log("Error", "getting the RoadBlocks error");
+          });
+      }
+    });
 
   }
+//Checking the Validations
+isValid() {
+  const { roadblockdescription } = this.state;
+  let valid = true;
+  if (roadblockdescription.length === 0) {
+    this.setState({ error1: 'Enter Road Block ' });
+  }
+   else {
+    return valid;
+  }
+}
 
 
   //Adding roadblock
   addRoadBlock = () => {
+    log("Info", " getRoadBlocks(cropcode) is used to Adding roadblock");
+ 
     AsyncStorage.getItem("cropcode", (err, res) => {
       const crop = res;
       NetInfo.fetch().then(state => {
         if (state.type == "none") {
           console.log(state.type);
+          log("Warn", "No internet connection");
           Snackbar.show({
             title: 'No Internet Connection',
             backgroundColor: 'red',
             duration: Snackbar.LENGTH_LONG,
           });
-        }else{
-      fetch(API + 'roadblock.php', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-      
-          action:"insert",
-          crop: crop,
-          roadBlockDescription:this.state.roadblockdescription,
-          subTaskId:this.state.subtaskId,
+        } else {
+          if (this.isValid()) {
+          this.setState({ itemPressedDisabled: true })
+          this.setState({ open: false })
+          fetch(API + 'roadBlock.php', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
 
-        })
-      }).then((response) => response.json())
-        .then((responseJson) => {
-          //console.log(JSON.stringify(responseJson));
-          if (responseJson.status === 'True') {
-            this.getRoadBlocks(this.state.role, this.state.userToken, this.state.cropcode);
-            this.setState({ open: false })
-          }
-        }).catch((error) => {
-          console.error(error);
-        });
+              action: "insert",
+              crop: crop,
+              roadBlockDescription: this.state.roadblockdescription,
+              subTaskId: this.state.subtaskId,
+
+            })
+          }).then((response) => response.json())
+            .then((responseJson) => {
+              //console.log(JSON.stringify(responseJson));
+              if (responseJson.status === 'True') {
+                this.setState({ itemPressedDisabled: false })
+                this.getRoadBlocks(this.state.role, this.state.userToken, this.state.cropcode);
+               
+                this.setState({error1:''})
+              }
+            }).catch((error) => {
+              console.error(error);
+              log("Error", "Adding the RoadBlock error");
+            });
+        }
       }
-    });
+      });
     });
   };
 
   render() {
     return (
       <Container >
-       <Header 
-            androidStatusBarColor="#00A2C1"
-            style={{
-            backgroundColor: '#00A2C1', 
+        <Header
+          androidStatusBarColor="#00A2C1"
+          style={{
+            backgroundColor: '#00A2C1',
             height: 80,
-            width: Dimensions.get('window').width, 
+            width: Dimensions.get('window').width,
             borderBottomColor: '#ffffff',
-            justifyContent: 'space-between', 
-        }}>
+            justifyContent: 'space-between',
+          }}>
           <Left>
-              <Icon size={25} name="arrow-left" style={{color: '#fff'}}onPress={() =>
-                this.props.navigation.goBack(null)}  />
-              
+            <Icon size={25} name="arrow-left" style={{ color: '#fff' }} onPress={() =>
+              this.props.navigation.goBack(null)} />
+
           </Left>
           <Body>
-            <Title style={{color: '#fff', fontWeight: '600' }}>RoadBlock</Title>
+            <Title style={{ color: '#fff', fontWeight: '600' }}>RoadBlock</Title>
           </Body>
           <Right></Right>
-     </Header>
+        </Header>
 
 
         <View style={styles.MainContainer}>
-          <View style={{ height: '96%' }}>
+          <View style={{ height: '90%' }}>
 
             <FlatList
 
@@ -300,7 +329,7 @@ export default class Roadblock extends Component {
                 <View>
 
                   <ListItem navigation={this.props.navigation}
-                    item={item}/>
+                    item={item} />
                 </View>
               }
               keyExtractor={item => item.id}
@@ -311,7 +340,7 @@ export default class Roadblock extends Component {
 
           <TouchableOpacity onPress={this.openModal} style={styles.bottomView}>
             <View style={styles.bottomView} >
-              
+
               <Text style={styles.textStyle}>  Add RoadBlock</Text>
 
 
@@ -332,12 +361,13 @@ export default class Roadblock extends Component {
                 style={{ height: 40, borderBottomWidth: 1, borderBottomColor: 'black', width: 300, marginTop: 10 }}
                 onChangeText={(text) => this.setState({ roadblockdescription: text })}
                 value={this.state.text} />
+                  <Text style={{ color: 'red', marginLeft: 10 }}>{this.state.error1}</Text>
               <View style={{ flexDirection: 'row', marginTop: 30 }}>
-                <TouchableOpacity style={{ margin: 5, backgroundColor: 'red', padding: 19, height: 30, alignItems: "center", justifyContent: 'center' }} onPress={this.closeModal}>
-                  <Text style={{ color: 'white' }}>CANCEL</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ margin: 5, backgroundColor: 'green', padding: 20, height: 30, alignItems: "center", justifyContent: 'center' }} onPress={this.addRoadBlock}>
+                <TouchableOpacity style={styles.opensave} onPress={this.addRoadBlock} disabled={this.state.itemPressedDisabled} >
                   <Text style={{ color: 'white' }}>SAVE</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.opencancel} onPress={this.closeModal}>
+                  <Text style={{ color: 'white' }}>CANCEL</Text>
 
                 </TouchableOpacity>
               </View>
@@ -423,13 +453,13 @@ const styles = StyleSheet.create(
     },
     signUpText0: {
       fontSize: 13,
-    
+
       paddingTop: 10,
 
     },
     signUpText1: {
       fontSize: 13,
-     width:'70%',
+      width: '70%',
       paddingTop: 10,
 
       paddingLeft: 10,
@@ -464,8 +494,6 @@ const styles = StyleSheet.create(
       color: 'green',
       paddingTop: 10,
 
-      //  marginRight: 10,
-      //textAlign: "right"
 
     },
     signUpText3: {
@@ -488,7 +516,7 @@ const styles = StyleSheet.create(
       color: "#FFF",
 
     },
-   
+
     box: {
       flexDirection: 'row',
       position: 'relative',
@@ -501,5 +529,31 @@ const styles = StyleSheet.create(
       color: 'white',
       alignSelf: 'center',
 
+    },
+    opencancel: {
+      flex: 1,
+      ...Platform.select({
+        ios: {
+          backgroundColor: 'red', margin: 20, height: 30, alignItems:
+            "center", justifyContent: 'center'
+        },
+        android: {
+          backgroundColor: 'red', margin: 20, height: 30, alignItems:
+            "center", justifyContent: 'center'
+        },
+      }),
+    },
+    opensave: {
+      flex: 1,
+      ...Platform.select({
+        ios: {
+          backgroundColor: 'green', margin: 20, height: 30, alignItems:
+            "center", justifyContent: 'center'
+        },
+        android: {
+          backgroundColor: 'green', margin: 20, height: 30, alignItems:
+            "center", justifyContent: 'center'
+        },
+      }),
     },
   });

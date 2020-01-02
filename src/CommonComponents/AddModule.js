@@ -15,6 +15,7 @@ import {API }from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
 import Toast from 'react-native-whc-toast';
+import log from '../LogFile/Log';
 
 
 
@@ -33,10 +34,10 @@ class ListItem extends React.Component {
   }
 
   componentDidMount() {
-
+    log("Debug", "Add Module screen is loaded");
     this.VisibleActions();
   }
-
+  //Visable actions based on role start
   async VisibleActions() {
 
     AsyncStorage.getItem("emp_role", (err, res) => {
@@ -54,7 +55,7 @@ class ListItem extends React.Component {
     });
 
   }
-
+  //Visable actions based on role close
 
   render() {
     const { item } = this.props;
@@ -109,7 +110,7 @@ class ListItem extends React.Component {
 
               </View>
 
-          
+         
 
         </TouchableOpacity>
 
@@ -133,14 +134,17 @@ export default class AddModule extends React.Component {
       isFetching: false,
       modalVisible: false,
       idea_id: this.props.navigation.state.params.idea_id,
+      idea_title: this.props.navigation.state.params.idea_title,
       action: '',
       moduleid: '',
-      error1:''
+      error1:'',
+      itemPressedDisabled:false,
     };
 
   }
+  //open the Modal 
   modalDidOpen = () => console.log("Modal did open.");
-
+  //close the Modal
   modalDidClose = () => {
 
     this.setState({ open: false }); this.setState({ open: false });
@@ -155,7 +159,7 @@ export default class AddModule extends React.Component {
 
   openModal = () => this.setState({ open: true });
 
-
+//close dialog
   closeModal = () => {
     this.setState({ open: false,error1:''
    });
@@ -164,6 +168,7 @@ export default class AddModule extends React.Component {
   //Dialog Actions close
 
   componentDidMount() {
+    log("Debug", " getModules screen is loaded");
     this.getModules();
     // this.setModalVisible(!this.state.modalVisible);
   }
@@ -198,13 +203,14 @@ export default class AddModule extends React.Component {
       NetInfo.fetch().then(state => {
         if (state.type == "none") {
           console.log(state.type);
+          log("Warn", "No internet connection");
           Snackbar.show({
             title: 'No Internet Connection',
             backgroundColor: 'red',
             duration: Snackbar.LENGTH_LONG,
           });
         }else{
-      fetch(API+'get_modules.php',
+      fetch(API+'getModules.php',
         {
           method: 'POST',
           headers: {
@@ -231,6 +237,7 @@ export default class AddModule extends React.Component {
         })
         .catch((error) => {
           console.error(error);
+          log("Error", "Add Module error");
         });
       }
     });
@@ -244,6 +251,7 @@ export default class AddModule extends React.Component {
     let valid = false;
 
     if(modulename.length===0){
+      log("Warn", "module name should not be empty");
       // ToastAndroid.showWithGravity('"Enter sub Task', ToastAndroid.SHORT,ToastAndroid.CENTER);
       this.setState({ error1: 'Module Title ' });
     }
@@ -270,6 +278,7 @@ export default class AddModule extends React.Component {
       NetInfo.fetch().then(state => {
         if (state.type == "none") {
           console.log(state.type);
+          log("Warn", "No internet connection");
           Snackbar.show({
             title: 'No Internet Connection',
             backgroundColor: 'red',
@@ -279,7 +288,8 @@ export default class AddModule extends React.Component {
         else{
 
           if(this.isValid()){
-      fetch(API+'manage_module.php',
+            this.setState({ itemPressedDisabled: true })
+      fetch(API+'manageModule.php',
         {
           method: 'POST',
           headers: {
@@ -300,13 +310,15 @@ export default class AddModule extends React.Component {
           console.log(responseJson)
           this.refs.toast.show('Module Added', Toast.Duration.long, Toast.Position.center);
           if (responseJson.status == 'True') {
-            this.setState({ open: false });
+            this.setState({ itemPressedDisabled: false })
+            this.setState({ open: false,error1: '', });
             this.getModules();
           }
 
         })
         .catch((error) => {
           console.error(error);
+          log("Error", "error in project adding");
         });
         this.closeModal();
       }
@@ -342,17 +354,18 @@ export default class AddModule extends React.Component {
       //empid getting
       AsyncStorage.getItem("userToken", (err, res) => {
         const empId = res;
-        alert(item.moduleId + empId)
+       // alert(item.moduleId + empId)
         NetInfo.fetch().then(state => {
           if (state.type == "none") {
             console.log(state.type);
+            log("Warn", "No internet connection");
             Snackbar.show({
               title: 'No Internet Connection',
               backgroundColor: 'red',
               duration: Snackbar.LENGTH_LONG,
             });
           }else{
-        fetch(API+'manage_module.php', {
+        fetch(API+'manageModule.php', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -373,10 +386,12 @@ export default class AddModule extends React.Component {
               this.setState({ open: false })
               this.props.navigation.navigate("AddModule", { idea_id: this.state.idea_id });
             } else {
+              log("Warn", "You can't delete this module");
               alert("Having maintasks,you cannot delete this module");
             }
           }).catch((error) => {
             console.error(error);
+            log("Error", "error in delete Module ");
           });
         }
       });
@@ -392,8 +407,9 @@ export default class AddModule extends React.Component {
     console.log(index);
 
     console.log(item.ideaId + item.moduleId);
+    log("Info", "MainTask() method is used to move Add Module to Add MainTask screen");
 
-    this.props.navigation.navigate('AddMainTask', { moduleId: item.moduleId, ideaid: item.ideaId });
+    this.props.navigation.navigate('AddMainTask', { moduleId: item.moduleId, ideaid: item.ideaId,moduledesc:item.moduleDesc,idea_title:this.state.idea_title});
 
   }
 
@@ -401,12 +417,12 @@ export default class AddModule extends React.Component {
   ModifyModule(item, index) {
     console.log(item);
     console.log(index);
-
-    this.props.navigation.navigate('ModuleAdd', { action: 'modify', moduleId: item.moduleId, ideaid: item.ideaId });
+    log("Info", "ModifyModule() method is used to move Add Module to Add ModuleAdd screen");
+    this.props.navigation.navigate('ModuleAdd', { action: 'modify', moduleId: item.moduleId, ideaid: item.ideaId,moduledesc:item.moduleDesc });
 
   }
 
-
+  //Seperate the list of data
   FlatListItemSeparator = () => {
     return (
       <View
@@ -420,7 +436,7 @@ export default class AddModule extends React.Component {
   }
 
 
-
+//For empty data(No list available)
   _listEmptyComponent = () => {
     return (
       <View style={{ width: '90%', height: '80%' }}>
@@ -448,14 +464,14 @@ export default class AddModule extends React.Component {
           
       </Left>
       <Body>
-        <Title style={{color: '#fff', fontWeight: '600' }}>Module</Title>
+        <Title style={{color: '#fff', fontWeight: '600' }}>{this.state.idea_title}</Title>
       </Body>
       <Right></Right>
     </Header>
 
       <View style={styles.MainContainer}>
       <Toast ref="toast"/>
-        <View style={{ height: '96%' }}>
+        <View style={{ height: '90%' }}>
 
           <FlatList
 
@@ -486,6 +502,14 @@ export default class AddModule extends React.Component {
           />
 
         </View>
+        {/* <View style={{height:hp('15%')}}></View> */}
+        <View style={styles.bottomView} >
+          <TouchableOpacity onPress={this.openModal} >
+            {/* <Icon name='lightbulb-o'color='white' type='MaterialCommunityIcons' size={30} /> */}
+            <Text style={styles.textStyle}>ADD MODULE</Text>
+            </TouchableOpacity>
+          </View>
+
         <Modal
           offset={this.state.offset}
           open={this.state.open}
@@ -495,7 +519,7 @@ export default class AddModule extends React.Component {
 
           <View style={{ alignItems: "center", paddingBottom: 40 }}>
 
-            <Text>Add Module</Text>
+            <Text>MODULE INFO</Text>
 
             <TextInput placeholder='Module Title'
               style={{ height: 40, borderBottomWidth: 1, borderBottomColor: 'black', width: 300, marginTop: 10 }}
@@ -506,35 +530,33 @@ export default class AddModule extends React.Component {
                
           </View>
           <View style={{flexDirection:'row',marginTop:20,alignItems:'center',justifyContent:'center',alignSelf:'center',}}>
-              <TouchableOpacity style={{
-                margin: 5, backgroundColor: '#00A2C1', padding: 19, height: 30, alignItems: "center",
-                justifyContent: 'center'
-              }} onPress={this.closeModal}>
-                <Text style={{ color: 'white' }}>CANCEL</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{
-                margin: 5, backgroundColor: '#00A2C1', padding: 20, height: 30, alignItems: "center",
-                justifyContent: 'center'
-              }} onPress={this.addModule.bind(this)}>
+          <TouchableOpacity style={styles.opensave} onPress={this.addModule.bind(this)}  disabled={this.state.itemPressedDisabled}>
                 <Text style={{ color: 'white' }}>SAVE</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.opencancel} onPress={this.closeModal} >
+                <Text style={{ color: 'white' }}>CANCEL</Text>
+              </TouchableOpacity>
+              
             </View>
 
         </Modal>
-        <TouchableOpacity onPress={this.openModal} style={styles.bottomView}>
-          <View style={styles.bottomView} >
-            {/* <Icon name='lightbulb-o'color='white' type='MaterialCommunityIcons' size={30} /> */}
-            <Text style={styles.textStyle}>ADD MODULE</Text>
-          </View>
-        </TouchableOpacity>
+        
+     
       </View>
+      {/* <Content> */}
+
+     
+       
+      {/* </Content> */}
       </Container>
+      
 
     );
 
   }
 
 }
+//Styles for UI
 const styles = StyleSheet.create(
   {
     MainContainer:
@@ -559,7 +581,7 @@ const styles = StyleSheet.create(
     textStyle: {
       color: '#fff',
       fontSize: 18,
-      backgroundColor:'#00a2c1',
+     // backgroundColor:'#00a2c1',
       paddingLeft:10,
       paddingRight:10,
       paddingBottom:5,
@@ -673,7 +695,7 @@ const styles = StyleSheet.create(
       fontSize: 12,
       paddingTop: 10,
       paddingLeft:5,
-      backgroundColor:'#f8f8f8',
+     // backgroundColor:'#f8f8f8',
 
 
       alignItems: 'center',
@@ -709,5 +731,31 @@ const styles = StyleSheet.create(
 
       color: 'white',
       alignSelf: 'center',
+    },
+    opencancel: {
+      flex: 1,
+      ...Platform.select({
+        ios: {
+          backgroundColor: 'red', margin:20,height:30, alignItems:
+          "center", justifyContent: 'center'
+        },
+        android: {
+           backgroundColor: 'red',margin:20,height:30, alignItems:
+        "center", justifyContent: 'center'
+        },
+      }),
+    },
+    opensave: {
+      flex: 1,
+      ...Platform.select({
+        ios: {
+          backgroundColor: 'green',margin:20,height:30,  alignItems:
+          "center", justifyContent: 'center'
+        },
+        android: {
+           backgroundColor: 'green',margin:20,height:30, alignItems:
+        "center", justifyContent: 'center'
+        },
+      }),
     },
   });

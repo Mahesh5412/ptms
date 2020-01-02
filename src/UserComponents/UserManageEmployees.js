@@ -5,8 +5,8 @@ Purpose:Getting the List of all the employees list
 Devloper:Rishitha,Santosh,Mahesh
 */
 import React, { Component } from 'react';
-import { Platform, Linking, StyleSheet, Text, FlatList, TouchableOpacity, View, StatusBar, Dimensions } from 'react-native';
-import { Title, Button, Container, Content, Header, Right, Left, Body, Tab, Tabs, TabHeading, Footer, Item, Input, FooterTab } from 'native-base';
+import { Platform, Linking, StyleSheet, Text, FlatList, TouchableOpacity, View, StatusBar, Dimensions, Alert } from 'react-native';
+import { Title, Button, Container, Content, Header, Right, Left, Body, Tab, Tabs, TabHeading, Footer, Subtitle, Item, Input, FooterTab } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -14,6 +14,9 @@ import Communications from 'react-native-communications';
 import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
+import log from '../LogFile/Log';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { NavigationEvents } from 'react-navigation';
 import {
   BallIndicator,
   BarIndicator,
@@ -25,71 +28,88 @@ import {
   UIActivityIndicator
 } from 'react-native-indicators';
 
-class ListItem extends React.Component {
+class ListItem extends Component {
+
   render() {
-    const { item } = this.props;
+
+    const { data } = this.props;
+    const { emp_role } = this.props;
+
+    let button;
+
+    if (emp_role === "Emp") {
+      
+    const { data } = this.props;
+      button = null;
+    } else {
+
+    const { data } = this.props;
+      button =
+        <TouchableOpacity style={{ marginTop: 12 }}
+          onPress={() => this.props.navigation.navigate("EmployeeInfo", {
+            empId: data.item.id,
+            name: data.item.name,
+            mobile: data.item.mobileNumber,
+            email: data.item.email,
+            designation: data.item.designation,
+            userName: data.item.userName,
+            team: data.item.team,
+            empStatus: data.item.empStatus,
+            workingStatus: data.item.workingStatus,
+            role: data.item.role
+          })}>
+          <Icon name="chevron-right" style={{ color: '#808080', paddingRight: 5 }} size={15} />
+        </TouchableOpacity>
+    }
+
+    let buttonttt;
     return (
 
       <View style={styles.container}>
-
         <View style={styles.signup}>
-
           <View style={[styles.buttonContainer, styles.signupButton]} >
-
             <View style={styles.box}>
-
               <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.signUpText1} >{item.name}</Text>
+                <Text style={styles.signUpText1} >{data.item.name}</Text>
               </View>
-              {/* <Text style={styles.empstatusText}>{item.empStatus}</Text> */}
-              <Text style={styles.designationText}>{item.role}</Text>
-
+              <Text style={styles.designationText}>{data.item.role}</Text>
             </View>
-
-
-            {/* <View > */}
-
-
-            <View style={{ flexDirection: 'row', width: wp('60%') }}>
-              <Text style={styles.signUpText11}>Email : </Text>
-              <TouchableOpacity style={{ flexDirection: 'row' }}>
-                <Icon name="envelope" style={{ color: 'red', marginLeft: 5, marginTop: 12 }} size={15}
-                  onPress={() => Linking.openURL('mailto:support@example.com')} />
-                <Text style={styles.signUpText11email}
-                  onPress={() => Linking.openURL('mailto:support@example.com')}
-                >{item.email}</Text>
-              </TouchableOpacity>
-
+            <View style={{ flexDirection: 'row', }}>
+              <View style={{ flexDirection: 'row', width: wp('90%') }}>
+                <Text style={styles.signUpText11}>Email : </Text>
+                <TouchableOpacity style={{ flexDirection: 'row' }}>
+                  <Icon name="envelope" style={{ color: 'red', marginLeft: 5, marginTop: 12 }} size={15}
+                    onPress={() => Linking.openURL('mailto:support@example.com')} />
+                  <Text style={styles.signUpText11email}
+                    onPress={() => Linking.openURL('mailto:support@example.com')}
+                  >{data.item.email}</Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                {button}
+              </View>
             </View>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={styles.signUpText11}>Mobile : </Text>
-              <TouchableOpacity style={{ flexDirection: 'row' }}>
-                <Icon name="phone" style={{ color: '#00FF00', marginLeft: 5, marginTop: 12 }} size={20}
-                  onPress={() => Communications.phonecall(item.mobileNumber, true)} />
-                <Text style={styles.signUpText11mobile}
-                  //onPress={()=>{Linking.openURL('tel:${item.mobileNumber}');}}
-                  onPress={() => Communications.phonecall(item.mobileNumber, true)}
-
-                >{item.mobileNumber}</Text>
-              </TouchableOpacity>
-
-            </View>
-            <View
-              style={{
-                marginTop: 15,
-                borderBottomColor: '#C0C0C0',
-                borderBottomWidth: 0.2,
-              }}
-            />
-
-
 
           </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={styles.signUpText11}>Mobile : </Text>
 
+            <TouchableOpacity style={{ flexDirection: 'row' }}>
+              <Icon name="phone" style={{ color: '#00FF00', marginLeft: 5, marginTop: 12 }} size={20}
+                onPress={() => Communications.phonecall(data.item.mobileNumber, true)} />
+              <Text style={styles.signUpText11mobile}
+                onPress={() => Communications.phonecall(data.item.mobileNumber, true)}
+              >{data.item.mobileNumber}</Text>
+            </TouchableOpacity>
 
-
-          {/* </View> */}
-
+          </View>
+          <View
+            style={{
+              marginTop: 15,
+              borderBottomColor: '#C0C0C0',
+              borderBottomWidth: 0.2,
+            }}
+          />
         </View>
 
       </View>
@@ -97,43 +117,65 @@ class ListItem extends React.Component {
   }
 }
 export default class UserManageEmployees extends Component {
+  static navigationOptions = () => {
+    return {
+      tabBarOnPress({ navigation, defaultHandler }) {
+        navigation.state.params.onTabFocus();
+        defaultHandler();
+        this.onRefresh();
+      }
+    };
+  }
 
 
   constructor(props) {
-
     super(props);
+    props.navigation.setParams({
+      onTabFocus: this.handleTabFocus
+    });
+    let button;
     this.state = {
       isLoading: true,
       dataSource: [],
       isFetching: false,
       result: '',
-
+      emp_role: '',
+    
+    
     }
     this.arrayholder = [];
+    this.button=button;
+   
+  
   }
-
-
+  handleTabFocus = () => {
+    this.onRefresh();
+  };
+ 
   componentDidMount() {
-
+    log("Debug", "Employees list getting screen is loaded at user side");
+    //to get the lsit of list of employees
     this.UserManageEmployees()
-  }
 
+    AsyncStorage.getItem("emp_role", (err, res) => {
+      console.log(res)
+      const emp_role1 = res;
+      this.setState({ emp_role: emp_role1 })
+    })
+  }
   //to refresh the data
   onRefresh() {
-    this.setState({ isFetching: true }, function () { this.myOrders() });
+     this.UserManageEmployees() ;
+
   }
-
-
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    console.log("re loading...........")
-    this.UserManageEmployees();
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   //to get the lsit of list of employees
+  //   this.UserManageEmployees();
+  // }
 
   //to get the lsit of list of employees
   UserManageEmployees() {
-
+    log("Info", "UserManageEmployees:getEmployeeList() method is used to get employee list");
     AsyncStorage.getItem("cropcode", (err, res) => {
       const cropcode = res;
 
@@ -143,9 +185,10 @@ export default class UserManageEmployees extends Component {
 
         AsyncStorage.getItem("emp_role", (err, res) => {
           const emp_role = res;
+          //Checking the Internet Connection
           NetInfo.fetch().then(state => {
             if (state.type == "none") {
-              console.log(state.type);
+
               Snackbar.show({
                 title: 'No Internet Connection',
                 backgroundColor: 'red',
@@ -170,9 +213,7 @@ export default class UserManageEmployees extends Component {
                 .then((response) => response.json())
                 .then((responseJson) => {
 
-
-                  console.log(responseJson);
-                  console.log(JSON.stringify(responseJson))
+                  // console.log(JSON.stringify(responseJson))
                   this.setState({
                     isLoading: false,
                     dataSource: responseJson.data,
@@ -184,6 +225,7 @@ export default class UserManageEmployees extends Component {
                 })
                 .catch((error) => {
                   console.error(error);
+                  log("Error", "error in getting employee list at user side");
                 });
 
             }
@@ -194,12 +236,8 @@ export default class UserManageEmployees extends Component {
       });
 
     });
-
-
-
   }
-
-
+  //Seperate the List date
   FlatListItemSeparator = () => {
     return (
       <View
@@ -211,9 +249,7 @@ export default class UserManageEmployees extends Component {
       />
     );
   }
-
-
-
+  //For Empty list
   _listEmptyComponent = () => {
     return (
       <View>
@@ -225,7 +261,7 @@ export default class UserManageEmployees extends Component {
 
   //to filter the search data in search area 
   SearchFilterFunction(text) {
-    console.log(text);
+    log("Info", "UserManageEmployees:SearchFilterFunction(text) method is used for search functionality")
     const newData = this.arrayholder.filter(function (item) {
 
       const name = item.name.toUpperCase()
@@ -239,16 +275,12 @@ export default class UserManageEmployees extends Component {
       const mobileNumber = item.mobileNumber.toUpperCase()
       const mobileNumber1 = text.toUpperCase()
 
-
-
       return name.indexOf(name1) > -1 ||
         //  date.indexOf(date1) > -1 || 
         empStatus.indexOf(empStatus1) > -1 ||
         designation.indexOf(designation1) > -1 ||
         email.indexOf(email1) > -1 ||
         mobileNumber.indexOf(mobileNumber1) > -1
-
-
     })
     this.setState({
       dataSource: newData,
@@ -258,18 +290,41 @@ export default class UserManageEmployees extends Component {
 
 
 
-
+  
 
 
   render() {
-      if (this.state.isLoading) {
-        return (
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <DotIndicator color='#00A2C1' />
-          </View>
-        );
-  
-      }
+    let button;
+    if (this.state.emp_role === "Emp") {
+      button = null;
+    } else {
+      button =
+        <TouchableOpacity style={{ marginTop: 12 }}
+          onPress={(item) => this.props.navigation.navigate("UserManageEmployeesTasks", {
+            empId: item.id,
+            name:item.name,
+            mobile: item.mobileNumber,
+            email:item.email,
+            designation: item.designation,
+            userName: item.userName,
+            team:item.team,
+            empStatus: item.empStatus,
+            workingStatus: item.workingStatus,
+            role: item.role
+          })}>
+          <Icon name="chevron-right" style={{ color: '#808080', paddingRight: 5 }} size={15} />
+        </TouchableOpacity>
+    }
+ 
+    if (this.state.isLoading) {
+      return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <DotIndicator color='#00A2C1' />
+        </View>
+      );
+
+    }
+     
     return (
       <Container>
         <Header
@@ -282,28 +337,25 @@ export default class UserManageEmployees extends Component {
             borderBottomColor: '#ffffff',
             justifyContent: 'space-between',
           }}>
-          <Left>
-            <Icon size={25} name="navicon" style={{ color: '#fff' }} onPress={() =>
-              this.props.navigation.toggleDrawer()} />
-          </Left>
-          <Body>
-            <Title style={{ color: '#fff', fontWeight: '600' }}>Manage Employees</Title>
-          </Body>
 
-          <Right>
-            <Icon size={25} name="home" style={{ color: '#fff' }}
-              onPress={() => this.props.navigation.navigate('UserProfile')} />
-          </Right>
+          <Icon name="navicon" size={25} style={{ color: '#fff', paddingTop: 17 }} onPress={() =>
+            this.props.navigation.toggleDrawer()} />
+          <Body style={{ paddingLeft: 30, }}>
+            <Title style={{ color: '#fff', fontWeight: '600' }}>Manage Employees</Title>
+            <Subtitle></Subtitle>
+          </Body>
+          <Icon name="home" size={25} style={{ color: '#fff', paddingTop: 17 }} onPress={() =>
+            this.props.navigation.navigate('UserProfile')} />
 
         </Header>
 
         <Item >
-          <Input style={{
-            borderWidth: 1, borderBottomColor: '#000000',
-            marginBottom: 0.5
-          }} placeholder="Search"
+        <NavigationEvents
+            onDidFocus={() => this.onRefresh()}
+          />
+          <Input placeholder="Search"
             onChangeText={(text) => this.SearchFilterFunction(text)} />
-          <Icon name="search" />
+          <Icon style={{ marginRight: 10, color: 'black' }} size={25} name="search" />
         </Item>
         <Content>
 
@@ -315,48 +367,49 @@ export default class UserManageEmployees extends Component {
             </View>
             <View style={styles.end1}>
 
-              <FlatList
-                // data={this.props.data}
-                extraData={this.state}
-                keyExtractor={this._keyExtractor}
-                renderItem={this._renderItem}
-                style={{ flex: 1, }}
+              <SwipeListView
                 data={this.state.dataSource}
-
-                onRefresh={() => this.onRefresh()}
-                refreshing={this.state.isFetching}
-
-                ItemSeparatorComponent={this.FlatListItemSeparator}
-                renderItem={({ item, index }) =>
+                renderItem={(data) => (
+                 
                   <View style={styles.container2} >
-                    <ListItem
-                      item={item}
+                  <ListItem navigation={this.props.navigation}
+                    data={data}
+                    emp_role={this.state.emp_role}
 
-                    />
-                  </View>
-                }
-                keyExtractor={item => item.id}
-                ListEmptyComponent={this._listEmptyComponent}
+                  />
+                </View>
+            
+                )}
+                
+                renderHiddenItem={(data, rowMap) => (
+              
+                <View style={styles.rowBack}>
+   
+                <Text>{data.item.empStatus}</Text> 
+                <Text>{data.item.empStatus}</Text> 
+            </View>
+            
+                )}
+                
+                leftOpenValue={100}
+                rightOpenValue={-100}
+                
               />
+
             </View>
           </View>
 
-
-
-
-
         </Content>
-
-
-
       </Container>
     );
   }
 }
+//Styles for UI
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
+    backgroundColor:'white',
 
     paddingRight: 20,
   },
@@ -366,10 +419,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: '#d2691e',
     //backgroundColor:'#fadbd8',
-
     marginLeft: 4,
-
-
   },
   signupButton: {
 
@@ -401,21 +451,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingTop: 10,
 
-    color: '#808080',
+    color: 'black',
     paddingLeft: 10,
   },
   signUpText11email: {
     fontSize: 12,
     paddingTop: 10,
 
-    color: '#000000',
+    color: 'black',
     paddingLeft: 10,
   },
   signUpText11mobile: {
     fontSize: 12,
     paddingTop: 10,
-    fontStyle: 'italic',
-    color: '#000000',
+    //fontStyle: 'italic',
+    color: 'black',
     paddingLeft: 10,
   },
   signUpText12: {
@@ -495,6 +545,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
 
   },
+  rowBack: {
+    alignItems: 'center',
+    backgroundColor: '#81def0',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 10,
+},
+rowFront: {
+  alignItems: 'center',
+  backgroundColor: '#81def0',
+  flex: 1,
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  paddingRight: 10,
+},
   signUpText002: {
     fontSize: 12,
 

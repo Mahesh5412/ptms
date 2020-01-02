@@ -112,7 +112,7 @@ export default class Requesteddata extends Component {
               duration: Snackbar.LENGTH_LONG,
             });
           } else {
-            fetch(API + 'ReactgetIdeas.php',
+            fetch(API + 'getIdeas.php',
               {
                 method: 'POST',
                 headers: {
@@ -153,7 +153,7 @@ export default class Requesteddata extends Component {
 
 
   }
-
+ //to get the user requested projects datalist end
 
 
   action(item, index) {
@@ -217,11 +217,7 @@ export default class Requesteddata extends Component {
           />
 
         </View>
-        {/* <View style={styles.footer}>
-          <TouchableHighlight style={styles.bottomButtons}>
-              <Text style={styles.footerText}>A</Text>
-          </TouchableHighlight>
-          </View> */}
+ 
       </View>
     );
   }

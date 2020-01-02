@@ -2,7 +2,7 @@
 FileName:UserCompletedManageTasks.js
 Version:1.0.0
 Purpose:Getting the List of completedProjects and also verify the project by role
-Devloper:Rishitha,Harsha
+Devloper:Rishitha,Harsha,Mahesh
 */
 import React, { Component } from 'react';
 import { Left, Button, Container, Header, Content, Item, Input } from 'native-base';
@@ -13,6 +13,8 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
+import log from '../LogFile/Log';
+import { NavigationEvents } from 'react-navigation';
 import {
   BallIndicator,
   BarIndicator,
@@ -26,325 +28,35 @@ import {
 
 import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
 
-class ListItemLevel1 extends React.Component {
-
-  //to verify the main task 
-  // to validate the user
-  MaintaskVerify() {
-
-    const { item } = this.props;
-
-    Alert.alert(
-      'Alert..!',
-      'Do you want to Verify Task',
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        { text: 'OK', onPress: () => this.MaintaskVerification(item.taskid) },
-      ],
-      { cancelable: false },
-    );
-
-  }
-
-  //verifying the main task 
-  MaintaskVerification(maintaskid) {
-
-    AsyncStorage.getItem("cropcode", (err, res) => {
-      const cropcode = res;
-      NetInfo.fetch().then(state => {
-        if (state.type == "none") {
-          console.log(state.type);
-          Snackbar.show({
-            title: 'No Internet Connection',
-            backgroundColor: 'red',
-            duration: Snackbar.LENGTH_LONG,
-          });
-        }else{
-      fetch(API+'manageMaintasks.php',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            crop: cropcode,
-            mainTaskId: maintaskid,
-            action: 'verify'
-
-          })
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          if (responseJson.status == 'True') {
-
-          } else if (responseJson.status == 'false') {
-
-            Alert.alert("you can not verify tasks untill subtasks are verified");
-
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      }
-    });
-    });
-  }
-
-  render() {
-    const { item } = this.props;
-    if (this.state.isLoading) {
-      return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <DotIndicator color='#00A2C1' />
-        </View>
-      );
-
-    }
-    return (
-
-      <View>
-        <Collapse style={styles.container}>
-
-
-          <CollapseHeader style={styles.boxheader}>
-
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={styles.signUpText0} >Task_ID:</Text>
-              <Text style={styles.signUpText1} >{item.taskid}</Text>
-            </View>
-            <Text style={styles.signUpText2} >{item.assignedon}</Text>
-
-
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-              <Text style={styles.signUpText4} >Project Title:</Text>
-              <Text style={styles.signUpText3} >{item.projectitle}</Text>
-            </View>
-
-
-
-
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.signUpText00} >Task Title:</Text>
-                <Text style={styles.signUpText11} >{item.tasktitle}</Text>
-                {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-              </View>
-              <TouchableOpacity onPress={() => { this.MaintaskVerify() }}>
-                <Text style={styles.signUpText02} >{item.completeStatus} </Text>
-              </TouchableOpacity>
-
-            </View>
-
-          </CollapseHeader>
-          <CollapseBody>
-
-
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-              <Text style={styles.signUpText44} >Description</Text>
-              <Text style={styles.signUpText33} >{item.taskdescription}</Text>
-              {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
-            </View>
-
-
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-              <TouchableOpacity style={{ width: 100, backgroundColor: 'red' }} onPress={() => this.props.AddSubTask()}>
-                <Text style={{ color: '#fff', textAlign: 'center' }}>ADD SUB TASk</Text></TouchableOpacity>
-              <TouchableOpacity style={{ width: 120, backgroundColor: '#6cbb3f', marginLeft: 10, }} onPress={() => this.props.Module()}>
-                <Text style={{ color: '#fff', textAlign: 'center' }}>VIEW SUB TASK</Text></TouchableOpacity>
-
-            </View>
-
-
-          </CollapseBody>
-
-        </Collapse>
-
-      </View>
-    )
-  }
-}
-class ListItemLevel2 extends React.Component {
-
-  //to verify the main task 
-  // to validate the user
-  MaintaskVerify() {
-
-    const { item } = this.props;
-
-    Alert.alert(
-      'Alert..!',
-      'Do you want to Verify Task',
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        { text: 'OK', onPress: () => this.MaintaskVerification(item.taskid) },
-      ],
-      { cancelable: false },
-    );
-
-  }
-
-  //verifying the main task 
-  MaintaskVerification(maintaskid) {
-
-    AsyncStorage.getItem("cropcode", (err, res) => {
-      const cropcode = res;
-      NetInfo.fetch().then(state => {
-        if (state.type == "none") {
-          console.log(state.type);
-          Snackbar.show({
-            title: 'No Internet Connection',
-            backgroundColor: 'red',
-            duration: Snackbar.LENGTH_LONG,
-          });
-        }else{
-      fetch(API+'manageMaintasks.php',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            crop: cropcode,
-            mainTaskId: maintaskid,
-            action: 'verify'
-
-          })
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          if (responseJson.status == 'True') {
-
-          } else if (responseJson.status == 'false') {
-
-            Alert.alert("you can not verify tasks untill subtasks are verified");
-
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      }
-    });
-    });
-  }
-
-  render() {
-    const { item } = this.props;
-    return (
-
-      <View>
-        <Collapse style={styles.container}>
-
-
-          <CollapseHeader style={styles.boxheader}>
-
-            <View style={{ flexDirection: 'row',pad }}>
-              <Text style={styles.signUpText0} >Task_ID:</Text>
-              <Text style={styles.signUpText1} >{item.taskid}</Text>
-              {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-            </View>
-            <Text style={styles.signUpText2} >{item.assignedon}</Text>
-
-
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-              <Text style={styles.signUpText4} >Project Title:</Text>
-              <Text style={styles.signUpText3} >{item.projectitle}</Text>
-            </View>
-
-
-
-
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.signUpText00} >Task Title:</Text>
-                <Text style={styles.signUpText11} >{item.tasktitle}</Text>
-                {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-              </View>
-              <TouchableOpacity onPress={() => { this.MaintaskVerify() }}>
-                <Text style={styles.signUpText02} >{item.completeStatus} </Text>
-              </TouchableOpacity>
-
-            </View>
-
-          </CollapseHeader>
-          <CollapseBody>
-
-
-            <View style={{ flexDirection: 'row', paddingRight: 25 }}>
-              <Text style={styles.signUpText44} >Description</Text>
-              <Text style={styles.signUpText33} >{item.taskdescription}</Text>
-              {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
-            </View>
-
-
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.signUpText000} >Target Time:</Text>
-                <Text style={styles.signUpText111} >{item.targettime}</Text>
-                {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-              </View>
-              <Text style={styles.signUpText002} >Task Status:{item.completeStatus}% completed </Text>
-
-
-            </View>
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.signUpText000} >Assigned on:</Text>
-                <Text style={styles.signUpText111} >{item.assignedon}</Text>
-                {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-              </View>
-              {/* <Text style={styles.signUpText002} >Assigned By:Rishitha </Text> */}
-            </View>
-
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-              <Text style={styles.signUpText44} >Assigned By:</Text>
-              <Text style={styles.signUpText33} >{item.assignby}</Text>
-              {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
-            </View>
-
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-              <Text style={styles.signUpText44} >Task status Description:</Text>
-              <Text style={styles.signUpText33} >{item.taskStatusDesc}</Text>
-              {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-              <TouchableOpacity style={{ width: 100, backgroundColor: 'red' }} onPress={() => this.props.AddSubTask()}>
-                <Text style={{ color: '#fff', textAlign: 'center' }}>ADD SUB TASk</Text></TouchableOpacity>
-              <TouchableOpacity style={{ width: 120, backgroundColor: '#6cbb3f', marginLeft: 10, }} onPress={() => this.props.Module()}>
-                <Text style={{ color: '#fff', textAlign: 'center' }}>VIEW SUB TASK</Text></TouchableOpacity>
-
-            </View>
-
-
-          </CollapseBody>
-
-        </Collapse>
-
-      </View>
-    )
-  }
-}
 class ListItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true,
+      roledata:'',
+    }
+    this.GetLevel();
+  }
+  //Get List Based o  Task Level
+ GetLevel() {
+    log("Info", "to get level no");
+    AsyncStorage.getItem("levelno", (err, res) => {
+      const level = res;
+      AsyncStorage.getItem("emp_role", (err, res) => {
+        const emprole = res;
+        this.setState({
+          LevelId: level,
+          roledata: emprole
+        });
 
+      });
+      //  alert(typeof(this.state.LevelId));
+    });
+  }
   //to verify the main task 
   // to validate the user
   MaintaskVerify() {
-
+    log("Info", "MaintaskVerify() method is used to give alert");
     const { item } = this.props;
 
     Alert.alert(
@@ -365,7 +77,7 @@ class ListItem extends React.Component {
 
   //verifying the main task 
   MaintaskVerification(maintaskid) {
-
+    log("Info", "MaintaskVerification(maintaskid) method is used to verify maintask");
     AsyncStorage.getItem("cropcode", (err, res) => {
       const cropcode = res;
       NetInfo.fetch().then(state => {
@@ -398,11 +110,13 @@ class ListItem extends React.Component {
               } else if (responseJson.status == 'false') {
 
                 Alert.alert("you can not verify tasks untill subtasks are verified");
+                log("Warn", "you can not verify tasks untill subtasks are verified");
 
               }
             })
             .catch((error) => {
               console.error(error);
+              log("Error", "Maintask verification error");
             });
         }
       });
@@ -411,6 +125,166 @@ class ListItem extends React.Component {
 
   render() {
     const { item } = this.props;
+    
+     let button = <TouchableOpacity style={{ width: 100, marginRight: 5 }} onPress={() => { this.MaintaskVerify() }}>
+      <Text style={styles.signUpText02} >{item.completeStatus} </Text>
+    </TouchableOpacity>
+
+    let button1 = <TouchableOpacity style={{ width: 100, marginRight: 5 }} >
+      <Text style={styles.signUpText02} >{item.completeStatus} </Text>
+    </TouchableOpacity>
+    
+    let collapseSelection1 = <CollapseBody>
+
+
+      <View style={{ flexDirection: 'row', paddingRight: 25, }}>
+        <Text style={styles.signUpText44} >Description</Text>
+        <Text style={styles.signUpText33} >{item.taskdescription}</Text>
+        {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
+      </View>
+
+
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+        <TouchableOpacity style={{ width: 100, backgroundColor: 'black', marginRight: 5 }} onPress={() => this.props.AddSubTask()}>
+          <Text style={{ color: '#fff', textAlign: 'center' }}>Add Subtask</Text></TouchableOpacity>
+        <TouchableOpacity style={{ width: 100, backgroundColor: '#00A2C1', marginRight: 5, }} onPress={() => this.props.Module()}>
+          <Text style={{ color: '#fff', textAlign: 'center' }}>View Subtask</Text></TouchableOpacity>
+
+      </View>
+
+
+    </CollapseBody>
+    let collapseSelection2 = <CollapseBody>
+
+
+      <View style={{ flexDirection: 'row', paddingRight: 25 }}>
+        <Text style={styles.signUpText44} >Description</Text>
+        <Text style={styles.signUpText33} >{item.taskdescription}</Text>
+        {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
+      </View>
+
+
+      <View style={styles.box1}>
+
+        <View style={{ flexDirection: 'row',width:wp('50%') }}>
+          <Text style={styles.signUpText000} >Target Time:</Text>
+          <Text style={styles.signUpText111} >{item.targettime}</Text>
+          {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
+        </View>
+        <Text style={styles.signUpText002} >Task Status:{item.taskStatus}% completed </Text>
+
+
+      </View>
+      <View style={styles.box1}>
+
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.signUpText000} >Assigned on:</Text>
+          <Text style={styles.signUpText111} >{item.assignedon}</Text>
+          {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
+        </View>
+        {/* <Text style={styles.signUpText002} >Assigned By:Rishitha </Text> */}
+      </View>
+
+      <View style={{ flexDirection: 'row', paddingRight: 25, }}>
+        <Text style={styles.signUpText44} >Assigned By:</Text>
+        <Text style={styles.signUpText33} >{item.assignby}</Text>
+        {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
+      </View>
+
+      <View style={{ flexDirection: 'row', paddingRight: 25, }}>
+        <Text style={styles.signUpText44} >Task status Description:</Text>
+        <Text style={styles.signUpText33} >{item.taskStatusDesc}</Text>
+        {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
+      </View>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+        <TouchableOpacity style={{ width: 100, backgroundColor: 'black', marginRight: 5 }} onPress={() => this.props.AddSubTask()}>
+          <Text style={{ color: '#fff', textAlign: 'center' }}>Add Subtask</Text></TouchableOpacity>
+        <TouchableOpacity style={{ width: 100, backgroundColor: '#00A2C1', marginRight: 5, }} onPress={() => this.props.Module()}>
+          <Text style={{ color: '#fff', textAlign: 'center' }}>View Subtask</Text></TouchableOpacity>
+
+      </View>
+
+
+    </CollapseBody>
+
+    let collapseSelection3 = <CollapseBody>
+
+
+      <View style={{ flexDirection: 'row', paddingRight: 25, }}>
+        <Text style={styles.signUpText44} >Description :</Text>
+        <Text style={styles.signUpText33} >{item.taskdescription}</Text>
+        {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
+      </View>
+
+
+      <View style={styles.box1}>
+
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.signUpText000} >Target Time:</Text>
+          <Text style={styles.signUpText111} >{item.targettime}</Text>
+          {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
+        </View>
+        <Text style={styles.signUpText002} >Task Status:{item.taskStatus}% completed </Text>
+
+
+      </View>
+      <View style={styles.box1}>
+
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.signUpText000} >Assigned on:</Text>
+          <Text style={styles.signUpText111} >{item.assignedon}</Text>
+          {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
+        </View>
+        {/* <Text style={styles.signUpText002} >Assigned By:Rishitha </Text> */}
+      </View>
+
+      <View style={{ flexDirection: 'row', paddingRight: 25, }}>
+        <Text style={styles.signUpText44} >Assigned By:</Text>
+        <Text style={styles.signUpText33} >{item.assignby}</Text>
+        {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
+      </View>
+
+      <View style={{ flexDirection: 'row', paddingRight: 25, }}>
+        <Text style={styles.signUpText44} >Task status Description:</Text>
+        <Text style={styles.signUpText33} >{item.taskStatusDesc}</Text>
+        {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
+      </View>
+
+      <View style={styles.box1}>
+
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.signUpText000} >Extra Hours:</Text>
+          <Text style={styles.signUpText111} >{item.extraHours}</Text>
+          {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
+        </View>
+        {/* <Text style={styles.signUpText002} >Updated On:0000-00-00 00:00:00 </Text> */}
+
+      </View>
+
+
+      <View style={styles.box1}>
+
+        <View style={{ flexDirection: 'row',width:wp('50%') }}>
+          <Text style={styles.signUpText000} >Dependency:{item.dependencyTitle}</Text>
+          
+          {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
+        </View>
+      
+        <Text style={styles.signUpText111} >dependency:{item.dependencyUser}</Text>
+      </View>
+
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+        <TouchableOpacity style={{ width: 100, backgroundColor: 'black', marginRight: 5 }} onPress={() => this.props.AddSubTask()}>
+          <Text style={{ color: '#fff', textAlign: 'center' }}>Add Subtask</Text></TouchableOpacity>
+        <TouchableOpacity style={{ width: 100, backgroundColor: '#00A2C1', marginRight: 5, }} onPress={() => this.props.Module()}>
+          <Text style={{ color: '#fff', textAlign: 'center' }}>View Subtask</Text></TouchableOpacity>
+
+      </View>
+
+
+    </CollapseBody>
+
+
     return (
 
       <View>
@@ -431,9 +305,6 @@ class ListItem extends React.Component {
               <Text style={styles.signUpText3} >{item.projectitle}</Text>
             </View>
 
-
-
-
             <View style={styles.box1}>
 
               <View style={{ flexDirection: 'row' }}>
@@ -441,89 +312,18 @@ class ListItem extends React.Component {
                 <Text style={styles.signUpText11} >{item.tasktitle}</Text>
                 {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
               </View>
-              <TouchableOpacity onPress={() => { this.MaintaskVerify() }}>
-                <Text style={styles.signUpText02} >{item.completeStatus} </Text>
-              </TouchableOpacity>
-
+              <View>
+              {/* <TouchableOpacity onPress={() => { this.MaintaskVerify() }}> */}
+              <View>
+                {(this.state.roledata == 'Approver' || this.state.roledata == 'Admin') ? button : button1}
+              </View>
+              {/* <Text style={styles.signUpText02} >{item.completeStatus} </Text> */}
+            
+</View>
             </View>
 
           </CollapseHeader>
-          <CollapseBody>
-
-
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-              <Text style={styles.signUpText44} >Description :</Text>
-              <Text style={styles.signUpText33} >{item.taskdescription}</Text>
-              {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
-            </View>
-
-
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.signUpText000} >Target Time:</Text>
-                <Text style={styles.signUpText111} >{item.targettime}</Text>
-                {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-              </View>
-              <Text style={styles.signUpText002} >Task Status:{item.completeStatus}% completed </Text>
-
-
-            </View>
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.signUpText000} >Assigned on:</Text>
-                <Text style={styles.signUpText111} >{item.assignedon}</Text>
-                {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-              </View>
-              {/* <Text style={styles.signUpText002} >Assigned By:Rishitha </Text> */}
-            </View>
-
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-              <Text style={styles.signUpText44} >Assigned By:</Text>
-              <Text style={styles.signUpText33} >{item.assignby}</Text>
-              {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
-            </View>
-
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-              <Text style={styles.signUpText44} >Task status Description:</Text>
-              <Text style={styles.signUpText33} >{item.taskStatusDesc}</Text>
-              {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
-            </View>
-
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.signUpText000} >Extra Hours:</Text>
-                <Text style={styles.signUpText111} >{item.extraHours}</Text>
-                {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-              </View>
-              {/* <Text style={styles.signUpText002} >Updated On:0000-00-00 00:00:00 </Text> */}
-
-            </View>
-
-
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.signUpText000} >Dependency:</Text>
-                <Text style={styles.signUpText111} >{item.assignby}dependency</Text>
-                {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-              </View>
-              <Text style={styles.signUpText002} >Dependent:NA</Text>
-
-            </View>
-
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-              <TouchableOpacity style={{ width: 100, backgroundColor: 'red' }} onPress={() => this.props.AddSubTask()}>
-                <Text style={{ color: '#fff', textAlign: 'center' }}>ADD SUB TASk</Text></TouchableOpacity>
-              <TouchableOpacity style={{ width: 120, backgroundColor: '#6cbb3f', marginLeft: 10, }} onPress={() => this.props.Module()}>
-                <Text style={{ color: '#fff', textAlign: 'center' }}>VIEW SUB TASK</Text></TouchableOpacity>
-
-            </View>
-
-
-          </CollapseBody>
+          {this.state.LevelId === '1' ? collapseSelection1 : this.state.LevelId === '2' ? collapseSelection2 : this.state.LevelId === '3' ? collapseSelection3 : collapseSelection3}
 
         </Collapse>
 
@@ -536,12 +336,25 @@ class ListItem extends React.Component {
   }
 }
 export default class UserCompletedManageTask extends Component {
+  static navigationOptions = () => {
+    return {
+      tabBarOnPress({ navigation, defaultHandler }) {
+        navigation.state.params.onTabFocus();
+        defaultHandler();
+        this.onRefresh();
+      }
+    };
+  }
   constructor(props) {
 
     super(props);
+    props.navigation.setParams({
+      onTabFocus: this.handleTabFocus
+    });
     this.state = {
       isLoading: true,
       dataSource: [],
+      roledata:'',
       isFetching: false,
       result: '',
       open: false,
@@ -557,43 +370,41 @@ export default class UserCompletedManageTask extends Component {
       time: '',
       modifyTask: 'modify',
       dependencyid: '',
-      LevelId:'',
+      LevelId: '',
 
     }
     this.arrayholder = [];
   }
-
-  GetLevel(){
-    AsyncStorage.getItem("levelno",(err ,res)=>{
-      this.setState({LevelId:res});
-    
-    });
-   }
-  //  componentWillUpdate(){
-  //   this.GetLevel();
-  //  }
+  handleTabFocus = () => {
+    this.onRefresh();
+  };
   componentDidMount() {
-    this.GetLevel();
+    log("Debug", "user completed manage tasks screen is loaded");
+    //this.GetLevel();
     this.manageTasksCompleted()
   }
 
   //to refresh the data in user completed main tasks
   onRefresh() {
-    this.setState({ isFetching: true }, function () { this.manageTasksCompleted() });
+    this.setState({
+      dataSource:[],
+    })
+    
+    this.manageTasksCompleted();
   }
 
 
 
-  componentWillReceiveProps(nextProps) {
-    // console.log(nextProps);
-    // console.log("re loading...........")
-    // this.manageTasksCompleted();
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   // console.log(nextProps);
+  //   // console.log("re loading...........")
+  //   // this.manageTasksCompleted();
+  // }
 
 
   //get all the mian task in user role
   manageTasksCompleted() {
-
+    log("Info", "UserCompletedManageTasks:manageTasksCompleted() method is used to get completed manage tasks at admin side");
     AsyncStorage.getItem("cropcode", (err, res) => {
       const cropcode = res;
 
@@ -603,117 +414,130 @@ export default class UserCompletedManageTask extends Component {
           const ptime = res;
 
 
-        AsyncStorage.getItem("emp_role", (err, res) => {
-          const emp_role = res;
-          NetInfo.fetch().then(state => {
-            if (state.type == "none") {
-              console.log(state.type);
-              Snackbar.show({
-                title: 'No Internet Connection',
-                backgroundColor: 'red',
-                duration: Snackbar.LENGTH_LONG,
-              });
-            } else {
+          AsyncStorage.getItem("emp_role", (err, res) => {
+            const emp_role = res;
+            NetInfo.fetch().then(state => {
+              if (state.type == "none") {
+                console.log(state.type);
+                Snackbar.show({
+                  title: 'No Internet Connection',
+                  backgroundColor: 'red',
+                  duration: Snackbar.LENGTH_LONG,
+                });
+              } else {
 
-              fetch(API + 'getmanagemaintasks.php',
-                {
-                  method: 'POST',
-                  headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    crop: cropcode,
-                    action: "completed",
-                    userType: emp_role,
-                    empId: empId
+                fetch(API + 'getManageMaintasks.php',
+                  {
+                    method: 'POST',
+                    headers: {
+                      Accept: 'application/json',
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      crop: cropcode,
+                      action: "completed",
+                      userType: emp_role,
+                      empId: empId
+                    })
                   })
-                })
-                .then((response) => response.json())
+                  .then((response) => response.json())
                   .then((responseJson) => {
                     console.log(responseJson);
                     // alert(JSON.stringify(responseJson));
-                   // console.log(JSON.stringify(responseJson))
+                    // console.log(JSON.stringify(responseJson))
                     //alert(JSON.stringify(responseJson.data));
-                     let viewitemsList=[];
-                     if (this.state.isLoading) {
+                    let viewitemsList = [];
+                    // if (this.state.isLoading) {
                       // return (
                       //   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                       //     <DotIndicator color='#283B53' />
                       //   </View>
                       // );
-                
-                    
-                    if (responseJson.status === 'true')
+
+
+                      if (responseJson.status === 'true')
                       // alert(JSON.stringify(responseJson.data[0].ptime));
-                    {
-                      isLoading:false
+                      {
 
-                      for (let i = 0; i < JSON.stringify(responseJson.data.length); i++) {
-                    
-                      let time=JSON.stringify(responseJson.data[i].ptime)/24;
-                      let comparetime=Number(ptime);
-                      let countTime=Math.round(time);
-                      if(comparetime >0){
-                        if (countTime === comparetime) {
-                          console.log("intoo for");
-                          viewitemsList.push(responseJson.data[i]);
-                          this.setState({
-                           // alert(JSON.stringify(responseJson.data[i]));
-                            isLoading: false,
-                            dataSource: viewitemsList,
-                       
-                            isFetching: false
-                          },
-                          
-                            function () {
+                        // isLoading: false
+                        this.setState({
+                          isLoading: false,
+                          isFetching: false
+                        });
+
+                        for (let i = 0; i < JSON.stringify(responseJson.data.length); i++) {
+
+                          let time = JSON.stringify(responseJson.data[i].ptime) / 24;
+                          let comparetime = Number(ptime);
+                          let countTime = Math.round(time);
+                          if (comparetime > 0) {
+                            if (countTime === comparetime) {
+                              console.log("intoo for");
+                              viewitemsList.push(responseJson.data[i]);
+                              this.setState({
+                                // alert(JSON.stringify(responseJson.data[i]));
+                                isLoading: false,
+                                dataSource: viewitemsList,
+                                isFetching: false
+                              },
+
+                                function () {
 
 
-                            });
-                            this.arrayholder = viewitemsList;
-                            
-                        } 
-                        // else{
-                        //   alert('no data on this days');
-                        // }
-                      }
-                        else {
-                          console.log("else ptime");
-                          this.setState({
-                            isLoading: false,
-                            dataSource: responseJson.data,
-                            isFetching: false
-                          },
-                            function () {
+                                });
+                              this.arrayholder = viewitemsList;
 
-                            });
+                            }
+                            // else{
+                            //   alert('no data on this days');
+                            // }
+                          }
+                          else {
+                            log("Info", "no completed manage tasks at user side");
+                            console.log("else ptime");
+
+                            this.setState({
+                              isLoading: false,
+                              dataSource: responseJson.data,
+                              isFetching: false
+                            },
+                              function () {
+
+                              });
                             this.arrayholder = responseJson.data;
 
+                          }
                         }
+
+                      } else {
+                        Snackbar.show({
+                          title: 'No Completed Maintasks',
+                          backgroundColor: '#3BB9FF',
+                          duration: Snackbar.LENGTH_LONG,
+                        });
+                        this.setState({
+                          isFetching: false
+                        });
+
                       }
 
-                    }
-
-                     }
+                    // }
                   })
-                  
+
                   .catch((error) => {
                     console.error(error);
+                    log("Error", "Error in getting of completed manage tasks at user side");
                   });
-            }
+              }
+            });
           });
         });
-
-        });
-
       });
-
     });
-
-
-
   }
+  //Navigate to AddSubtaskModal for Modify Task
   AddSubTask(item, index) {
+    log("Info", "UserCompletedManageTasks:AddSubTask()To navigate to add subtask modal");
     console.log(item);
     console.log(index);
 
@@ -721,11 +545,9 @@ export default class UserCompletedManageTask extends Component {
 
   }
 
-
-
-  //to navigate to next screeen
+  //to navigate to next screeen ViewSubtasks
   Module = (item, index) => {
-
+    log("Info", "UserCompletedManageTasks:Module()To navigate to viewsubtask");
     console.log(item.taskid);
     console.log(index);
     this.props.navigation.navigate("ViewSubTasks", { taskId: item.taskid });
@@ -746,6 +568,7 @@ export default class UserCompletedManageTask extends Component {
 
   //to filter the search data in search area 
   SearchFilterFunction(text) {
+    log("Info", "UserCompletedManageTasks:SearchFilterFunction(text) for search functionality");
     console.log(text);
     const newData = this.arrayholder.filter(function (item) {
 
@@ -791,127 +614,46 @@ export default class UserCompletedManageTask extends Component {
 
   render() {
 
-    let ListDisplay
-    if(this.state.LevelId=='1'){
- 
-     ListDisplay=<View style={styles.end1}>
-                       <FlatList
-                       extraData={this.state}
-                       keyExtractor={this._keyExtractor}
-                       renderItem={this._renderItem}
-                       style={{ flex: 1, }}
-                       data={this.state.dataSource}
-                       onRefresh={() => this.onRefresh()}
-                       refreshing={this.state.isFetching}
-                       ItemSeparatorComponent={this.FlatListItemSeparator}
-                       renderItem={({ item, index }) =>
-                         <View style={styles.container2} >
-                           <ListItemLevel1 navigation={this.props.navigation}
-                             item={item}
-                            //  openModal={() => this.openModal(item, index)}
-                             ModifyMaintask={() => this.ModifyMaintask(item, index)}
-                             Module={()=>this.Module(item,index)}
-                             AddSubTask={()=>this.AddSubTask(item,index)}
-                           />
-                         </View>
-                       }
-                       keyExtractor={item => item.id}
-                       ListEmptyComponent={this._listEmptyComponent}/>
-                     </View>
- }
-     else if(this.state.LevelId=='2'){
-       ListDisplay=<View style={styles.end1}>
-                 <FlatList
-                 extraData={this.state}
-                 keyExtractor={this._keyExtractor}
-                 renderItem={this._renderItem}
-                 style={{ flex: 1, }}
-                 data={this.state.dataSource}
-                 onRefresh={() => this.onRefresh()}
-                 refreshing={this.state.isFetching}
-                 ItemSeparatorComponent={this.FlatListItemSeparator}
-                 renderItem={({ item, index }) =>
-                   <View style={styles.container2} >
-                     <ListItemLevel2 navigation={this.props.navigation}
-                       item={item}
-                      //  openModal={() => this.openModal(item, index)}
-                       ModifyMaintask={() => this.ModifyMaintask(item, index)}
-                       Module={()=>this.Module(item,index)}
-                       AddSubTask={()=>this.AddSubTask(item,index)}
-                     />
-                   </View>
-                 }
-                 keyExtractor={item => item.id}
-                 ListEmptyComponent={this._listEmptyComponent}/>
-               </View>
- 
-   }else if(this.state.LevelId=='3'){
- 
-     ListDisplay=<View style={styles.end1}>
-             <FlatList
-             extraData={this.state}
-             keyExtractor={this._keyExtractor}
-             renderItem={this._renderItem}
-             style={{ flex: 1, }}
-             data={this.state.dataSource}
-             onRefresh={() => this.onRefresh()}
-             refreshing={this.state.isFetching}
-             ItemSeparatorComponent={this.FlatListItemSeparator}
-             renderItem={({ item, index }) =>
-               <View style={styles.container2} >
-                 <ListItem navigation={this.props.navigation}
-                   item={item}
-                  //  openModal={() => this.openModal(item, index)}
-                   ModifyMaintask={() => this.ModifyMaintask(item, index)}
-                   Module={()=>this.Module(item,index)}
-                   AddSubTask={()=>this.AddSubTask(item,index)}
-                 />
-               </View>
-             }
-             keyExtractor={item => item.id}
-             ListEmptyComponent={this._listEmptyComponent}/>
-           </View>
- 
-   }else{
-     ListDisplay=<View style={styles.end1}>
-           <FlatList
-           extraData={this.state}
-           keyExtractor={this._keyExtractor}
-           renderItem={this._renderItem}
-           style={{ flex: 1, }}
-           data={this.state.dataSource}
-           onRefresh={() => this.onRefresh()}
-           refreshing={this.state.isFetching}
-           ItemSeparatorComponent={this.FlatListItemSeparator}
-           renderItem={({ item, index }) =>
-             <View style={styles.container2} >
-               <ListItem navigation={this.props.navigation}
-                 item={item}
-                //  openModal={() => this.openModal(item, index)}
-                 ModifyMaintask={() => this.ModifyMaintask(item, index)}
-                 Module={()=>this.Module(item,index)}
-                 AddSubTask={()=>this.AddSubTask(item,index)}
-               />
-             </View>
-           }
-           keyExtractor={item => item.id}
-           ListEmptyComponent={this._listEmptyComponent}/>
-         </View>
-   }
-
     return (
       <Container style={{ height: Dimensions.get('window').height }}>
         <Item>
+        <NavigationEvents
+            onDidFocus={() => this.onRefresh()}
+          />
           {/* <Icon name="ios-search" /> */}
           <Input placeholder="Search" />
-          <Icon style={{marginRight:10, color:'#c0c0c0'}} size={20} name="search" />
+          <Icon style={{ marginRight: 10, color: '#c0c0c0' }} size={20} name="search" />
 
         </Item>
-        {ListDisplay}
+        <View style={styles.end1}>
+          <FlatList
+            extraData={this.state}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderItem}
+            style={{ flex: 1, }}
+            data={this.state.dataSource}
+            onRefresh={() => this.onRefresh()}
+            refreshing={this.state.isFetching}
+            ItemSeparatorComponent={this.FlatListItemSeparator}
+            renderItem={({ item, index }) =>
+              <View style={styles.container2} >
+                <ListItem navigation={this.props.navigation}
+                  item={item}
+                  //  openModal={() => this.openModal(item, index)}
+                  ModifyMaintask={() => this.ModifyMaintask(item, index)}
+                  Module={() => this.Module(item, index)}
+                  AddSubTask={() => this.AddSubTask(item, index)}
+                />
+              </View>
+            }
+            keyExtractor={item => item.id}
+            ListEmptyComponent={this._listEmptyComponent} />
+        </View>
       </Container>
     );
   }
 }
+//Styles for UI
 const styles = StyleSheet.create({
 
   MainContainer:
@@ -924,7 +666,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor:'#f8f8f8',
+    backgroundColor: '#f8f8f8',
     //  paddingTop: 15,
     // justifyContent:'center',
     // alignItems:'center',
@@ -960,40 +702,41 @@ const styles = StyleSheet.create({
     //paddingTop: 40
   },
   signUpText0: {
-    fontSize: 14,
+    fontSize: 13,
     // paddingTop: 20,
     // fontWeight: 'bold',
     color: 'green',
     paddingLeft: 10,
-    fontWeight: "bold",
+    // fontWeight: "bold",
   },
   signUpText1: {
-    fontSize: 14,
+    fontSize: 13,
     // paddingTop: 20,
     // fontWeight: 'bold',
     color: 'green',
-    fontWeight: "bold",
+    // fontWeight: "bold",
     // paddingLeft: 23,
   },
 
   signUpText00: {
-    fontSize: 14,
+    fontSize: 13,
     // paddingTop: 20,
     // fontWeight: 'bold',
     // color: 'green',
     paddingLeft: 10,
   },
   signUpText11: {
-    fontSize: 14,
+    fontSize: 13,
     paddingBottom: 10,
+    width: wp('50%'),
     //  paddingTop: 20,
     // fontWeight: 'bold',
-    color: '#000000',
-    fontWeight: "bold",
+    color: 'black',
+    // fontWeight: "bold",
     // paddingLeft: 23,
   },
   signUpText000: {
-    fontSize: 12,
+    fontSize: 13,
     // paddingTop: 20,
     // fontWeight: 'bold',
     // color: 'green',
@@ -1001,7 +744,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   signUpText111: {
-    fontSize: 12,
+    fontSize: 13,
     paddingBottom: 10,
     //  paddingTop: 20,
     // fontWeight: 'bold',
@@ -1033,7 +776,7 @@ const styles = StyleSheet.create({
 
   },
   signUpText2: {
-    fontSize: 14,
+    fontSize: 13,
     paddingRight: 10,
     //   paddingTop: 20,
     paddingLeft: 23,
@@ -1044,7 +787,7 @@ const styles = StyleSheet.create({
 
   },
   signUpText02: {
-    fontSize: 14,
+    fontSize: 13,
     paddingRight: 10,
     // paddingTop: 20,
     paddingLeft: 23,
@@ -1055,10 +798,10 @@ const styles = StyleSheet.create({
 
   },
   signUpText002: {
-    fontSize: 12,
+    fontSize: 13,
     paddingRight: 10,
     // paddingTop: 20,
-    paddingLeft: 23,
+   // paddingLeft: 23,
     // color: 'red',
     paddingBottom: 5,
     // fontWeight: 'bold',
@@ -1069,12 +812,12 @@ const styles = StyleSheet.create({
 
     paddingBottom: 5,
     // paddingLeft: 23,
-    fontSize: 14,
+    fontSize: 13,
     // paddingRight:hp('-10%'),
     paddingRight: 13,
-    fontWeight: "bold",
+    // fontWeight: "bold",
     // fontWeight: 'bold',
-    color: '#000000',
+    color: 'black',
     alignItems: 'center',
   },
   signUpText4: {
@@ -1082,7 +825,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     // fontWeight: 'bold',
     //color: 'black',
-    fontSize: 14,
+    fontSize: 13,
     alignItems: 'center',
   },
 
@@ -1091,7 +834,7 @@ const styles = StyleSheet.create({
 
     paddingBottom: 5,
     // paddingLeft: 23,
-    fontSize: 12,
+    fontSize: 13,
     // paddingRight:hp('-10%'),
     paddingRight: 13,
     // fontWeight: 'bold',
@@ -1104,7 +847,7 @@ const styles = StyleSheet.create({
     // fontWeight: 'bold',
     // paddingTop: -15,
     //color: 'black',
-    fontSize: 12,
+    fontSize: 13,
     alignItems: 'center',
   },
 
@@ -1140,7 +883,7 @@ const styles = StyleSheet.create({
 
   },
   signUpText: {
-    fontSize: 20,
+    fontSize: 13,
     justifyContent: 'center',
 
 

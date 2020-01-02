@@ -17,6 +17,8 @@ import com.qptms.R;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 // @react-native-community/netinfo
 import com.reactnativecommunity.netinfo.NetInfoPackage;
+// react-native-device-info
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 // react-native-gesture-handler
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 // react-native-mail-launcher
@@ -60,6 +62,7 @@ public class PackageList {
       new MainReactPackage(),
       new AsyncStoragePackage(),
       new NetInfoPackage(),
+      new RNDeviceInfo(),
       new RNGestureHandlerPackage(),
       new RNMailLauncherPackage(),
       new SnackbarPackage(),

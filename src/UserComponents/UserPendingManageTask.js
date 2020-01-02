@@ -2,7 +2,7 @@
 FileName:UserPendingManageTask.js
 Version:1.0.0
 Purpose:Getting the List of user pending manage tasks list 
-Devloper:Rishitha,Harsha,Mahesh,Santosh
+Devloper:Rishitha,Naveen,Harsha,Mahesh,Santosh
 */
 
 import React, { Component } from 'react';
@@ -16,6 +16,8 @@ import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react
 import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
+import log from '../LogFile/Log';
+import { NavigationEvents } from 'react-navigation';
 import {
   BallIndicator,
   BarIndicator,
@@ -26,159 +28,147 @@ import {
   SkypeIndicator,
   UIActivityIndicator
 } from 'react-native-indicators';
-class ListItemLevel1 extends React.Component {
-  render() {
-    const { item } = this.props;
-    if (this.state.isLoading) {
-      return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <DotIndicator color='#000000' />
-        </View>
-      );
-
-    }
-    return (
-      <View>
-        <Collapse style={styles.container}>
-
-          <CollapseHeader style={styles.boxheader}>
-
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={styles.signUpText0} >TASK ID:</Text>
-              <Text style={styles.signUpText1} >{item.taskid}</Text>
-            </View>
-            <Text style={styles.signUpText2} >{item.date}</Text>
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-              <Text style={styles.signUpText4} >Project Title:</Text>
-              <Text style={styles.signUpText3} >{item.projectitle}</Text>
-            </View>
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.signUpText00} >Task Title:</Text>
-                <Text style={styles.signUpText11} >{item.tasktitle}</Text>
-              </View>
-              <Text style={styles.signUpText02} >Pending </Text>
-            </View>
-          </CollapseHeader>
-
-          <CollapseBody>
-            <View style={{ flexDirection: 'row', paddingRight: 35, }}>
-              <Text style={styles.signUpText44} >Description</Text>
-              <Text style={styles.signUpText33} >{item.taskdescription}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 5 }}>
-              {/* <TouchableOpacity style={{ width: 50, backgroundColor: 'red', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center' }}>Delete</Text></TouchableOpacity> */}
-              <TouchableOpacity style={{ width: 90, backgroundColor: '#97f362', marginLeft: 10, }} onPress={() => this.props.AddSubTask()}><Text style={{ color: '#fff', textAlign: 'center' }}>Add Sub Task</Text></TouchableOpacity>
-              <TouchableOpacity style={{ width: 110, backgroundColor: '#6cbb3f', marginLeft: 10, }} onPress={() => this.props.Module()}>
-                <Text style={{ color: '#fff', textAlign: 'center' }}>View Sub Task</Text></TouchableOpacity>
-              <TouchableOpacity onPress={this.props.ModifyMaintask} style={{ width: 50, backgroundColor: 'black', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center', }}>Modify</Text></TouchableOpacity>
-            </View>
-
-
-          </CollapseBody>
-        </Collapse>
-      </View>
-    )
-  }
-}
-
-class ListItemLevel2 extends React.Component {
-  
-  render() {
-    const { item } = this.props;
-
-
-    return (
-      <View>
-        <Collapse style={styles.container}>
-
-          <CollapseHeader style={styles.boxheader}>
-
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={styles.signUpText0} >TASK ID:</Text>
-              <Text style={styles.signUpText1} >{item.taskid}</Text>
-            </View>
-            {/* <Text style={styles.signUpText2} >{item.date}</Text> */}
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-              <Text style={styles.signUpText4} >Project Title:</Text>
-              <Text style={styles.signUpText3} >{item.projectitle}</Text>
-            </View>
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.signUpText00} >Task Title:</Text>
-                <Text style={styles.signUpText11} >{item.tasktitle}</Text>
-              </View>
-              <Text style={styles.signUpText02} >Pending </Text>
-            </View>
-          </CollapseHeader>
-
-          <CollapseBody>
-            <View style={{ flexDirection: 'row', paddingRight: 35, }}>
-              <Text style={styles.signUpText44} >Description</Text>
-              <Text style={styles.signUpText33} >{item.taskdescription}</Text>
-            </View>
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row', paddingRight: 35, width: wp('50%') }}>
-                <Text style={styles.signUpText44} >Target Time:</Text>
-                <Text style={styles.signUpText33} >{item.targettime}</Text>
-              </View>
-              <View styles={{ paddingRight: 40 }}>
-                <Text style={styles.signUpText111} >Task Status:0% completed </Text>
-              </View>
-
-            </View>
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row', width: wp('50%') }}>
-                <Text style={styles.signUpText44} >Assigned To:</Text>
-                <Text style={styles.signUpText33} >{item.assigntto}</Text>
-              </View>
-              <Text style={styles.signUpText002} >Assigned By:{item.assignby} </Text>
-
-
-            </View>
-
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-              <Text style={styles.signUpText44} >Assigned On:</Text>
-              <Text style={styles.signUpText33} >{item.assignedon}</Text>
-            </View>
-
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 5 }}>
-              {/* <TouchableOpacity style={{ width: 50, backgroundColor: 'red', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center' }}>Delete</Text></TouchableOpacity> */}
-              <TouchableOpacity style={{ width: 90, backgroundColor: '#97f362', marginLeft: 10, }} onPress={() => this.props.AddSubTask()}><Text style={{ color: '#fff', textAlign: 'center' }}>Add Sub Task</Text></TouchableOpacity>
-              <TouchableOpacity style={{ width: 110, backgroundColor: '#6cbb3f', marginLeft: 10, }} onPress={() => this.props.Module()}>
-                <Text style={{ color: '#fff', textAlign: 'center' }}>View Sub Task</Text></TouchableOpacity>
-              <TouchableOpacity onPress={this.props.ModifyMaintask} style={{ width: 50, backgroundColor: 'black', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center', }}>Modify</Text></TouchableOpacity>
-            </View>
-
-
-          </CollapseBody>
-        </Collapse>
-      </View>
-    )
-  }
-}
-
 class ListItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
     }
+    this.GetLevel();
   }
 
- 
-
+  GetLevel() {
+    log("Info", "to get level no");
+    AsyncStorage.getItem("levelno", (err, res) => {
+      const level = res;
+    console.warn(level+"hdhjdjehwdehjehrjherjehreh")
+      this.setState({
+        LevelId: level
+      });
+    });
+  }
   render() {
+
     const { item } = this.props;
-    
-    // alert(item.ptime);
+    console.warn(this.state.LevelId + "heelo naveen")
+    let collapseSelection1 = <CollapseBody>
+      <View style={{ flexDirection: 'row', paddingRight: 35, }}>
+        <Text style={styles.signUpText44} >Description</Text>
+        <Text style={styles.signUpText33} >{item.taskdescription}</Text>
+      </View>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 5 }}>
+        {/* <TouchableOpacity style={{ width: 50, backgroundColor: 'red', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center' }}>Delete</Text></TouchableOpacity> */}
+        <TouchableOpacity style={{ width: 90, backgroundColor: 'black', marginLeft: 10, }} onPress={() => this.props.AddSubTask()}><Text style={{ color: '#fff', textAlign: 'center', fontSize: 13 }}>Add Subtask</Text></TouchableOpacity>
+        <TouchableOpacity style={{ width: 110, backgroundColor: '#00A2C1', marginLeft: 10, }} onPress={() => this.props.Module()}>
+          <Text style={{ color: '#fff', textAlign: 'center', fontSize: 13 }}>View Subtask</Text></TouchableOpacity>
+        <TouchableOpacity onPress={this.props.ModifyMaintask} style={{ width: 50, backgroundColor: 'black', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center', fontSize: 13 }}>Modify</Text></TouchableOpacity>
+        <Icon size={22} style={{ paddingLeft: 10, paddingTop: 4 }} name="chatboxes" onPress={() => { this.props.TaskChat() }}></Icon>
+      </View>
+    </CollapseBody>
+
+    let collapseSelection2 = <CollapseBody>
+      <View style={{ flexDirection: 'row', paddingRight: 35, }}>
+        <Text style={styles.signUpText44} >Description</Text>
+        <Text style={styles.signUpText33} >{item.taskdescription}</Text>
+      </View>
+      <View style={styles.box1}>
+
+        <View style={{ flexDirection: 'row', paddingRight: 35, width: wp('50%') }}>
+          <Text style={styles.signUpText44} >Target Time:</Text>
+          <Text style={styles.signUpText33} >{item.targettime}</Text>
+        </View>
+        <View styles={{ paddingRight: 40 }}>
+          <Text style={styles.signUpText111} >Task Status:{item.taskStatus}% completed </Text>
+        </View>
+
+      </View>
+      <View style={styles.box1}>
+
+        <View style={{ flexDirection: 'row', width: wp('50%') }}>
+          <Text style={styles.signUpText44} >Assigned To:</Text>
+          <Text style={styles.signUpText33} >{item.assigntto}</Text>
+        </View>
+        <Text style={styles.signUpText002} >Assigned By:{item.assignby} </Text>
+
+
+      </View>
+
+      <View style={{ flexDirection: 'row', paddingRight: 25, }}>
+        <Text style={styles.signUpText44} >Assigned On:</Text>
+        <Text style={styles.signUpText33} >{item.assignedon}</Text>
+      </View>
+
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 5 }}>
+        {/* <TouchableOpacity style={{ width: 50, backgroundColor: 'red', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center' }}>Delete</Text></TouchableOpacity> */}
+        <TouchableOpacity style={{ width: 90, backgroundColor: '#97f362', marginLeft: 10, }} onPress={() => this.props.AddSubTask()}><Text style={{ color: '#fff', textAlign: 'center', fontSize: 13 }}>Add Subtask</Text></TouchableOpacity>
+        <TouchableOpacity style={{ width: 110, backgroundColor: '#6cbb3f', marginLeft: 10, }} onPress={() => this.props.Module()}>
+          <Text style={{ color: '#fff', textAlign: 'center', fontSize: 13 }}>View Subtask</Text></TouchableOpacity>
+        <TouchableOpacity onPress={this.props.ModifyMaintask} style={{ width: 50, backgroundColor: 'black', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center', fontSize: 13 }}>Modify</Text></TouchableOpacity>
+        <Icon size={22} style={{ paddingLeft: 10, paddingTop: 4 }} name="chatboxes" onPress={() => { this.props.TaskChat() }}></Icon>
+      </View>
+    </CollapseBody>
+
+    let collapseSelection3 = <CollapseBody>
+      <View style={{ flexDirection: 'row', paddingRight: 35, }}>
+        <Text style={styles.signUpText44} >Description</Text>
+        <Text style={styles.signUpText33} >{item.taskdescription}</Text>
+        {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
+      </View>
+
+
+      <View style={styles.box1}>
+
+        <View style={{ flexDirection: 'row', paddingRight: 35, width: wp('50%') }}>
+          <Text style={styles.signUpText44} >Target Time:</Text>
+          <Text style={styles.signUpText33} >{item.targettime}</Text>
+        </View>
+        <View styles={{ paddingRight: 40 }}>
+          <Text style={styles.signUpText111} >Task Status:{item.taskStatus}% completed </Text>
+        </View>
+
+      </View>
+      <View style={styles.box1}>
+
+        <View style={{ flexDirection: 'row', width: wp('50%') }}>
+          <Text style={styles.signUpText44} >Assigned To:</Text>
+          <Text style={styles.signUpText33} >{item.assigntto}</Text>
+          {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
+        </View>
+        <Text style={styles.signUpText002} >Assigned By:{item.assignby} </Text>
+
+
+      </View>
+
+      <View style={{ flexDirection: 'row', paddingRight: 25, }}>
+        <Text style={styles.signUpText44} >Assigned On:</Text>
+        <Text style={styles.signUpText33} >{item.assignedon}</Text>
+        {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
+      </View>
+
+
+      <View style={styles.box1}>
+
+        <View style={{ flexDirection: 'row', width: wp('45%'), paddingRight: 50, }}>
+          <Text style={styles.signUpText44} >Time Left:</Text>
+          <Text style={styles.signUpText33} >{item.timeLeft}</Text>
+          {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
+        </View>
+        <Text style={styles.signUpText000} >Updated On:{item.taskEndDate} </Text>
+
+      </View>
+
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 5 }}>
+        {/* <TouchableOpacity style={{ width: 50, backgroundColor: 'red', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center' }}>Delete</Text></TouchableOpacity> */}
+        <TouchableOpacity style={{ width: 90, backgroundColor: 'black', marginLeft: 10, }} onPress={() => this.props.AddSubTask()}><Text style={{ color: '#fff', textAlign: 'center', fontSize: 13 }}>Add Subtask</Text></TouchableOpacity>
+        <TouchableOpacity style={{ width: 110, backgroundColor: '#00A2C1', marginLeft: 10, }} onPress={() => this.props.Module()}>
+          <Text style={{ color: '#fff', textAlign: 'center', fontSize: 13 }}>View Subtask</Text></TouchableOpacity>
+        <TouchableOpacity onPress={this.props.ModifyMaintask} style={{ width: 50, backgroundColor: 'black', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center', fontSize: 13 }}>Modify</Text></TouchableOpacity>
+        <Icon size={22} style={{ paddingLeft: 10, paddingTop: 4 }} name="chatboxes" onPress={() => { this.props.TaskChat() }}></Icon>
+      </View>
+    </CollapseBody>
     return (
       <View>
-        <Collapse style={styles.container}>
+        <Collapse style={[item.cDate >= item.targettime ? styles.container : styles.container1]}>
 
           <CollapseHeader style={styles.boxheader}>
 
@@ -187,11 +177,7 @@ class ListItem extends React.Component {
               <Text style={styles.signUpText1} >{item.taskid}</Text>
               {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
             </View>
-            <Text style={styles.signUpText2} >{item.date}</Text>
-
-
-
-
+  
             <View style={{ flexDirection: 'row', paddingRight: 25, }}>
               <Text style={styles.signUpText4} >Project Title:</Text>
               <Text style={styles.signUpText3} >{item.projectitle}</Text>
@@ -211,67 +197,7 @@ class ListItem extends React.Component {
             </View>
           </CollapseHeader>
 
-          <CollapseBody>
-
-
-            <View style={{ flexDirection: 'row', paddingRight: 35, }}>
-              <Text style={styles.signUpText44} >Description</Text>
-              <Text style={styles.signUpText33} >{item.taskdescription}</Text>
-              {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
-            </View>
-
-
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row', paddingRight: 35, width: wp('50%') }}>
-                <Text style={styles.signUpText44} >Target Time:</Text>
-                <Text style={styles.signUpText33} >{item.targettime}</Text>
-              </View>
-              <View styles={{ paddingRight: 40 }}>
-                <Text style={styles.signUpText111} >Task Status:0% completed </Text>
-              </View>
-
-            </View>
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row', width: wp('50%') }}>
-                <Text style={styles.signUpText44} >Assigned To:</Text>
-                <Text style={styles.signUpText33} >{item.assigntto}</Text>
-                {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-              </View>
-              <Text style={styles.signUpText002} >Assigned By:{item.assignby} </Text>
-
-
-            </View>
-
-            <View style={{ flexDirection: 'row', paddingRight: 25, }}>
-              <Text style={styles.signUpText44} >Assigned On:</Text>
-              <Text style={styles.signUpText33} >{item.assignedon}</Text>
-              {/* <Text style={styles.signUpText33} >{item.recipeNames}</Text> */}
-            </View>
-
-
-            <View style={styles.box1}>
-
-              <View style={{ flexDirection: 'row', width: wp('45%'), paddingRight: 50, }}>
-                <Text style={styles.signUpText44} >Time Left:</Text>
-                <Text style={styles.signUpText33} >{item.timeLeft}</Text>
-                {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
-              </View>
-              <Text style={styles.signUpText000} >Updated On:{item.taskEndDate} </Text>
-
-            </View>
-
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 5 }}>
-              {/* <TouchableOpacity style={{ width: 50, backgroundColor: 'red', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center' }}>Delete</Text></TouchableOpacity> */}
-              <TouchableOpacity style={{ width: 90, backgroundColor: '#97f362', marginLeft: 10, }} onPress={() => this.props.AddSubTask()}><Text style={{ color: '#fff', textAlign: 'center' }}>Add Sub Task</Text></TouchableOpacity>
-              <TouchableOpacity style={{ width: 110, backgroundColor: '#6cbb3f', marginLeft: 10, }} onPress={() => this.props.Module()}>
-                <Text style={{ color: '#fff', textAlign: 'center' }}>View Sub Task</Text></TouchableOpacity>
-              <TouchableOpacity onPress={this.props.ModifyMaintask} style={{ width: 50, backgroundColor: 'black', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center', }}>Modify</Text></TouchableOpacity>
-            </View>
-
-
-          </CollapseBody>
+          {this.state.LevelId === '1' ? collapseSelection1 : this.state.LevelId === '2' ? collapseSelection2 : this.state.LevelId === '3' ? collapseSelection3 : collapseSelection3}
         </Collapse>
 
         <View style={{ backgroundColor: '#fff', height: 5 }}>
@@ -284,8 +210,20 @@ class ListItem extends React.Component {
 
 
 export default class Pending extends Component {
+  static navigationOptions = () => {
+    return {
+      tabBarOnPress({ navigation, defaultHandler }) {
+        navigation.state.params.onTabFocus();
+        defaultHandler();
+        this.onRefresh();
+      }
+    };
+  }
   constructor(props) {
     super(props);
+    props.navigation.setParams({
+      onTabFocus: this.handleTabFocus
+    });
     this.state = {
       isLoading: true,
       dataSource: [],
@@ -309,59 +247,60 @@ export default class Pending extends Component {
     };
     this.arrayholder = [];
   }
+  handleTabFocus = () => {
+    this.onRefresh();
+  };
 
-
+  //Getting the Levels
   GetLevel() {
-
+    log("Info", "to get level no");
     AsyncStorage.getItem("levelno", (err, res) => {
-      this.setState({ LevelId: res });
-
+      const level = res;
+      // alert(level)
+      this.setState({
+        LevelId: level
+      });
+      //  alert(typeof(this.state.LevelId));
     });
+
   }
-  // componentWillUpdate() {
-  //   this.GetLevel();
 
-  // }
+  componentDidMount() {
+    log("Debug", "user pending manage tasks screen is loaded");
+    this.UserPendingManagetasks();
+    this.GetLevel();
 
-  // componentDidMount() {
-
-  //   this.UserPendingManagetasks();
-  //   this.GetLevel();
-
-  // }
-  GetLevel(){
-    AsyncStorage.getItem("levelno",(err ,res)=>{
-      this.setState({LevelId:res});
-    
-    });
-   }
-  //  componentDidUpdate(){
-  //   this.GetLevel();
-  //  }
+  }
 
   componentWillMount() {
 
     this.UserPendingManagetasks();
     this.GetLevel();
-  
+  }
+
+  //Navigates to TaskChat Screen
+  TaskChat(item, index) {
+    log("Info", "UserPendingManageTasks:TaskChat(item, index) used to navigate to taskchat");
+    this.props.navigation.navigate("TaskChat", { taskid: item.taskid, action: "maintask" });
   }
 
   //to refresh the pending manage tasks list 
   onRefresh() {
-    this.setState({ isFetching: true }, function () { this.UserPendingManagetasks() });
+    this.setState({
+      dataSource:[],
+    })
+    { this.UserPendingManagetasks() };
   }
   componentWillReceiveProps(nextProps) {
     this.UserPendingManagetasks();
   }
 
-  // componentDidUpdate(){
-  //   this.UserPendingManagetasks();
-  // }
+
 
 
   //UserPendingManagetasks Getting
   UserPendingManagetasks() {
-
+    log("Info", "userPendingManageTasks:DeleteMaintask(maintaskid) method is used to delete maintask");
     AsyncStorage.getItem("cropcode", (err, res) => {
       const cropcode = res;
 
@@ -373,19 +312,19 @@ export default class Pending extends Component {
           const emp_role = res;
           AsyncStorage.getItem("nodays", (err, res) => {
             const ptime = res;
-          //  alert(ptime);
+            //Checking the Internet Connection
             NetInfo.fetch().then(state => {
               if (state.type == "none") {
                 console.log(state.type);
                 Snackbar.show({
                   title: 'No Internet Connection',
-                  backgroundColor: 'red',
+                  backgroundColor: '#3BB9FF',
                   duration: Snackbar.LENGTH_LONG,
                 });
               } else {
-            
 
-                fetch(API + 'getmanagemaintasks.php',
+
+                fetch(API + 'getManageMaintasks.php',
                   {
                     method: 'POST',
                     headers: {
@@ -402,73 +341,81 @@ export default class Pending extends Component {
                   .then((response) => response.json())
                   .then((responseJson) => {
                     console.log(responseJson);
-                    // alert(JSON.stringify(responseJson));
-                   // console.log(JSON.stringify(responseJson))
-                    //alert(JSON.stringify(responseJson.data));
-                     let viewitemsList=[];
-                     if (this.state.isLoading) {
+                    let viewitemsList = [];
+                    // if (this.state.isLoading) {
                       // return (
                       //   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                       //     <DotIndicator color='#283B53' />
                       //   </View>
                       // );
-                
-                    
-                    if (responseJson.status === 'true')
+
+
+                      if (responseJson.status === 'true')
                       // alert(JSON.stringify(responseJson.data[0].ptime));
-                    {
-                      isLoading:false
+                      {
+                        isLoading: false
 
-                      for (let i = 0; i < JSON.stringify(responseJson.data.length); i++) {
-                    
-                      let time=JSON.stringify(responseJson.data[i].ptime)/24;
-                      let comparetime=Number(ptime);
-                      let countTime=Math.round(time);
-                      if(comparetime >0){
-                        if (countTime === comparetime) {
-                          console.log("intoo for");
-                          viewitemsList.push(responseJson.data[i]);
-                          this.setState({
-                           // alert(JSON.stringify(responseJson.data[i]));
-                            isLoading: false,
-                            dataSource: viewitemsList,
-                       
-                            isFetching: false
-                          },
-                          
-                            function () {
+                        for (let i = 0; i < JSON.stringify(responseJson.data.length); i++) {
+
+                          let time = JSON.stringify(responseJson.data[i].ptime) / 24;
+                          let comparetime = Number(ptime);
+                          let countTime = Math.round(time);
+                          if (comparetime > 0) {
+                            if (countTime === comparetime) {
+                              console.log("intoo for");
+                              viewitemsList.push(responseJson.data[i]);
+                              this.setState({
+                                // alert(JSON.stringify(responseJson.data[i]));
+                                isLoading: false,
+                                dataSource: viewitemsList,
+
+                                isFetching: false
+                              },
+
+                                function () {
 
 
-                            });
-                            this.arrayholder = viewitemsList;
-                            
-                        } 
-                        // else{
-                        //   alert('no data on this days');
-                        // }
-                      }
-                        else {
-                          console.log("else ptime");
-                          this.setState({
-                            isLoading: false,
-                            dataSource: responseJson.data,
-                            isFetching: false
-                          },
-                            function () {
+                                });
+                              this.arrayholder = viewitemsList;
 
-                            });
+                            }
+                            // else{
+                            //   alert('no data on this days');
+                            // }
+                          }
+                          else {
+                            log("Info", "no pending manage tasks at user side");
+                            console.log("else ptime");
+                            this.setState({
+                              isLoading: false,
+                              dataSource: responseJson.data,
+                              isFetching: false
+                            },
+                              function () {
+
+                              });
                             this.arrayholder = responseJson.data;
 
+                          }
                         }
+
+                      } else {
+
+                        console.log("else" + responseJson.status);
+                        this.setState({ isLoading: false });
+                        Snackbar.show({
+                          title: 'No Pending Maintasks',
+                          backgroundColor: '#3BB9FF',
+                          duration: Snackbar.LENGTH_LONG,
+                        });
                       }
 
-                    }
-
-                     }
+                    // }
                   })
-                  
+
                   .catch((error) => {
                     console.error(error);
+                    log("Error", "error in  pending manage tasks at user side");
                   });
               }
             });
@@ -482,17 +429,18 @@ export default class Pending extends Component {
 
   //Modify Maintask
   ModifyMaintask(item, index) {
-
+    log("Info", "UsrePendingManageTasks:ModifyMaintask(item, index) used to navigate to modify maintask screen");
     const { modifyTask } = this.state;
-    this.props.navigation.navigate("AddTask", { maintaskid: item.taskid, IdeaId: item.ideano, modifyTask: modifyTask });
+    this.props.navigation.navigate("AddTask", { maintaskid: item.taskid, IdeaId: item.ideano, modifyTask: modifyTask,maintaskdesc:item.taskdescription,maintasktitle:item.tasktitle });
 
   }
+  // Navigate to Add or Modify Subtask
   AddSubTask(item, index) {
-
+    log("Info", "UsrePendingManageTasks:AddSubTask(item, index) used to navigate to modify addsubtask screen");
     this.props.navigation.navigate('AddSubTaskModal', { action: 'modify', moduleId: item.moduleId, taskid: item.taskid });
 
   }
-
+  //Seperate the list data
   FlatListItemSeparator = () => {
     return (
       <View
@@ -503,17 +451,16 @@ export default class Pending extends Component {
       />
     );
   }
-
+  //Navigate to View the Subtasks
   Module = (item, index) => {
 
     console.log(item.taskid);
     console.log(index);
     this.props.navigation.navigate("ViewSubTasks", { taskId: item.taskid });
 
-      }
+  }
 
-
-
+  //For empty data
   _listEmptyComponent = () => {
     return (
       <View>
@@ -525,6 +472,7 @@ export default class Pending extends Component {
 
   //to filter the search data in search area 
   SearchFilterFunction(text) {
+    log("Info", "UserPendingManageTasks:DeleteMaintask(maintaskid) method is used to delete maintask");
     console.log(text);
     const newData = this.arrayholder.filter(function (item) {
 
@@ -570,8 +518,6 @@ export default class Pending extends Component {
 
 
   render() {
-    let ListDisplay
-
     if (this.state.isLoading) {
       return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -580,121 +526,43 @@ export default class Pending extends Component {
       );
 
     }
-    
-    else if (this.state.LevelId == '1') {
-
-    ListDisplay=<View style={styles.end1}>
-                      <FlatList
-                      extraData={this.state}
-                      keyExtractor={this._keyExtractor}
-                      renderItem={this._renderItem}
-                      style={{ flex: 1, }}
-                      data={this.state.dataSource}
-                      onRefresh={() => this.onRefresh()}
-                      refreshing={this.state.isFetching}
-                      ItemSeparatorComponent={this.FlatListItemSeparator}
-                      renderItem={({ item, index }) =>
-                        <View style={styles.container2} >
-                          <ListItemLevel1 navigation={this.props.navigation}
-                            item={item}
-                            AddSubTask={() => this.AddSubTask(item, index)}
-                            ModifyMaintask={() => this.ModifyMaintask(item, index)}
-                            Module={()=>this.Module(item,index)}
-                          />
-                        </View>
-                      }
-                      keyExtractor={item => item.id}
-                      ListEmptyComponent={this._listEmptyComponent}/>
-                    </View>
-}else if (this.state.LevelId == '2') {
-      ListDisplay = <View style={styles.end1}>
-        <FlatList
-          extraData={this.state}
-          keyExtractor={this._keyExtractor}
-          renderItem={this._renderItem}
-          style={{ flex: 1, }}
-          data={this.state.dataSource}
-          onRefresh={() => this.onRefresh()}
-          refreshing={this.state.isFetching}
-          ItemSeparatorComponent={this.FlatListItemSeparator}
-          renderItem={({ item, index }) =>
-            <View style={styles.container2} >
-              <ListItemLevel2 navigation={this.props.navigation}
-                item={item}
-                AddSubTask={() => this.AddSubTask(item, index)}
-                ModifyMaintask={() => this.ModifyMaintask(item, index)}
-                Module={() => this.Module(item, index)}
-              />
-            </View>
-          }
-          keyExtractor={item => item.id}
-          ListEmptyComponent={this._listEmptyComponent} />
-      </View>
-
-    } else if (this.state.LevelId == '3') {
-
-      ListDisplay = <View style={styles.end1}>
-        <FlatList
-          extraData={this.state}
-          keyExtractor={this._keyExtractor}
-          renderItem={this._renderItem}
-          style={{ flex: 1, }}
-          data={this.state.dataSource}
-          onRefresh={() => this.onRefresh()}
-          refreshing={this.state.isFetching}
-          ItemSeparatorComponent={this.FlatListItemSeparator}
-          renderItem={({ item, index }) =>
-            <View style={styles.container2} >
-              <ListItem navigation={this.props.navigation}
-                item={item}
-                // openModal={() => this.openModal(item, index)}
-                ModifyMaintask={() => this.ModifyMaintask(item, index)}
-                Module={() => this.Module(item, index)}
-                AddSubTask={() => this.AddSubTask(item, index)}
-              />
-            </View>
-          }
-          keyExtractor={item => item.id}
-          ListEmptyComponent={this._listEmptyComponent} />
-      </View>
-
-    } else {
-      ListDisplay = <View style={styles.end1}>
-        <FlatList
-          extraData={this.state}
-          keyExtractor={this._keyExtractor}
-          renderItem={this._renderItem}
-          style={{ flex: 1, }}
-          data={this.state.dataSource}
-          onRefresh={() => this.onRefresh()}
-          refreshing={this.state.isFetching}
-          ItemSeparatorComponent={this.FlatListItemSeparator}
-          renderItem={({ item, index }) =>
-            <View style={styles.container2} >
-              <ListItem navigation={this.props.navigation}
-                item={item}
-                AddSubTask={() => this.AddSubTask(item, index)}
-                ModifyMaintask={() => this.ModifyMaintask(item, index)}
-                Module={() => this.Module(item, index)}
-                AddSubTask={() => this.AddSubTask(item, index)}
-              />
-            </View>
-          }
-          keyExtractor={item => item.id}
-          ListEmptyComponent={this._listEmptyComponent} />
-      </View>
-    }
 
     return (
       <View style={styles.MainContainer}>
         <Item>
+        <NavigationEvents
+            onDidFocus={() => this.onRefresh()}
+          />
           <Input placeholder="Search"
             onChangeText={(text) => this.SearchFilterFunction(text)} />
-          <Icon style={{marginRight:10, color:'#c0c0c0'}} size={20} name="search" />
+          <Icon style={{ marginRight: 10, color: '#c0c0c0' }} size={20} name="search" />
         </Item>
 
-
-        {ListDisplay}
+        <View style={styles.end1}>
+          <FlatList
+            extraData={this.state}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderItem}
+            style={{ flex: 1, }}
+            data={this.state.dataSource}
+            onRefresh={() => this.onRefresh()}
+            refreshing={this.state.isFetching}
+            ItemSeparatorComponent={this.FlatListItemSeparator}
+            renderItem={({ item, index }) =>
+              <View style={styles.container2} >
+                <ListItem navigation={this.props.navigation}
+                  item={item}
+                  AddSubTask={() => this.AddSubTask(item, index)}
+                  ModifyMaintask={() => this.ModifyMaintask(item, index)}
+                  Module={() => this.Module(item, index)}
+                  AddSubTask={() => this.AddSubTask(item, index)}
+                  TaskChat={() => this.TaskChat(item, index)}
+                />
+              </View>
+            }
+            keyExtractor={item => item.id}
+            ListEmptyComponent={this._listEmptyComponent} />
+        </View>
 
 
 
@@ -703,7 +571,7 @@ export default class Pending extends Component {
     );
   }
 }
-
+//Styles for UI
 const styles = StyleSheet.create({
   MainContainer:
   {
@@ -712,7 +580,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height,
     // width: '90%',
     // paddingLeft: hp('2%'),
-    backgroundColor:'#f8f8f8',
+    backgroundColor: '#f8f8f8',
   },
   buttonContainer: {
     width: wp('95%'),
@@ -744,24 +612,24 @@ const styles = StyleSheet.create({
     //paddingTop: 40
   },
   signUpText0: {
-    fontSize: 14,
+    fontSize: 13,
     // paddingTop: 20,
     // fontWeight: 'bold',
     color: 'green',
     paddingLeft: 10,
-    fontWeight: "bold",
+    // fontWeight: "bold",
   },
   signUpText1: {
-    fontSize: 14,
+    fontSize: 13,
     // paddingTop: 20,
     // fontWeight: 'bold',
     color: 'green',
     // paddingLeft: 23,
-    fontWeight: "bold",
+    // fontWeight: "bold",
   },
 
   signUpText00: {
-    fontSize: 14,
+    fontSize: 13,
     // paddingTop: 20,
     // fontWeight: 'bold',
     // color: 'green',
@@ -769,15 +637,15 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   signUpText11: {
-    fontSize: 14,
+    fontSize: 13,
     paddingBottom: 5,
     //  paddingTop: 20,
-    fontWeight: "bold",
+    // fontWeight: "bold",
     color: '#000000',
     // paddingLeft: 23,
   },
   signUpText000: {
-    fontSize: 12,
+    fontSize: 13,
     // paddingTop: 20,
     // fontWeight: 'bold',
     // color: 'green',
@@ -785,7 +653,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   signUpText111: {
-    fontSize: 12,
+    fontSize: 13,
     paddingBottom: 5,
     //  paddingTop: 20,
     // fontWeight: 'bold',
@@ -796,6 +664,16 @@ const styles = StyleSheet.create({
 
     alignItems: 'flex-end',
 
+  },
+  container: {
+    backgroundColor: '#ffcccc',
+    paddingTop: 5,
+    paddingRight: 20,
+  },
+  container1: {
+    backgroundColor: '#ffffff',
+    paddingTop: 5,
+    paddingRight: 20,
   },
   end1: {
     flex: 1,
@@ -817,7 +695,7 @@ const styles = StyleSheet.create({
 
   },
   signUpText2: {
-    fontSize: 14,
+    fontSize: 13,
     paddingRight: 10,
     //   paddingTop: 20,
     paddingLeft: 23,
@@ -828,18 +706,18 @@ const styles = StyleSheet.create({
 
   },
   signUpText02: {
-    fontSize: 14,
+    fontSize: 13,
     paddingRight: 10,
     // paddingTop: 20,
     paddingLeft: 23,
     color: 'red',
     paddingBottom: 5,
-     fontWeight: 'bold',
+    // fontWeight: 'bold',
     justifyContent: 'center',
 
   },
   signUpText002: {
-    fontSize: 12,
+    fontSize: 13,
     paddingRight: 10,
     // paddingTop: 20,
     paddingLeft: 23,
@@ -851,21 +729,21 @@ const styles = StyleSheet.create({
   },
   signUpText3: {
 
-    paddingBottom: 5,
+    // paddingBottom: 5,
     // paddingLeft: 23,
-    fontSize: 14,
+    fontSize: 13,
     // paddingRight:hp('-10%'),
     paddingRight: 13,
-    fontWeight: "bold",
+    // fontWeight: "bold",
     alignItems: 'center',
     color: '#000000'
   },
   signUpText4: {
-    paddingBottom: 5,
+    // paddingBottom: 5,
     paddingLeft: 10,
     // fontWeight: 'bold',
     // color: 'black',
-    fontSize: 14,
+    fontSize: 13,
     alignItems: 'center',
   },
 
@@ -874,7 +752,7 @@ const styles = StyleSheet.create({
 
     paddingBottom: 5,
     // paddingLeft: 23,
-    fontSize: 12,
+    fontSize: 13,
     // paddingRight:hp('-10%'),
     paddingRight: 13,
     // fontWeight: 'bold',
@@ -887,7 +765,7 @@ const styles = StyleSheet.create({
     // fontWeight: 'bold',
     paddingTop: -15,
     //color: 'black',
-    fontSize: 12,
+    fontSize: 13,
     alignItems: 'center',
   },
 
@@ -923,7 +801,7 @@ const styles = StyleSheet.create({
 
   },
   signUpText: {
-    fontSize: 20,
+    fontSize: 13,
     justifyContent: 'center',
 
 
@@ -934,7 +812,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'column',
     position: 'relative',
-    marginBottom: 5,
+    // marginBottom: 5,
 
   },
 });

@@ -2,7 +2,7 @@
 FileName:AddTask.js
 Version:1.0.0
 Purpose: Add or Modify the Maintask 
-Devloper:Rishitha,Harsha
+Devloper:Rishitha,Naveen,Harsha
 */
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, StatusBar, Dimensions, TouchableOpacity, Linking, TextInput, Alert } from 'react-native';
@@ -12,9 +12,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import AsyncStorage from '@react-native-community/async-storage';
 import { tsMethodSignature } from '@babel/types';
-import {API }from "../WebServices/RestClient";
+import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
-import Snackbar from 'react-native-snackbar';;
+import Snackbar from 'react-native-snackbar';
+import log from '../LogFile/Log';
+import Toast from 'react-native-whc-toast';
 
 export default class AddTask extends Component {
 
@@ -33,13 +35,16 @@ export default class AddTask extends Component {
       addTask: this.props.navigation.state.params.addTask,//action for add task
       modifyTask: this.props.navigation.state.params.modifyTask,//action for modify task
       maintaskid: this.props.navigation.state.params.maintaskid,//maintaskId
-      error1:'',error2:'',error:'',
+      error1: '', error2: '', error: '',
+      maintasktitle: this.props.navigation.state.params.maintasktitle,//maintaskId,
+      maintaskdesc: this.props.navigation.state.params.maintaskdesc,//maintaskId
+      itemPressedDisabled: false,
     };
   }
 
   //getting the Employees list for addind maintask
   getEmployees() {
-
+    log("Info", " getEmployees(cropcode) is used for getting the Employees list for addind maintask");
     const { ModuleId } = this.state;
     const { ideaid } = this.state;
 
@@ -48,66 +53,92 @@ export default class AddTask extends Component {
       NetInfo.fetch().then(state => {
         if (state.type == "none") {
           console.log(state.type);
+          log("Warn", "No internet connection");
           Snackbar.show({
             title: 'No Internet Connection',
             backgroundColor: 'red',
             duration: Snackbar.LENGTH_LONG,
           });
-        }else{
-      fetch(API+'getEmployees.php',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            crop: cropcode
-          })
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          if (responseJson.status === 'True') {
-            this.setState({
-              resource: responseJson.data
+        } else {
+          fetch(API + 'getEmployees.php',
+            {
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                crop: cropcode
+              })
+            })
+            .then((response) => response.json())
+            .then((responseJson) => {
+              if (responseJson.status === 'True') {
+                this.setState({
+                  resource: responseJson.data
+                });
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              log("Error", "requested projects error");
             });
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      }
-    });
+        }
+      });
     });
   }
-
+  //Checking the Validations
   isValid() {
-    const { tasktitle, taskdescription,assignedto} = this.state;
+    const { tasktitle, taskdescription, assignedto } = this.state;
     let valid = false;
-  
-     if(tasktitle.length===0){
-      // ToastAndroid.showWithGravity('"Enter sub Task', ToastAndroid.SHORT,ToastAndroid.CENTER);
+
+    if (tasktitle.length === 0) {
+      log("Warn", "tasktitle title should not be empty");
       this.setState({ error1: 'Enter Task Title ' });
     }
     else if (taskdescription.length === 0) {
       // alert("Enter Description");
-      // ToastAndroid.showWithGravity('"Enter Description', ToastAndroid.SHORT,ToastAndroid.CENTER);
+      log("Warn", "taskdescription title should not be empty");
       this.setState({ error2: 'Enter Description ' });
     }
     else if (assignedto.length === 0) {
-      // ToastAndroid.showWithGravity('"Enter Description', ToastAndroid.SHORT,ToastAndroid.CENTER);
+      log("Warn", "taskdescription title should not be empty");
       this.setState({ error3: 'Select Source ' });
     }
-  
+
     else {
       valid = true;
     }
     return valid;
   }
+
+  IsValid() {
+    const { maintasktitle, maintaskdesc, assignedto } = this.state;
+    let valid = false;
+
+    if (maintasktitle.length === 0) {
+      log("Warn", "maintasktitle title should not be empty");
+      this.setState({ error1: 'Enter Task Title ' });
+    }
+    else if (maintaskdesc.length === 0) {
+      log("Warn", "maintaskdesc title should not be empty");
+      this.setState({ error2: 'Enter Description ' });
+    }
+    else if (assignedto.length === 0) {
+      log("Warn", "assignedto title should not be empty");
+      this.setState({ error3: 'Select Source ' });
+    }
+
+    else {
+      valid = true;
+    }
+    return valid;
+  }
+
   //Add or Modify the Maintask start
   addMainTask() {
 
-
+    log("Info", " addMainTask(addTask, modifyTask,) is used to add maintask");
     const { addTask } = this.state;
     const { modifyTask } = this.state;
 
@@ -119,53 +150,59 @@ export default class AddTask extends Component {
       const { ModuleId } = this.state;
       const { ideaid } = this.state;
       const { maintaskid } = this.state;
-
+      //Getting the role and id
       AsyncStorage.multiGet(["cropcode", "userToken"], (err, response) => {
         const cropcode = response[0][1];
         const userToken = response[1][1];
         NetInfo.fetch().then(state => {
           if (state.type == "none") {
             console.log(state.type);
+            log("Warn", "No internet connection");
             Snackbar.show({
               title: 'No Internet Connection',
               backgroundColor: 'red',
               duration: Snackbar.LENGTH_LONG,
             });
-          }else{
-            if(this.isValid()){
-        fetch(API+'manageMaintasks.php',
-          {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              action: "modify",
-              crop: cropcode,
-              title: this.state.tasktitle,
-              description: this.state.taskdescription,
-              module_id: ModuleId,
-              idea_id: ideaid,
-              added_to: this.state.assignedto,
-              added_by: userToken,
-              mainTaskId: maintaskid
-            })
-          })
-          .then((response) => response.json())
-          .then((responseJson) => {
-            this.props.navigation.goBack();
-            console.log("modify" + responseJson);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-        }
-      }
-      });
+          } else {
+            if (this.IsValid()) {
+
+              this.setState({ itemPressedDisabled: true })
+              fetch(API + 'manageMaintasks.php',
+                {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    action: "modify",
+                    crop: cropcode,
+                    title: this.state.maintasktitle,
+                    description: this.state.maintaskdesc,
+                    module_id: ModuleId,
+                    idea_id: ideaid,
+                    added_to: this.state.assignedto,
+                    added_by: userToken,
+                    mainTaskId: maintaskid
+                  })
+                })
+                .then((response) => response.json())
+                .then((responseJson) => {
+                  this.setState({ itemPressedDisabled: false })
+                  this.props.navigation.goBack();
+                  console.log("modify" + responseJson);
+                })
+                .catch((error) => {
+                  console.error(error);
+                  log("Error", "requested projects error");
+                });
+            }
+          }
+        });
+        this.refs.toast.showCenter('Main Task Modified');
       });
 
-    } else if (addTask == 'add') {
+    } else if (addTask == 'add') { //Add subtask
 
       const { ModuleId } = this.state;
       const { ideaid } = this.state;
@@ -180,37 +217,38 @@ export default class AddTask extends Component {
               backgroundColor: 'red',
               duration: Snackbar.LENGTH_LONG,
             });
-          }else{
-            if(this.isValid()){
-        fetch(API+'manageMaintasks.php',
-          {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              action: "add",
-              crop: cropcode,
-              title: this.state.tasktitle,
-              description: this.state.taskdescription,
-              module_id: ModuleId,
-              idea_id: ideaid,
-              added_to: this.state.assignedto,
-              added_by: userToken,
-            })
-          })
-          .then((response) => response.json())
-          .then((responseJson) => {
-            this.props.navigation.goBack();
-            console.log(responseJson);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-        }
-      }
-      });
+          } else {
+            if (this.isValid()) {
+              fetch(API + 'manageMaintasks.php',
+                {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    action: "add",
+                    crop: cropcode,
+                    title: this.state.tasktitle,
+                    description: this.state.taskdescription,
+                    module_id: ModuleId,
+                    idea_id: ideaid,
+                    added_to: this.state.assignedto,
+                    added_by: userToken,
+                  })
+                })
+                .then((response) => response.json())
+                .then((responseJson) => {
+                  this.props.navigation.goBack();
+                  console.log(responseJson);
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
+            }
+          }
+        });
+        this.refs.toast.showCenter('Main Task Added');
       });
 
     } else {
@@ -220,11 +258,79 @@ export default class AddTask extends Component {
   }
   //Add or Mpdify the Maintask close
   componentDidMount() {
-
+    //Getting Employees List
+    log("Debug", "Add Task screen is loaded");
     this.getEmployees();
   }
 
   render() {
+    let button;
+    const { addTask } = this.state;
+    const { modifyTask } = this.state;
+    if (addTask == 'add') {
+      button = <View>
+        <View style={{ paddingLeft: 10, }}>
+
+          <TextInput style={{ width: wp('95%'), height: 45, color: 'black', borderBottomWidth: 1, }}
+            placeholder='Main Task Title'
+            underlineColorAndroid='transparent'
+            // selectionColor='white'
+            onChangeText={(maintask) => this.setState({ tasktitle: maintask })}
+          >
+          </TextInput>
+
+          <Text style={{ color: 'red' }}>{this.state.error1}</Text>
+        </View>
+
+        <View style={{ paddingLeft: 10, }}>
+
+
+          <TextInput style={{ width: wp('95%'), height: 45, color: 'black', borderBottomWidth: 1, }}
+            placeholder='Description:'
+            underlineColorAndroid='transparent'
+            // selectionColor='white'
+            onChangeText={(description) => this.setState({ taskdescription: description })}>
+          </TextInput>
+          <Text style={{ color: 'red' }}>{this.state.error2}</Text>
+        </View>
+      </View>
+    } else if (modifyTask == 'modify') {
+
+      button = <View>
+        <View style={{ paddingLeft: 10, }}>
+
+          <TextInput style={{ width: wp('95%'), height: 45, color: 'black', borderBottomWidth: 1, }}
+            placeholder='Main Task Title'
+            underlineColorAndroid='transparent'
+            // selectionColor='white'
+            value={this.state.maintasktitle}
+            onChangeText={(maintask) => this.setState({ maintasktitle: maintask })}
+
+          >
+          </TextInput>
+
+          <Text style={{ color: 'red' }}>{this.state.error1}</Text>
+        </View>
+
+        <View style={{ paddingLeft: 10, }}>
+
+
+          <TextInput style={{ width: wp('95%'), height: 45, color: 'black', borderBottomWidth: 1, }}
+            placeholder='Description:'
+            underlineColorAndroid='transparent'
+            // selectionColor='white'
+            value={this.state.maintaskdesc}
+            onChangeText={(description) => this.setState({ maintaskdesc: description })}>
+
+          </TextInput>
+          <Text style={{ color: 'red' }}>{this.state.error2}</Text>
+        </View>
+      </View>
+
+    } else {
+      button = null;
+    }
+
     return (
       <Container>
         <Header
@@ -239,17 +345,18 @@ export default class AddTask extends Component {
           }}>
           <Left>
             <Icon name="arrow-left" size={25} style={{ color: '#fff', }} onPress={() =>
-             this.props.navigation.goBack(null)} />
+              this.props.navigation.goBack(null)} />
           </Left>
           <Body>
-                        <Title style={{ color: '#fff', fontWeight: '600' }}>Add Main Task</Title>
-                    </Body>
-                    <Right></Right>
+            <Title style={{ color: '#fff', fontWeight: '600' }}>MainTask Info</Title>
+          </Body>
+          <Right></Right>
         </Header>
 
         <Content>
+        <Toast ref="toast" />
           <View style={{ paddingTop: 80, }}>
-            <View style={{ paddingLeft: 10, }}>
+            {/* <View style={{ paddingLeft: 10, }}>
 
               <TextInput style={{ width: wp('95%'), height: 45, color: 'black', borderBottomWidth: 1, }}
                 placeholder='Main Task Title'
@@ -258,11 +365,11 @@ export default class AddTask extends Component {
                 onChangeText={(maintask) => this.setState({ tasktitle: maintask })}
               >
               </TextInput>
-              
-              <Text style={{color:'red'}}>{this.state.error1}</Text>
-            </View>
 
-            <View style={{ paddingLeft: 10, }}>
+              <Text style={{ color: 'red' }}>{this.state.error1}</Text>
+            </View> */}
+
+            {/* <View style={{ paddingLeft: 10, }}>
 
 
               <TextInput style={{ width: wp('95%'), height: 45, color: 'black', borderBottomWidth: 1, }}
@@ -270,9 +377,9 @@ export default class AddTask extends Component {
                 underlineColorAndroid='transparent'
                 // selectionColor='white'
                 onChangeText={(description) => this.setState({ taskdescription: description })}>
-                </TextInput>
-              <Text style={{color:'red'}}>{this.state.error2}</Text>
-            </View>
+              </TextInput>
+              <Text style={{ color: 'red' }}>{this.state.error2}</Text>
+            </View> */}{button}
             <View style={{ paddingTop: 20, }}>
               <SearchableDropdown
                 placeholder="select resource"
@@ -312,23 +419,19 @@ export default class AddTask extends Component {
                 underlineColorAndroid="transparent"
 
               />
-              <Text style={{color:'red'}}>{this.state.error3}</Text>
+              <Text style={{ color: 'red' }}>{this.state.error3}</Text>
             </View>
 
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingTop: 50 }}>
-              <TouchableOpacity style={{
-                margin: 5, backgroundColor: '#00A2C1', borderRadius: 5, padding: 19, height: 30, alignItems: "center",
-                justifyContent: 'center'
-              }} onPress={() => { this.addMainTask() }}>
+            <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: "space-between" }}>
+              <TouchableOpacity style={styles.opensave} onPress={() => { this.addMainTask() }} disabled={this.state.itemPressedDisabled}>
                 <Text style={{ color: 'white' }}>SAVE</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{
-                margin: 5, backgroundColor: '#00A2C1', borderRadius: 5, padding: 20, height: 30, alignItems: "center",
-                justifyContent: 'center'
-              }} onPress={() => this.props.navigation.goBack()}>
+
+              <TouchableOpacity style={styles.opencancel} onPress={() => this.props.navigation.goBack()}>
                 <Text style={{ color: 'white' }}>CANCEL</Text>
 
               </TouchableOpacity>
+
             </View>
 
           </View>
@@ -337,3 +440,32 @@ export default class AddTask extends Component {
     );
   }
 }
+//Styles for UI
+const styles = StyleSheet.create({
+  opencancel: {
+    flex: 1,
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'red', margin: 20, height: 30, alignItems:
+          "center", justifyContent: 'center'
+      },
+      android: {
+        backgroundColor: 'red', margin: 20, height: 30, alignItems:
+          "center", justifyContent: 'center'
+      },
+    }),
+  },
+  opensave: {
+    flex: 1,
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'green', margin: 20, height: 30, alignItems:
+          "center", justifyContent: 'center'
+      },
+      android: {
+        backgroundColor: 'green', margin: 20, height: 30, alignItems:
+          "center", justifyContent: 'center'
+      },
+    }),
+  },
+});

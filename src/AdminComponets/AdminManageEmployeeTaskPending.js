@@ -5,43 +5,52 @@ Purpose:Shows the list of maintask list
 Devloper:Rishitha,Harsha
 */
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Dimensions, TouchableOpacity, FlatList, Image } from 'react-native';
+import { Platform, StyleSheet, Text, View, Dimensions, TouchableOpacity, FlatList, Image, Alert } from 'react-native';
 import { Icon, Left, Button, Container, Header, Content, Item, Input } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
-import {API }from "../WebServices/RestClient";
+import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
-
+import log from '../LogFile/Log';
+import {
+  BallIndicator,
+  BarIndicator,
+  DotIndicator,
+  MaterialIndicator,
+  PacmanIndicator,
+  PulseIndicator,
+  SkypeIndicator,
+  UIActivityIndicator
+} from 'react-native-indicators';
 class ListItem extends React.Component {
   render() {
     const { item } = this.props;
+
+    // Getting current date and time
+    var currentdate = new Date();
+    var datetime = currentdate.getFullYear() + "-"
+      + (currentdate.getMonth() + 1) + "-"
+      + currentdate.getDate() + "  "
+      + currentdate.getHours() + ":"
+      + currentdate.getMinutes() + ":"
+      + currentdate.getSeconds();
     return (
 
       <View>
-        <Collapse style={styles.container}>
-
-
-
+        <Collapse style={[item.status == 'pending' ? [item.cDate >= item.targetDate ? styles.container : styles.container1] : styles.container1]}>
           <CollapseHeader style={styles.boxheader}>
-
-
             <View style={{ flexDirection: 'row' }}>
               <Text style={styles.signUpText0} >Task_no</Text>
               <Text style={styles.signUpText1} >{item.subTaskId}</Text>
               {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
             </View>
             {/* <Text style={styles.signUpText2} >{item.date}</Text> */}
-
-
-
-
             {/* <View style={{ flexDirection: 'row', paddingRight: 25, }}>
               <Text style={styles.signUpText4} >Project Title:</Text>
               <Text style={styles.signUpText3} >{item.projectitle}</Text>
             </View> */}
-
             <View style={styles.box1}>
 
               <View style={{ flexDirection: 'row' }}>
@@ -82,7 +91,7 @@ class ListItem extends React.Component {
 
             <View style={styles.box1}>
 
-              <View style={{ flexDirection: 'row', paddingRight: 35, }}>
+              <View style={{ flexDirection: 'row', paddingRight: 35,width:wp('55%') }}>
                 <Text style={styles.signUpText000} >Target Time:</Text>
                 <Text style={styles.signUpText111task} >{item.targetDate}</Text>
                 {/* <Text style={styles.signUpText1} >Task Status:0% completed</Text>  */}
@@ -125,7 +134,7 @@ class ListItem extends React.Component {
 
             <View style={styles.box1}>
 
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: 'row',width:('60%') }}>
                 <Text style={styles.signUpText000} >Dependency:</Text>
                 <Text style={styles.signUpText111} >{item.dependencyId}</Text>
                 {/* <Text style={styles.signUpText1} >{item.date}</Text> */}
@@ -135,6 +144,8 @@ class ListItem extends React.Component {
             </View>
 
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+              <Icon size={22} style={{ paddingLeft: 10, paddingTop: 4 }} name="chatboxes" onPress={() => { this.props.TaskChat() }}></Icon>
+
               {/* <TouchableOpacity style={{ width: 20, backgroundColor: 'black' }}><Text style={{ color: '#fff', textAlign: 'center' }}>?</Text></TouchableOpacity>
               <TouchableOpacity style={{ width: 130, backgroundColor: 'black', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center' }}>UPDATE STATUS</Text></TouchableOpacity>
               <TouchableOpacity style={{ width: 120, backgroundColor: '#6cbb3f', marginLeft: 10, }}><Text style={{ color: '#fff', textAlign: 'center' }}>VIEW SUB TASK</Text></TouchableOpacity> */}
@@ -145,6 +156,8 @@ class ListItem extends React.Component {
           </CollapseBody>
 
         </Collapse>
+        <View style={{ backgroundColor: '#fff', height: 5 }}>
+          </View>
       </View>
     )
   }
@@ -158,30 +171,33 @@ export default class Pending extends Component {
       dataSource: [],
       isFetching: false,
       result: '',
-      empid:''
+      empid: ''
     }
   }
 
 
   componentDidMount() {
-
+    log("Debug", "Admin Manageemployee view pendingtasks screen is loaded");
     this.getEmployeesPendingTaskList()
   }
-
+  //This is for refreshing the data
   onRefresh() {
-    this.setState({ isFetching: true }, function () { this.getEmployeesPendingTaskList() });
+     this.getEmployeesPendingTaskList() ;
   }
 
+  //Navigates to TaskChat Screen
+  TaskChat(item, index) {
+    log("Info", "AdminManageEmployeeTaskPending:TaskChat(item, index) method is used to naviagate to chat");
+    this.props.navigation.navigate("TaskChat", { taskid: item.subTaskId, action: "subtask" });
+  }
 
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    console.log("re loading...........")
     this.getEmployeesPendingTaskList();
   }
-//Getting the employee pending maintask list start
+  //Getting the employee pending maintask list start
   getEmployeesPendingTaskList() {
-
+    log("Info", "AdminManageEmployeeTaskPending:getEmployeesPendingTaskList() used to get employee pending tasks");
     AsyncStorage.getItem("cropcode", (err, res) => {
       const cropcode = res;
 
@@ -201,37 +217,49 @@ export default class Pending extends Component {
                 backgroundColor: 'red',
                 duration: Snackbar.LENGTH_LONG,
               });
-            }else{
-          fetch(API+'get_subtasks.php',
-            {
-              method: 'POST',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                crop: cropcode,
-                action: "pending",
-                userType: emp_role,
-                empId: this.props.navigation.state.params.empId
-              })
-            })
-            .then((response) => response.json())
-            .then((responseJson) => {
-              console.log(responseJson);
-              console.log(JSON.stringify(responseJson))
-              this.setState({
-                isLoading: false,
-                dataSource: responseJson.data,
-                isFetching: false
-              }, function () {
-              });
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-          }
-        });
+            } else {
+              fetch(API + 'getSubtasks.php',
+                {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    crop: cropcode,
+                    action: "pending",
+                    userType: emp_role,
+                    empId: this.props.navigation.state.params.empId
+                  })
+                })
+                .then((response) => response.json())
+                .then((responseJson) => {
+                  console.log(responseJson);
+                  console.log(JSON.stringify(responseJson))
+                  if (responseJson.status === 'True') {
+                    this.setState({
+                      isLoading: false,
+                      dataSource: responseJson.data,
+                      isFetching: false
+                    }, function () {
+                    });
+                  } else {
+                    this.setState({
+                      isLoading: false,
+                    })
+                    Snackbar.show({
+                      title: 'No Pending Subtasks',
+                      backgroundColor: '#3BB9FF',
+                      duration: Snackbar.LENGTH_LONG,
+                    });
+                  }
+                })
+                .catch((error) => {
+                  console.error(error);
+                  log("Error", "Error in getting employee pending tasks at admin side");
+                });
+            }
+          });
         });
 
       });
@@ -241,7 +269,7 @@ export default class Pending extends Component {
 
 
   }
-//Getting the employee pending maintask list end
+  //Getting the employee pending maintask list end
 
   FlatListItemSeparator = () => {
     return (
@@ -257,6 +285,8 @@ export default class Pending extends Component {
 
 
 
+  //if data is empty in flatlist we will use _listEmptyComponent method
+
   _listEmptyComponent = () => {
     return (
       <View>
@@ -271,13 +301,7 @@ export default class Pending extends Component {
 
 
   render() {
-    // if (this.state.isLoading) {
-    //   return (
-    //     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    //       <DotIndicator color='#ed7070' />
-    //     </View>
-    //   );
-    // }
+
     return (
       <Container style={{ height: Dimensions.get('window').height }}>
         <Item>
@@ -312,6 +336,7 @@ export default class Pending extends Component {
                   <View style={styles.container2} >
                     <ListItem
                       item={item}
+                      TaskChat={() => this.TaskChat(item, index)}//For Chat
 
                     />
                   </View>
@@ -323,21 +348,6 @@ export default class Pending extends Component {
           </View>
 
 
-
-          {/* <View style={{flex:1}}>
-<View style={{backgroundColor:'green'}}>
-  <Text>hello</Text>
-</View>
-
-<View style={{backgroundColor:'blue'}}>
-  <Text>hello</Text>
-</View>
-<View style={{backgroundColor:'red'}}>
-  <Text>hello</Text>
-</View>
-
-</View> */}
-
         </Content>
 
 
@@ -346,13 +356,16 @@ export default class Pending extends Component {
     );
   }
 }
+//Styles for UI
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 15,
-    // justifyContent:'center',
-    // alignItems:'center',
-    // paddingLeft: hp('-1%'),
+    backgroundColor: '#ffcccc',
+    paddingTop: 5,
+    paddingRight: 20,
+  },
+  container1: {
+    backgroundColor: '#ffffff',
+    paddingTop: 5,
     paddingRight: 20,
   },
   buttonContainer: {
@@ -386,15 +399,15 @@ const styles = StyleSheet.create({
   },
   signUpText0: {
     fontSize: 14,
-    
-    fontWeight: 'bold',
+
+    // fontWeight: 'bold',
     color: 'green',
     paddingLeft: 10,
   },
   signUpText1: {
     fontSize: 14,
     // paddingTop: 20,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     color: 'green',
     paddingLeft: 10,
   },
@@ -402,33 +415,33 @@ const styles = StyleSheet.create({
   signUpText00: {
     fontSize: 14,
     paddingLeft: 10,
-    color:'#808080'
+    color: 'black'
   },
   signUpText11: {
     fontSize: 14,
-    paddingBottom: 10,
+    // paddingBottom: 10,
     color: 'black',
-    width:'60%',
-    fontWeight:'bold',
-    paddingLeft: 10,
+    width: '60%',
+    // fontWeight: 'bold',
+    paddingLeft: 2,
   },
   signUpText000: {
     fontSize: 14,
     // paddingTop: 20,
     // fontWeight: 'bold',
-     color: '#C0C0C0',
-    paddingBottom: 10,
+    color: 'black',
+    // paddingBottom: 10,
     paddingLeft: 10,
   },
   signUpText111: {
-    fontSize: 12,
-   width:'60%',
+    fontSize: 14,
+    //width: '60%',
     color: 'black',
   },
   signUpText111task: {
-    fontSize: 12,
-    paddingBottom: 10,
-    width:'60%',
+    fontSize: 14,
+    //paddingBottom: 10,
+    // width: '60%',
     color: 'black',
   },
   end: {
@@ -456,7 +469,7 @@ const styles = StyleSheet.create({
 
   },
   signUpText2: {
-    fontSize: 15,
+    fontSize: 14,
     paddingRight: 10,
     //  paddingTop: 20,
     paddingLeft: 23,
@@ -467,80 +480,80 @@ const styles = StyleSheet.create({
 
   },
   signUpText02: {
-    fontSize: 15,
+    fontSize: 14,
     paddingRight: 10,
     // paddingTop: 20,
     paddingLeft: 23,
     color: 'red',
-    paddingBottom: 10,
+    // paddingBottom: 10,
     // fontWeight: 'bold',
     justifyContent: 'center',
 
   },
   signUpText022: {
-    fontSize: 15,
+    fontSize: 14,
     paddingLeft: 23,
-    color: '#00FF00',
+    color: 'green',
     justifyContent: 'center',
-    fontWeight:'bold'
+    // fontWeight: 'bold'
 
   },
   signUpText002: {
-    fontSize: 12,
+    fontSize: 14,
     //paddingRight: 35,
     // paddingTop: 20,
     paddingLeft: 23,
     // color: 'red',
-    paddingBottom: 10,
+    // paddingBottom: 10,
     // fontWeight: 'bold',
     justifyContent: 'center',
 
   },
   signUpText0002: {
-    fontSize: 13,
+    fontSize: 14,
     paddingRight: 45,
     // paddingTop: 20,
     paddingLeft: 23,
     // color: 'red',
-    paddingBottom: 10,
+    // paddingBottom: 10,
     // fontWeight: 'bold',
     justifyContent: 'center',
 
   },
   signUpText3: {
 
-    paddingBottom: 10,
+    // paddingBottom: 10,
     paddingLeft: 23,
-    fontSize: 15,
+    fontSize: 14,
     // paddingRight:hp('-10%'),
     paddingRight: 13,
     // fontWeight: 'bold',
     alignItems: 'center',
   },
   signUpText4: {
-    paddingBottom: 10,
+    // paddingBottom: 10,
     paddingLeft: 20,
     // fontWeight: 'bold',
     //color: 'black',
-    fontSize: 15,
+    fontSize: 14,
     alignItems: 'center',
   },
 
 
   signUpText33: {
 
-    paddingBottom: 10,
-    fontSize: 12,
-  
-   
+    // paddingBottom: 10,
+    fontSize: 14,
+
+
     alignItems: 'center',
   },
   signUpText44: {
-    
+
     paddingLeft: 10,
     // fontWeight: 'bold',
     paddingTop: -10,
-    color: '#C0C0C0',
+    color: 'black',
     fontSize: 14,
     alignItems: 'center',
   },
@@ -574,7 +587,7 @@ const styles = StyleSheet.create({
     paddingRight: 25,
   },
   signUpText: {
-    fontSize: 20,
+    fontSize: 14,
     justifyContent: 'center',
 
 

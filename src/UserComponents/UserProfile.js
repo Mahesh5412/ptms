@@ -5,7 +5,7 @@ Purpose:Edit and update the profile Description
 Devloper:Mahesh,Rishitha
 */
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Image, StatusBar, Dimensions, TextInput,Alert } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, StatusBar, Dimensions, TextInput, Alert } from 'react-native';
 import { Icon, Title, Button, Container, Content, Header, Right, Left, Body, Tab, Tabs, TabHeading, Footer, Item, Input, FooterTab } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -14,6 +14,7 @@ import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
 import { Dropdown } from 'react-native-material-dropdown';
+import log from '../LogFile/Log';
 import {
     BallIndicator,
     BarIndicator,
@@ -23,7 +24,7 @@ import {
     PulseIndicator,
     SkypeIndicator,
     UIActivityIndicator
-  } from 'react-native-indicators';
+} from 'react-native-indicators';
 export default class UserProfile extends Component {
 
     constructor(props) {
@@ -31,36 +32,45 @@ export default class UserProfile extends Component {
 
         this.state = {
             isLoading: true,
+
+            data2: [],
+            status: '',
             mobile: '',
-            data2:[],
-            status:'',
         }
     }
 
     componentDidMount() {
+        log("Debug", "UserProfile screen is loaded");
         this.profile();
         this.GetStatus();
     }
 
-    componentDidUpdate(){
+    // componentDidUpdate() {
 
-        this.profile();
-    }
+    //     // this.profile();
+    // }
 
-
+    //validation For Mobile Number
     isValid() {
         const { mobile } = this.state;
         let valid = false;
         if (mobile.length === 0) {
             alert("Enter Mobile Number");
+            log("Warn", "Mobile number should not be empty");
         }
 
         else if (mobile.length > 10) {
             alert("Enter Valid Number");
+            log("Warn", "Mobile number should  be valid");
         }
         else if (mobile.length < 10) {
             alert("Enter Valid Number");
+            log("Warn", "Mobile number should be valid");
         }
+        else if (!this.mobilevalidate(mobile)) {
+            alert('Invalid Phonenumber');
+      
+          }
 
 
         else {
@@ -68,11 +78,14 @@ export default class UserProfile extends Component {
         }
         return valid;
     }
-
+    mobilevalidate(mobile) {
+        const reg = /^[0]?[6789]\d{9}$/;
+        return reg.test(mobile);
+      }
 
     //Getting the profile details of User
     profile() {
-
+        log("Info", "UserProfile:profile() method is used get employee profile data");
         AsyncStorage.getItem("cropcode", (err, res) => {
             const cropcode = res;
 
@@ -105,9 +118,9 @@ export default class UserProfile extends Component {
                                 console.log(responseJson);
                                 console.log(JSON.stringify(responseJson))
                                 console.log(JSON.stringify(responseJson))
-                                
+
                                 this.setState({
-                                    isLoading:false,
+                                    isLoading: false,
                                     empid: responseJson.data[0].empid,
                                     fullName: responseJson.data[0].fullname,
                                     team: responseJson.data[0].team,
@@ -124,6 +137,7 @@ export default class UserProfile extends Component {
                                     });
                             }).catch((error) => {
                                 console.error(error);
+                                log("Error", "Error in getting profile data");
 
                             });
                     }
@@ -135,7 +149,7 @@ export default class UserProfile extends Component {
 
     //Update the User Profile
     save() {
-
+        log("Info", "UserProfile:save() method is used to update mobile number");
         const { mobile } = this.state;
         console.log(mobile);
         if (this.isValid()) {
@@ -178,18 +192,20 @@ export default class UserProfile extends Component {
                                 .then((response) => response.json())
                                 .then((responseJson) => {
                                     console.log(responseJson)
-
+                                    console.warn(JSON.stringify(responseJson))
                                     if (responseJson.status == 'True') {
                                         alert("Updated Successfully")
 
 
                                     } else {
-                                        alert("user already exist");
+                                       // alert("user already exist");
+                                        log("Warn", "user number already exist");
                                     }
 
                                 })
                                 .catch((error) => {
                                     console.error(error);
+                                    log("Error", "Error in updating mobile number");
                                 });
                         }
                     });
@@ -199,54 +215,59 @@ export default class UserProfile extends Component {
     }
 
     //get status dropdown data
-    GetStatus(){
+    GetStatus() {
+        log("Info", "UserProfile:GetStatus() method is used to get status of employee");
+        AsyncStorage.getItem("cropcode", (err, res) => {
+            const cropcode = res;
+            NetInfo.fetch().then(state => {
+                if (state.type == "none") {
+                    console.log(state.type);
+                    Snackbar.show({
+                        title: 'No Internet Connection',
+                        backgroundColor: 'red',
+                        duration: Snackbar.LENGTH_LONG,
+                    });
+                } else {
 
-            AsyncStorage.getItem("cropcode", (err, res) => {
-                const cropcode = res;
-                NetInfo.fetch().then(state => {
-                    if (state.type == "none") {
-                        console.log(state.type);
-                        Snackbar.show({
-                            title: 'No Internet Connection',
-                            backgroundColor: 'red',
-                            duration: Snackbar.LENGTH_LONG,
-                        });
-                    } else {
-
-                        fetch(API + 'spinner.php', {
-                            method: 'POST',
-                            headers: {
-                                Accept: 'application/json',
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                action:'status', 
-                                crop: cropcode,
+                    fetch(API + 'spinner.php', {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            action: 'status',
+                            crop: cropcode,
 
 
-                            })
                         })
-                            .then((response) => response.json())
-                            .then((responseJson) => {
-                                console.log(responseJson)
-                                if(responseJson.status=='True'){
+                    })
+                        .then((response) => response.json())
+                        .then((responseJson) => {
+                            console.log(responseJson)
+                            if (responseJson.status == 'True') {
 
-                                    this.setState({
-                                        data2: responseJson.data
-                                      });
-                                      console.log(this.state.data2);
-                                }
-                            })
-                            .catch((error) => {
-                                console.error(error);
-                            });
-                    }
-                });
+                                this.setState({
+                                    data2: responseJson.data
+                                });
+                                console.log(this.state.data2);
+                            } else {
+                                log("Warn", "status of employee is not available");
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            log("Error", "error in  getting status of employee");
+                        });
+                }
             });
+        });
 
     }
-
-    UpdateStatus(status){
+    
+    // Update Status of Employee
+    UpdateStatus(status) {
+        log("Info", "UserProfile:UpdateStatus(status) method is used to update status of employee");
         console.log(status);
 
         AsyncStorage.getItem("userToken", (err, res) => {
@@ -287,19 +308,21 @@ export default class UserProfile extends Component {
 
                                 if (responseJson.status == 'True') {
                                     this.setState({
-                                       
-                                        status:status 
+
+                                        empStatus: status
                                     });
-                                  //  alert("Updated Successfully")
+                                    //  alert("Updated Successfully")
 
 
                                 } else {
-                                    alert("user already exist");
+                                //    alert("user already exist");
+                                    log("Warn", "status of employee is not able to update");
                                 }
 
                             })
                             .catch((error) => {
                                 console.error(error);
+                                log("Error", "error in updating status of employee");
                             });
                     }
                 });
@@ -307,16 +330,17 @@ export default class UserProfile extends Component {
         });
 
     }
+    // Update Status of Employee end
 
     render() {
         if (this.state.isLoading) {
             return (
-              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <DotIndicator color='#00A2C1' />
-              </View>
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                    <DotIndicator color='#00A2C1' />
+                </View>
             );
-      
-          }
+
+        }
         // let data2 = [{ value: 'commericial', }, { value: 'residencial', }];
         return (
             <Container>
@@ -342,7 +366,7 @@ export default class UserProfile extends Component {
 
                     <View style={{ padding: 25 }}>
                         <View style={{ justifyContent: 'center', alignItems: 'center', height: hp('25%') }}>
-                            <Image source={require('../Images/profile.png')} style={{ width: wp('35%'), height: hp('20%'), margin: 10, borderRadius: 150 / 2, }} />
+                            <Image source={require('../Images/profile.jpeg')} style={{ width: wp('35%'), height: hp('20%'), margin: 10, borderRadius: 150 / 2, }} />
                             <Text >{this.state.fullName}</Text>
                             {/* <Text>FullName</Text> */}
 
@@ -421,13 +445,17 @@ export default class UserProfile extends Component {
                                     <Text>Mobile</Text>
 
                                 </View>
-                                <View >
+                                <View style={styles.mobile}>
+
                                     <TextInput
                                         maxLength={10}
                                         keyboardType='phone-pad'
                                         placeholder=''
+                                        
                                         value={this.state.mobile}
-                                        onChangeText={(mobile) => this.setState({ mobile })} />
+                                        onChangeText={(text) => this.setState({ mobile: text })}
+                                        >
+                                    </TextInput>
 
                                 </View>
 
@@ -435,7 +463,7 @@ export default class UserProfile extends Component {
 
                             </View>
 
-                            <View style={{ flexDirection: 'row', }}>
+                            <View style={styles.role}>
                                 <View style={{ paddingLeft: '2%', width: wp('30%') }}>
                                     <Text>Role</Text>
 
@@ -447,34 +475,34 @@ export default class UserProfile extends Component {
 
 
                             </View>
-                            
-                            <View style={{ flexDirection: 'row',paddingTop:10}}>
+
+                            <View style={{ flexDirection: 'row', paddingTop: 10 }}>
                                 <View style={{ paddingLeft: '2%', width: wp('30%'), }}>
                                     <Text>Status</Text>
-                                    <View  style={{marginLeft:120,width:100}}>
-                                    <Dropdown
-                                   
+                                    <View style={{ marginLeft: 120, width: 100 }}>
+                                        <Dropdown
+
                                             data={this.state.data2}
                                             label={"Select"}
                                             textColor='#000000'
                                             baseColor='#000000'
                                             itemColor='black'
                                             selectedItemColor='black'
-                                             //onChangeText={itemValue => this.setState({ status:itemValue})}
-                                            onChangeText={(itemValue) => {this.UpdateStatus(itemValue)}}
+                                            //onChangeText={itemValue => this.setState({ status:itemValue})}
+                                            onChangeText={(itemValue) => { this.UpdateStatus(itemValue) }}
                                         />
-                                        </View>
+                                    </View>
 
                                 </View>
-                                <TouchableOpacity><Text>{this.state.empStatus}</Text></TouchableOpacity> 
-                              
+                                <TouchableOpacity><Text>{this.state.empStatus}</Text></TouchableOpacity>
+
 
                             </View>
 
                         </View>
                         <View style={{ paddingTop: 50, paddingLeft: '40%', justifyContent: 'center', }}>
                             <TouchableOpacity onPress={this.save.bind(this)} >
-                                <Text style={{ color: 'white', paddingTop: 3, fontSize: 15, width: 100, height: 30, backgroundColor: '#00A2C1', textAlign: 'center', borderRadius: 70 }}>SUBMIT</Text>
+                                <Text style={styles.submit}>SUBMIT</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -482,10 +510,52 @@ export default class UserProfile extends Component {
 
 
 
-                   </View>
+                    </View>
                 </Content>
 
             </Container>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    submit: {
+      flex: 1,
+      ...Platform.select({
+        ios: {
+            color: 'white', paddingTop: 3, fontSize: 15, width: 100, 
+            height: 30, backgroundColor: '#00A2C1', 
+            textAlign: 'center', borderRadius: 10
+        },
+        android: {
+            color: 'white', paddingTop: 3, fontSize: 15, width: 100, 
+            height: 30, backgroundColor: '#00A2C1', 
+            textAlign: 'center', borderRadius: 70
+        },
+      }),
+    },
+      mobile: {
+      flex: 1,
+      ...Platform.select({
+        ios: {
+            marginTop:12
+        },
+        android: {
+           
+        },
+      }),
+    },
+     role: {
+      flex: 1,
+      ...Platform.select({
+        ios: {
+            flexDirection: 'row',marginTop:10
+        },
+        android: {
+            flexDirection: 'row'
+           
+        },
+      }),
+    },
+   
+  });

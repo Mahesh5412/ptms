@@ -2,10 +2,10 @@
 FileName:AdminRequestedrojects.js
 Version:1.0.0
 Purpose:List of Projects or ideas and shows list of projects
-Devloper:Rishitha,Harsha
+Devloper:Rishitha,Naveen,Harsha
 */
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Dimensions, TouchableOpacity, FlatList, TextInput, Alert,ToastAndroid} from 'react-native';
+import { Platform, StyleSheet, Text, View, Dimensions, TouchableOpacity, FlatList, TextInput, Alert, ToastAndroid } from 'react-native';
 import { Container, Content, Item, Input } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,6 +15,8 @@ import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
 import Toast from 'react-native-whc-toast';
+import log from '../LogFile/Log';
+
 import {
   BallIndicator,
   BarIndicator,
@@ -38,46 +40,38 @@ class ListItem extends React.Component {
           <View style={styles.signup}>
             <View style={[styles.buttonContainer, styles.signupButton]} >
               <View style={styles.box}>
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ width: wp('68%'), flexDirection: 'row' }}>
                   <Text style={styles.signUpText0} >Project No:</Text>
                   <Text style={styles.signUpText1} >{item.idea_id}</Text>
                 </View>
                 <Text style={styles.signUpText2} > {item.created_on}</Text>
               </View>
-              <View
-                style={{
-                  // borderBottomColor: '#C0C0C0',
-                  // borderBottomWidth: 0.3,
-                }}
-              />
+              <View style={{ backgroundColor: '#f8f8f8', height: 2 }}>
+
+              </View>
 
               <View style={{ flexDirection: 'row', paddingRight: 25, }}>
                 <Text style={styles.signUpText4} >Title:</Text>
                 <Text style={styles.signUpText3} >{item.idea_title}</Text>
               </View>
 
-              <View style={{ flexDirection: 'row', paddingRight: 25,marginTop:5 }}>
-                <Text style={{ fontSize: 12,paddingTop: 10,color: '#767676',alignItems: 'center',}} >Requested By:</Text>
-                <Text style={{fontSize: 12,paddingTop: 10,color: '#767676',alignItems: 'center',}} >{item.userName}</Text>
+              <View style={{ flexDirection: 'row', paddingRight: 25, marginTop: 5 }}>
+                <Text style={{ fontSize: 12, paddingTop: 10, color: 'black', alignItems: 'center', }} >Requested By:</Text>
+                <Text style={{ fontSize: 12, paddingTop: 10, color: 'black', alignItems: 'center', }} >{item.userName}</Text>
               </View>
-
-       
-
             </View>
-        
+          </View>
+          <View style={{ backgroundColor: '#f8f8f8', height: 5 }}>
 
           </View>
-          <View style={{backgroundColor:'#fff',height:5}}>
-
-</View> 
         </TouchableOpacity>
       </View>
-
     )
   }
 }
 
 export default class Requested1 extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -89,20 +83,16 @@ export default class Requested1 extends Component {
       ProjectDescription: "",
       role: '',
       userToken: '',
-      error1:'',error2:'',
-
+      error1: '', error2: '',
+      itemPressedDisabled: false,
     };
     this.arrayholder = [];
   }
-
-
   modalDidOpen = () => {
 
   }
   modalDidClose = () => {
-
     this.setState({ open: false });
-
   };
 
   //dialog actions start
@@ -112,30 +102,31 @@ export default class Requested1 extends Component {
 
   openModal = () => this.setState({ open: true });
 
-  closeModal = () => this.setState({ open: false,error1:'',error2:''
- });
+  closeModal = () => this.setState({
+    open: false, error1: '', error2: ''
+  });
   //dialog actions close
 
   componentDidMount() {
-    ToastAndroid.show('added', ToastAndroid.SHORT);
-
+    log("Debug", "admin request projects screen is loaded");
     this.ideas();
+    this.getRequestedIdeas();
   }
 
   // Text Field validation method
   isValid() {
-    const { ProjectTitle, ProjectDescription} = this.state;
+    const { ProjectTitle, ProjectDescription } = this.state;
     let valid = false;
-  
-     if(ProjectTitle.length===0){
-      
+
+    if (ProjectTitle.length === 0) {
+      log("Warn", "project title should not be empty");
       this.setState({ error1: 'Project Title ' });
     }
     else if (ProjectDescription.length === 0) {
-      
+      log("Warn", "project description should not be empty");
       this.setState({ error2: 'Project Description ' });
     }
-  
+
     else {
       valid = true;
     }
@@ -144,6 +135,7 @@ export default class Requested1 extends Component {
 
   //get the IdeasList or projects
   async ideas() {
+
     await AsyncStorage.getItem("emp_role", (err, res) => {
       console.log(res);
       this.setState({ role: res });
@@ -160,69 +152,86 @@ export default class Requested1 extends Component {
 
     this.getRequestedIdeas(this.state.role, this.state.userToken, this.state.cropcode);
   }
-
+  //Refresh the data
   onRefresh() {
-    this.setState({ isFetching: true }, function () { this.ideas() });
+    this.setState({
+      dataSource:[],
+    })
+
+  this.getRequestedIdeas() ;
   }
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    console.log("re loading...........")
     this.getRequestedIdeas();
   }
   //getting the Requested projects List
   getRequestedIdeas(role, userToken, cropcode) {
-
-
-    console.log(this.state.userToken);
-    console.log(this.state.role);
-
+    log("Info", " getRequestedIdeas(role, userToken, cropcode) is used to get all requested projects at admin side");
     NetInfo.fetch().then(state => {
       if (state.type == "none") {
         console.log(state.type);
+        log("Warn", "No internet connection");
         Snackbar.show({
           title: 'No Internet Connection',
           backgroundColor: 'red',
           duration: Snackbar.LENGTH_LONG,
         });
-      }else{
-    fetch(API + 'ReactgetIdeas.php',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          crop: cropcode,
-          action: 'requested',
-          empId: userToken,
-          userType: role
-        })
-      })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        //alert(JSON.stringify(responseJson));
-        console.log(responseJson)
-        this.setState({
-          isLoading: false,
-          // isFetching: true,
-          dataSource: responseJson.data,
-          isFetching: false
-        }, function () {
+      } else {
+        fetch(API + 'getIdeas.php',
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              crop: cropcode,
+              action: 'requested',
+              empId: userToken,
+              userType: role
+            })
+          })
+          .then((response) => response.json())
+          .then((responseJson) => {
+            if (responseJson.status == 'True') {
+              console.log(responseJson)
+              this.setState({
+                isLoading: false,
+                dataSource: responseJson.data,
+                isFetching: false
+              }, function () {
 
-        });
-        this.arrayholder = responseJson.data;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    }
-  });
+              });
+              this.arrayholder = responseJson.data;
+            }
+            else {
+              log("Warn", "no requested projects found");
+              this.setState({
+                isLoading: false,
+              })
+
+
+              Snackbar.show({
+
+                title: 'No RequestedProjects',
+
+                backgroundColor: '#3BB9FF',
+                duration: Snackbar.LENGTH_LONG,
+              });
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            log("Error", "requested projects error");
+          });
+      }
+    });
 
   }
+  //getting the Requested projects List end
 
   //navigate for Edit the project ,approve and reject project
   AdminProjectInfo = (item, index) => {
+    log("Info", "AdminProjectInfo method is used to move requested project to project info screen");
     this.props.navigation.navigate("AdminProjectInfo", {
       ideaId: item.idea_id,
       empId: item.emp_id,
@@ -235,52 +244,61 @@ export default class Requested1 extends Component {
 
   //Adding the new Project
   addProject = () => {
+    log("Info", "addProject() method is used to add new project at admin side");
     AsyncStorage.getItem("cropcode", (err, res) => {
       const crop = res;
-      NetInfo.fetch().then(state => {
-        if (state.type == "none") {
-          console.log(state.type);
-          Snackbar.show({
-            title: 'No Internet Connection',
-            backgroundColor: 'red',
-            duration: Snackbar.LENGTH_LONG,
-          });
-        }else{
-          if(this.isValid()){
-      fetch(API + 'manage_ideas.php', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          proj_title: this.state.ProjectTitle,
-          proj_desc: this.state.ProjectDescription,
-          empId: this.state.userToken, //Async
-          action: "add",
-          crop: crop, //Async
-        })
-      }).then((response) => response.json())
-        .then((responseJson) => {
-          console.log(JSON.stringify(responseJson));
-          console.log(responseJson);
-          this.refs.toast.show('Project Added', Toast.Duration.long, Toast.Position.center);
+      if (this.isValid()) {
+        NetInfo.fetch().then(state => {
+          if (state.type == "none") {
+            console.log(state.type);
+            log("Warn", "No internet connection");
+            Snackbar.show({
+              title: 'No Internet Connection',
+              backgroundColor: 'red',
+              duration: Snackbar.LENGTH_LONG,
+            });
+          } else {
+            this.setState({ itemPressedDisabled: true })
+            fetch(API + 'manageIdeas.php', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                proj_title: this.state.ProjectTitle,
+                proj_desc: this.state.ProjectDescription,
+                empId: this.state.userToken, //Async
+                action: "add",
+                crop: crop, //Async
+              })
+            }).then((response) => response.json())
+              .then((responseJson) => {
+                console.log(JSON.stringify(responseJson));
+                console.log(responseJson);
+                this.refs.toast.show('Project Added', Toast.Duration.long, Toast.Position.center);
 
-          if (responseJson.status === 'True') {
-            console.log("done")
-            this.setState({ open: false })
+                if (responseJson.status === 'True') {
+                  console.log("done")
+
+                  this.setState({ itemPressedDisabled: false })
+                  this.setState({ open: false, error1: '', error2: '', ProjectDescription: '', ProjectTitle: '' })
+                  this.getRequestedIdeas(this.state.role, this.state.userToken, this.state.cropcode);
+                }
+              }).catch((error) => {
+                console.error(error);
+                log("Error", "error in project adding");
+              });
           }
-        }).catch((error) => {
-          console.error(error);
+
         });
       }
-    }
-    });
+      //  this.getRequestedIdeas();
     });
   };
+  //Adding the new Project end
 
   componentWillUnmount() {
-    console.log("dscwvrewrvw");
     this.setState({
       text: "",
     })
@@ -292,7 +310,7 @@ export default class Requested1 extends Component {
 
   //Searh based on task id ,name,description,and user
   SearchFilterFunction(text) {
-
+    log("Info", "SearchFilterFunction(text) method  used for searching");
     console.log(text);
 
     const newData = this.arrayholder.filter(function (item) {
@@ -316,46 +334,32 @@ export default class Requested1 extends Component {
       text: text
     })
   }
+  //Search data end
 
   render() {
-      if (this.state.isLoading) {
-        return (
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <DotIndicator color='#00A2C1' />
-          </View>
-        );
-  
-      }
+    if (this.state.isLoading) {
+      return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <DotIndicator color='#00A2C1' />
+        </View>
+      );
+
+    }
     return (
       <Container style={{ height: Dimensions.get('window').height }}>
-        {/* <Item>
-          <Input placeholder="Search"
-            onChangeText={(text) => this.SearchFilterFunction(text)} />
-          <Icon name="search" />
-        </Item> */}
-
-
         <View style={styles.MainContainer}>
-          {/* <Requesteddata/> */}
-          <Toast ref="toast"/>
-
+          <Toast ref="toast" />
           <View style={{ height: '91%' }}>
-
             <FlatList
-
               extraData={this.state}
               keyExtractor={this._keyExtractor}
               renderItem={this._renderItem}
-
               data={this.state.dataSource}
-
               onRefresh={() => this.onRefresh()}
               refreshing={this.state.isFetching}
-
               ItemSeparatorComponent={this.FlatListItemSeparator}
               renderItem={({ item, index }) =>
                 <View>
-
                   <ListItem navigation={this.props.navigation}
                     item={item}
                     AdminProjectInfo={() => this.AdminProjectInfo(item, index)}
@@ -365,9 +369,7 @@ export default class Requested1 extends Component {
               keyExtractor={item => item.id}
               ListEmptyComponent={this._listEmptyComponent}
             />
-
           </View>
-
           <TouchableOpacity onPress={this.openModal} style={styles.bottomView}>
             <View style={styles.bottomView} >
               <Icon
@@ -376,10 +378,7 @@ export default class Requested1 extends Component {
                 type='MaterialCommunityIcons'
                 size={30}
               />
-
               <Text style={styles.textStyle}>  ADD PROJECT</Text>
-
-
             </View>
           </TouchableOpacity>
           <Modal
@@ -388,37 +387,38 @@ export default class Requested1 extends Component {
             modalDidOpen={this.modalDidOpen}
             modalDidClose={this.modalDidClose}
             style={{ alignItems: "center" }} >
-
             <View style={{ paddingBottom: 40 }}>
-
-              <Text style={{color:'#C0C0C0',fontSize:20}}> Enter Project Info</Text>
+              <Text style={{ color: 'black', fontSize: 20 }}> Project Information</Text>
 
               <TextInput placeholder='Project Title'
-                style={{ height: 40, borderBottomWidth: 1, borderBottomColor:'#00A2C1', width: '98%', marginTop: 30,color:'#C0C0C0' }}
-                style={{ height: 40, borderBottomWidth: 1, borderBottomColor:'#00A2C1', width: '98%', marginTop: 10, }}
+                style={{ height: 40, borderBottomWidth: 1, borderBottomColor: '#00A2C1', width: '98%', marginTop: 30, color: '#C0C0C0' }}
+                style={{ height: 40, borderBottomWidth: 1, borderBottomColor: '#00A2C1', width: '98%', marginTop: 10, }}
                 onChangeText={(text) => this.setState({ ProjectTitle: text })}
                 value={this.state.text}
-                maxLength={25} />
-                <Text style={{color:'red',alignItems:'flex-start',alignSelf:'flex-start',justifyContent:'flex-start',}}>{this.state.error1}</Text>
+                maxLength={50} />
+              <Text style={{ color: 'red', alignItems: 'flex-start', alignSelf: 'flex-start', justifyContent: 'flex-start', }}>{this.state.error1}</Text>
 
 
               <TextInput placeholder='Project Description'
-                style={{ height: 40, borderBottomWidth: 1, borderBottomColor:'#00A2C1', width: '98%', marginTop: 30,color:'#C0C0C0' }}
+                style={{ height: 40, borderBottomWidth: 1, borderBottomColor: '#00A2C1', width: '98%', marginTop: 30, color: '#C0C0C0' }}
+                style={{ height: 40, borderBottomWidth: 1, borderBottomColor: '#00A2C1', width: '98%', marginTop: 10, }}
+
                 onChangeText={(text) => this.setState({ ProjectDescription: text })}
                 value={this.state.text}
-                maxLength={1024} />
-                <Text style={{color:'red',alignItems:'flex-start',alignSelf:'flex-start',justifyContent:'flex-start',}}>{this.state.error2}</Text>
+                maxLength={1021} />
+              <Text style={{ color: 'red', alignItems: 'flex-start', alignSelf: 'flex-start', justifyContent: 'flex-start', }}>{this.state.error2}</Text>
 
             </View>
-            <View style={{flexDirection:'row',marginTop:20,alignItems:'center',justifyContent:'center',alignSelf:'center',}}>
-                <TouchableOpacity style={{ margin: 5, backgroundColor: '#00A2C1', padding: 19, height: 30, alignItems: "center", justifyContent: 'center',borderRadius:5, }} onPress={this.closeModal}>
-                  <Text style={{ color: 'white' }}>CANCEL</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ margin: 5, backgroundColor: '#00A2C1', padding: 20, height: 30, alignItems: "center", justifyContent: 'center',borderRadius:5, }} onPress={this.addProject}>
-                  <Text style={{ color: 'white' }}>SAVE</Text>
+            <View style={{ flexDirection: 'row', marginTop: 20, alignItems: 'center', justifyContent: 'center', alignSelf: 'center', }}>
 
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity style={styles.opensave} onPress={this.addProject} disabled={this.state.itemPressedDisabled}>
+                <Text style={{ color: 'white' }}>SAVE</Text>
+
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.opencancel} onPress={this.closeModal}>
+                <Text style={{ color: 'white' }}>CANCEL</Text>
+              </TouchableOpacity>
+            </View>
           </Modal>
 
 
@@ -455,19 +455,19 @@ const styles = StyleSheet.create(
     textStyle: {
 
       color: '#fff',
-      paddingLeft:5,
-      paddingRight:5,
-      backgroundColor:'#00A2C1',
+      paddingLeft: 5,
+      paddingRight: 5,
+      backgroundColor: '#00A2C1',
       fontSize: 22,
-      marginLeft:5,
-      borderRadius:5
-      
+      marginLeft: 5,
+      borderRadius: 5
+
     },
     container: {
       flex: 1,
       width: '98%',
       paddingLeft: hp('2%'),
-      backgroundColor:'#f8f8f8'
+      backgroundColor: '#fff'
     },
     footer: {
       position: 'absolute',
@@ -487,7 +487,7 @@ const styles = StyleSheet.create(
     },
     footerText: {
       color: 'white',
-      fontWeight: 'bold',
+      // fontWeight: 'bold',
       alignItems: 'center',
       fontSize: 18,
     },
@@ -497,14 +497,14 @@ const styles = StyleSheet.create(
       marginBottom: 10,
       color: '#d2691e',
       marginLeft: 4,
-    
+
 
 
 
     },
     signupButton: {
 
-     
+
     },
     subcontainer: {
       flex: 2,
@@ -515,14 +515,14 @@ const styles = StyleSheet.create(
       fontSize: 13,
       color: 'green',
       paddingTop: 10,
-      fontWeight:'bold'
+      //  fontWeight:'bold'
 
     },
     signUpText1: {
       fontSize: 13,
       color: 'green',
       paddingTop: 10,
-      fontWeight:'bold',
+      //  fontWeight:'bold',
       paddingLeft: 10,
     },
     end: {
@@ -550,9 +550,9 @@ const styles = StyleSheet.create(
     },
     signUpText2: {
       fontSize: 10,
-      marginLeft: 200,
+      // marginLeft: 200,
       fontSize: 13,
-      color: '#767676',
+      color: 'black',
       paddingTop: 10,
 
 
@@ -565,7 +565,7 @@ const styles = StyleSheet.create(
 
       alignItems: 'center',
     },
-    
+
     signUpText4: {
       fontSize: 12,
       paddingTop: 10,
@@ -576,7 +576,7 @@ const styles = StyleSheet.create(
     signup: {
       //paddingTop:20,
       color: "#FFF",
-     // backgroundColor:'#C0C0C0'
+      // backgroundColor:'#C0C0C0'
 
     },
     boxone: {
@@ -596,7 +596,7 @@ const styles = StyleSheet.create(
       flexDirection: 'row',
       position: 'relative',
       marginBottom: 10,
-     
+
 
     },
     signUpText: {
@@ -608,24 +608,50 @@ const styles = StyleSheet.create(
     },
     bodytext: {
       margin: 5,
-       backgroundColor: 'green',
-        padding: Platform.OS==='ios'?  0 : 20,
-         height: 30,
-          alignItems: "center",
-           justifyContent: 'center',
-           width: Platform.OS==='ios'?  100 : 0,
-  
-  
+      backgroundColor: 'green',
+      padding: Platform.OS === 'ios' ? 0 : 20,
+      height: 30,
+      alignItems: "center",
+      justifyContent: 'center',
+      width: Platform.OS === 'ios' ? 100 : 0,
+
+
     },
     bodytext1: {
       margin: 5,
-       backgroundColor: 'red',
-        padding: Platform.OS==='ios'?  0 : 20,
-         height: 30,
-          alignItems: "center",
-           justifyContent: 'center',
-           width: Platform.OS==='ios'?  100 : 0,
-  
-  
+      backgroundColor: 'red',
+      padding: Platform.OS === 'ios' ? 0 : 20,
+      height: 30,
+      alignItems: "center",
+      justifyContent: 'center',
+      width: Platform.OS === 'ios' ? 100 : 0,
+
+
+    },
+    opencancel: {
+      flex: 1,
+      ...Platform.select({
+        ios: {
+          backgroundColor: 'red', margin: 20, height: 30, alignItems:
+            "center", justifyContent: 'center'
+        },
+        android: {
+          backgroundColor: 'red', margin: 20, height: 30, alignItems:
+            "center", justifyContent: 'center'
+        },
+      }),
+    },
+    opensave: {
+      flex: 1,
+      ...Platform.select({
+        ios: {
+          backgroundColor: 'green', margin: 20, height: 30, alignItems:
+            "center", justifyContent: 'center'
+        },
+        android: {
+          backgroundColor: 'green', margin: 20, height: 30, alignItems:
+            "center", justifyContent: 'center'
+        },
+      }),
     },
   });

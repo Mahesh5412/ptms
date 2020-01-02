@@ -6,13 +6,24 @@ Devloper:Rishitha,Harsha
 */
 import React, { Component } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Platform, StyleSheet, Text, View, Dimensions, TouchableOpacity, FlatList, Image,Alert } from 'react-native';
-import { Icon, Left, Button, Container,Header, Content, Item, Input } from 'native-base';
+import { Platform, StyleSheet, Text, View, Dimensions, TouchableOpacity, FlatList, Image, Alert } from 'react-native';
+import { Icon, Left, Button, Container, Header, Content, Item, Input } from 'native-base';
 import { Collapse, CollapseHeader, CollapseBody } from "accordion-collapse-react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import {API }from "../WebServices/RestClient";
+import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
+import log from '../LogFile/Log';
+import {
+  BallIndicator,
+  BarIndicator,
+  DotIndicator,
+  MaterialIndicator,
+  PacmanIndicator,
+  PulseIndicator,
+  SkypeIndicator,
+  UIActivityIndicator
+} from 'react-native-indicators';
 class ListItem extends React.Component {
   render() {
     const { item } = this.props;
@@ -132,6 +143,8 @@ class ListItem extends React.Component {
           </CollapseBody>
 
         </Collapse>
+        <View style={{ backgroundColor: '#fff', height: 5 }}>
+        </View>
       </View>
     )
   }
@@ -145,38 +158,34 @@ export default class Completed extends Component {
       dataSource: [],
       isFetching: false,
       result: '',
-      empId:'',
+      empId: '',
     }
-    this.arrayholder = [] ;
+    this.arrayholder = [];
   }
 
 
   componentDidMount() {
-
+    log("Debug", "Admin Manageemployee view completed tasks screen is loaded");
     this.getEmployeeSubTasksCompleted()
   }
-//Refresh the list
+  //Refresh the list
   onRefresh() {
-    this.setState({ isFetching: true }, function () { this.getEmployeeSubTasksCompleted() });
+     this.getEmployeeSubTasksCompleted();
   }
 
-
-
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    console.log("re loading...........")
     this.getEmployeeSubTasksCompleted();
   }
 
   //gettting getEmployeeSubTasksCompleted
   getEmployeeSubTasksCompleted() {
-
+    log("Info", "AdminManageEmployeeTaskCompleted:getEmployeeSubTasksCompleted() method is used to get employee completed tasks");
     AsyncStorage.getItem("cropcode", (err, res) => {
       const cropcode = res;
 
       AsyncStorage.getItem("empId", (err, res) => {
         const empId = res;
-        
+
         AsyncStorage.getItem("emp_role", (err, res) => {
           const emp_role = res;
 
@@ -189,37 +198,49 @@ export default class Completed extends Component {
                 backgroundColor: 'red',
                 duration: Snackbar.LENGTH_LONG,
               });
-            }else{
-          fetch(API+'get_subtasks.php',
-            {
-              method: 'POST',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                crop: cropcode,
-                action:"completed",
-                empId: this.props.navigation.state.params.empId,
-              })
-            })
-            .then((response) => response.json())
-            .then((responseJson) => {
-              console.log(responseJson);
-              console.log(JSON.stringify(responseJson))
-              this.setState({
-                isLoading: false,
-                dataSource: responseJson.data,
-                isFetching: false
-              }, function () {
-              });
-              this.arrayholder = responseJson.data ;
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-          }
-        });
+            } else {
+              fetch(API + 'getSubtasks.php',
+                {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    crop: cropcode,
+                    action: "completed",
+                    empId: this.props.navigation.state.params.empId,
+                  })
+                })
+                .then((response) => response.json())
+                .then((responseJson) => {
+                  console.log(responseJson);
+                  console.log(JSON.stringify(responseJson))
+                  if (responseJson.status === 'True') {
+                    this.setState({
+                      isLoading: false,
+                      dataSource: responseJson.data,
+                      isFetching: false
+                    }, function () {
+                    });
+                  } else {
+                    this.setState({
+                      isLoading: false,
+                    })
+                    Snackbar.show({
+                      title: 'No Completed Subtasks',
+                      backgroundColor: '#3BB9FF',
+                      duration: Snackbar.LENGTH_LONG,
+                    });
+                  }
+                  this.arrayholder = responseJson.data;
+                })
+                .catch((error) => {
+                  console.error(error);
+                  log("Error", "Error in getting employee completed tasks at admin side");
+                });
+            }
+          });
 
 
 
@@ -246,6 +267,8 @@ export default class Completed extends Component {
     );
   }
 
+  //if data is empty in flatlist we will use _listEmptyComponent method
+
   _listEmptyComponent = () => {
     return (
       <View>
@@ -258,37 +281,38 @@ export default class Completed extends Component {
     )
   }
 
-//Search the task based on id,taskname,description,and user
-  SearchFilterFunction(text){
+  //Search the task based on id,taskname,description,and user
+  SearchFilterFunction(text) {
+    log("Info", "AdminManageEmployeeTaskCompleted:SearchFilterFunction(text) used for searching functionality");
     console.log(text);
-    const newData = this.arrayholder.filter(function(item){
-        const subTaskId = item.subTaskId.toUpperCase()
-        const subTaskId1 = text.toUpperCase()
-        const mainTaskTitle = item.mainTaskTitle.toUpperCase()
-        const mainTaskTitle1 = text.toUpperCase()
-       
-        const taskTitle = item.taskTitle.toUpperCase()
-        const taskTitle1 = text.toUpperCase()
-        const subTaskDesc = item.subTaskDesc.toUpperCase()
-        const subTaskDesc1 = text.toUpperCase()
-        const targetDate = item.targetDate.toUpperCase()
-        const targetDate1 = text.toUpperCase()
-        const taskStatus = item.taskStatus.toUpperCase()
-        const taskStatus1 = text.toUpperCase()
-        const assignedDate = item.assignedDate.toUpperCase()
-        const assignedDate1 = text.toUpperCase()
-        const assignedBy = item.assignedBy.toUpperCase()
-        const assignedBy1 = text.toUpperCase()
-        const timeLeft = item.timeLeft.toUpperCase()
-        const timeLeft1 = text.toUpperCase()
-        const dependencyId = item.dependencyId.toUpperCase()
-        const dependencyId1 = text.toUpperCase()
-        const dependencyTitle = item.dependencyTitle.toUpperCase()
-        const dependencyTitle1 = text.toUpperCase()
-       
-        return subTaskId.indexOf(subTaskId1) > -1 || 
-        mainTaskTitle.indexOf(mainTaskTitle1) > -1 || 
-      
+    const newData = this.arrayholder.filter(function (item) {
+      const subTaskId = item.subTaskId.toUpperCase()
+      const subTaskId1 = text.toUpperCase()
+      const mainTaskTitle = item.mainTaskTitle.toUpperCase()
+      const mainTaskTitle1 = text.toUpperCase()
+
+      const taskTitle = item.taskTitle.toUpperCase()
+      const taskTitle1 = text.toUpperCase()
+      const subTaskDesc = item.subTaskDesc.toUpperCase()
+      const subTaskDesc1 = text.toUpperCase()
+      const targetDate = item.targetDate.toUpperCase()
+      const targetDate1 = text.toUpperCase()
+      const taskStatus = item.taskStatus.toUpperCase()
+      const taskStatus1 = text.toUpperCase()
+      const assignedDate = item.assignedDate.toUpperCase()
+      const assignedDate1 = text.toUpperCase()
+      const assignedBy = item.assignedBy.toUpperCase()
+      const assignedBy1 = text.toUpperCase()
+      const timeLeft = item.timeLeft.toUpperCase()
+      const timeLeft1 = text.toUpperCase()
+      const dependencyId = item.dependencyId.toUpperCase()
+      const dependencyId1 = text.toUpperCase()
+      const dependencyTitle = item.dependencyTitle.toUpperCase()
+      const dependencyTitle1 = text.toUpperCase()
+
+      return subTaskId.indexOf(subTaskId1) > -1 ||
+        mainTaskTitle.indexOf(mainTaskTitle1) > -1 ||
+
         taskTitle.indexOf(taskTitle1) > -1 ||
         subTaskDesc.indexOf(subTaskDesc1) > -1 ||
         targetDate.indexOf(targetDate1) > -1 ||
@@ -297,15 +321,15 @@ export default class Completed extends Component {
         assignedBy.indexOf(assignedBy1) > -1 ||
         timeLeft.indexOf(timeLeft1) > -1 ||
         dependencyId.indexOf(dependencyId1) > -1 ||
-        dependencyTitle.indexOf(dependencyTitle) > -1 
-      
+        dependencyTitle.indexOf(dependencyTitle) > -1
+
     })
     this.setState({
-        dataSource: newData,
-        text: text
+      dataSource: newData,
+      text: text
     })
-}
-
+  }
+  //Search data end
 
   render() {
     return (
@@ -353,21 +377,6 @@ export default class Completed extends Component {
           </View>
 
 
-
-          {/* <View style={{flex:1}}>
-<View style={{backgroundColor:'green'}}>
-  <Text>hello</Text>
-</View>
-
-<View style={{backgroundColor:'blue'}}>
-  <Text>hello</Text>
-</View>
-<View style={{backgroundColor:'red'}}>
-  <Text>hello</Text>
-</View>
-
-</View> */}
-
         </Content>
 
 
@@ -376,6 +385,8 @@ export default class Completed extends Component {
     );
   }
 }
+
+//Styles for UI
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -415,15 +426,15 @@ const styles = StyleSheet.create({
   },
   signUpText0: {
     fontSize: 14,
-  
-    fontWeight: 'bold',
+
+    // fontWeight: 'bold',
     color: 'green',
     paddingLeft: 10,
   },
   signUpText1: {
     fontSize: 14,
     // paddingTop: 20,
-     fontWeight: 'bold',
+    // fontWeight: 'bold',
     color: 'green',
     paddingLeft: 10,
   },
@@ -431,30 +442,30 @@ const styles = StyleSheet.create({
   signUpText00: {
     fontSize: 14,
     paddingLeft: 10,
-    color:'#808080'
+    color: 'black',
   },
   signUpText11: {
     fontSize: 14,
-    paddingBottom: 10,
+    // paddingBottom: 10,
     color: 'black',
-    width:'55%',
-    fontWeight:'bold',
-    paddingLeft: 10,
+    width: '55%',
+    // fontWeight: 'bold',
+    // paddingLeft: 10,
   },
   signUpText000: {
-    fontSize: 12,
+    fontSize: 14,
     // paddingTop: 20,
     // fontWeight: 'bold',
-     color: '#C0C0C0',
+    color: 'black',
     paddingLeft: 10,
   },
   signUpText111: {
-    fontSize: 12,
-    paddingBottom: 5,
+    fontSize: 14,
+    // paddingBottom: 5,
     //  paddingTop: 20,
     // fontWeight: 'bold',
     color: 'black',
-    paddingLeft: 23,
+     paddingLeft: 2,
   },
   end: {
 
@@ -493,62 +504,62 @@ const styles = StyleSheet.create({
   },
   signUpText02: {
     fontSize: 14,
-   
+
     color: 'blue',
-    paddingBottom: 5,
-    paddingRight:10,
-    fontWeight: 'bold',
+    // paddingBottom: 5,
+    paddingRight: 10,
+    // fontWeight: 'bold',
     justifyContent: 'center',
 
   },
   signUpText002: {
-    fontSize: 12,
+    fontSize: 14,
     paddingRight: 10,
     // paddingTop: 20,
     paddingLeft: 23,
     // color: 'red',
-    paddingBottom: 5,
+    // paddingBottom: 5,
     // fontWeight: 'bold',
     justifyContent: 'center',
 
   },
   signUpText3: {
 
-    paddingBottom: 5,
-    paddingLeft: 23,
+    // paddingBottom: 5,
+     paddingLeft: 2,
     fontSize: 14,
-    fontWeight:'bold',
+    // fontWeight: 'bold',
     // paddingRight:hp('-10%'),
     paddingRight: 13,
-   
+
     alignItems: 'center',
   },
   signUpText4: {
-    paddingBottom: 5,
+    // paddingBottom: 5,
     paddingLeft: 10,
     fontSize: 14,
-    color:'#808080',
+    color: 'black',
     alignItems: 'center',
   },
 
 
   signUpText33: {
 
-   
-    paddingLeft: 5,
-    fontSize: 12,
-    width:'80%',
+
+    paddingLeft: 2,
+    fontSize: 14,
+    width: '80%',
     paddingRight: 13,
     // fontWeight: 'bold',
     paddingTop: -15,
     alignItems: 'center',
   },
   signUpText44: {
-    paddingBottom: 5,
+    // paddingBottom: 5,
     paddingLeft: 10,
-  
-   
-    color: '#C0C0C0',
+
+
+    color: 'black',
     fontSize: 14,
     alignItems: 'center',
   },
@@ -585,7 +596,7 @@ const styles = StyleSheet.create({
 
   },
   signUpText: {
-    fontSize: 20,
+    fontSize: 14,
     justifyContent: 'center',
 
 

@@ -1,14 +1,22 @@
+/*
+FileName:UpdateEmployee.js
+Version:1.0.0
+Purpose:
+Devloper:Mahesh
+*/
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, StatusBar, Dimensions, TouchableOpacity, Linking, TextInput } from 'react-native';
-import { Title, Button, Container, Content, Header, Right, Left, Body, Tab, Tabs, TabHeading, Footer, Item, Input, FooterTab } from 'native-base';
+import { Title, Button, Container, Content, Header, Right, Left, Body, Tab, Tabs, TabHeading, Footer, Item, Input, FooterTab, Subtitle } from 'native-base';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import RadioGroup from 'react-native-radio-button-group';
-import {API }from "../WebServices/RestClient";
+import { Dropdown } from 'react-native-material-dropdown';
+import { API } from "../WebServices/RestClient";
 import NetInfo from '@react-native-community/netinfo';
 import Snackbar from 'react-native-snackbar';
 import AsyncStorage from '@react-native-community/async-storage';
+import log from '../LogFile/Log';
 
 
 
@@ -18,83 +26,154 @@ export default class UpdateEmployee extends Component {
         super(props);
 
         this.state = {
-            //  maintask: '',
-            // description: '',
-
+      
             team: '',
             designation: '',
             modalVisible: false,
             usertype: '',
             user_status: '',
-            //usertype1: '',
+       
             password: '',
 
-            designation : [
-
-                { id: 1, name: 'angellist' },
-                { id: 2, name: 'codepen' },
-                { id: 3, name: 'envelope' },
-                { id: 4, name: 'etsy' },
-                { id: 5, name: 'facebook' },
-                { id: 6, name: 'foursquare' },
-                { id: 7, name: 'github-alt' },
-                { id: 8, name: 'github' },
-                { id: 9, name: 'gitlab' },
-                { id: 10, name: 'instagram' },
-            ],
-            
-            
-             team : [
-            
-                { id: 1, name: 'angellist' },
-                { id: 2, name: 'codepen' },
-                { id: 3, name: 'envelope' },
-                { id: 4, name: 'etsy' },
-                { id: 5, name: 'facebook' },
-                { id: 6, name: 'foursquare' },
-                { id: 7, name: 'github-alt' },
-                { id: 8, name: 'github' },
-                { id: 9, name: 'gitlab' },
-                { id: 10, name: 'instagram' },
-            ],
-            
-             radiogroup_options : [
-                { id: 0, label: 'active' },
-                { id: 1, label: 'inactive' },
+         
+            radiogroup_options: [
+                { id: 0, label: 'Active' },
+                { id: 1, label: 'Inactive' },
                 { id: 2, label: 'other' },
             ],
-           radiogroup_options : [
-                { id: 0, label: 'manager' },
-                { id: 1, label: 'employee' },
-                { id: 2, label: 'approver' },
+            radiogroup_options: [
+                { id: 0, label: 'Manager' },
+                { id: 1, label: 'Emp' },
+                { id: 2, label: 'Approver' },
             ]
 
 
         };
     }
+    componentDidMount(){
+        this.empDesignationSearch();
+        this.empRoleSearch();
+    }
+      //fetch disgnation dropdown 
+      empDesignationSearch() {
+        log("Info", " empDesignationSearch(cropcode) is used to fetch disgnation dropdown ");
+        AsyncStorage.getItem("cropcode", (err, res) => {
+
+            const cropcode = res;
+            NetInfo.fetch().then(state => {
+                if (state.type == "none") {
+                    console.log(state.type);
+                    log("Warn", "No internet connection");
+                    Snackbar.show({
+                        title: 'No Internet Connection',
+                        backgroundColor: 'red',
+                        duration: Snackbar.LENGTH_LONG,
+                    });
+                } else {
+                    fetch(API + 'spinner.php',
+                        {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                crop: cropcode,
+                                // mainTaskId: taskId,
+                                action: 'desig'
+                            })
+                        })
+                        .then((response) => response.json())
+                        .then((responseJson) => {
+                            this.setState({
+                                designationData: [...responseJson.data],
+                            });
+                          
+                        }
+                        )
+                        .catch((error) => {
+                            console.error(error);
+                            log("Error", "fetch disgnation dropdown  error");
+                        });
+                }
+            });
+        });
+
+    }
+    //fetch role dropdown 
+    empRoleSearch() {
+        log("Info", "     empRoleSearc(cropcode) is used to fetch role dropdown  ");
+        AsyncStorage.getItem("cropcode", (err, res) => {
+
+            const cropcode = res;
+            NetInfo.fetch().then(state => {
+                if (state.type == "none") {
+                    console.log(state.type);
+                    log("Warn", "No internet connection");
+                    Snackbar.show({
+                        title: 'No Internet Connection',
+                        backgroundColor: 'red',
+                        duration: Snackbar.LENGTH_LONG,
+                    });
+                } else {
+                    fetch(API + 'spinner.php',
+                        {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                crop: cropcode,
+                                // mainTaskId: taskId,
+                                action: 'team'
+                            })
+                        })
+                        .then((response) => response.json())
+                        .then((responseJson) => {
+
+                            this.setState({
+                                roleData: [...responseJson.data],
+                            });
+                        }
+                        )
+                        .catch((error) => {
+                            console.error(error);
+                            log("Error", "fetch role dropdown  error");
+                        });
+                }
+            });
+        });
+
+    }
 
 
-
+    //Checking the Validation
     isValid() {
         var { designation, team, usertype, user_status, password } = this.state;
         let valid = false;
 
         if (designation.length === 0) {
+            log("Warn", "designation should not be empty");
             alert("Enter Designation");
         }
 
         else if (team.length === 0) {
+            log("Warn", "team should not be empty");
             alert("Enter Team");
         }
         else if (usertype.length === 0) {
+            log("Warn", "usertype should not be empty");
             alert("Enter User Type");
         }
 
         else if (user_status.length === 0) {
+            log("Warn", "user_status should not be empty");
             alert("Enter User Status");
         }
 
         else if (password.length === 0) {
+            log("Warn", "password should not be empty");
             alert("Enter Password");
         }
 
@@ -103,25 +182,19 @@ export default class UpdateEmployee extends Component {
         }
         return valid;
     }
-    //  verifyEmail(email) {
+  
 
-
-
-    // nav(){
-    //     console.log("dvcdwvciuwdviwu");
-    //     alert("mahesh");
-    //     this.props.navigation.navigate("AddUser1");
-    // }
-
-
+    //Adding the new Employee
     onSignIn() {
-        alert("Gel");
+        log("Info", " onSignIn( designation, team, usertype, user_status, password) is used to Adding the new Employee");
+ 
         if (this.isValid()) {
             console.log("staredt.,.................");
             console.log(this.state.designation);
             console.log(this.state.team);
-            console.log(this.state.usertype);
+            console.warn(this.state.usertype);
             console.log(this.state.user_status);
+            console.warn(this.state.user_status);
             console.log(this.state.password);
             const { designation, team, usertype, user_status, password, } = this.state;
 
@@ -129,55 +202,58 @@ export default class UpdateEmployee extends Component {
                 const cropcode = res;
                 NetInfo.fetch().then(state => {
                     if (state.type == "none") {
-                      console.log(state.type);
-                      Snackbar.show({
-                        title: 'No Internet Connection',
-                        backgroundColor: 'red',
-                        duration: Snackbar.LENGTH_LONG,
-                      });
-                    }else{
-                fetch(API+'add_edit_employee.php', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        empId: this.props.navigation.state.params.empId,
-                        fullname: this.props.navigation.state.params.fullname,
-                        email: this.props.navigation.state.params.email,
-                        username: this.props.navigation.state.params.username,
-                        mobile: this.props.navigation.state.params.mobile,
-                        action: "save",
-                        crop: cropcode,
-                        password: password,
-                        team: team,
-                        designation: designation,
-                        userType: usertype,
-                        user_status: user_status,
-                        created_by: "admin",
-                    })
-                }).then((response) => response.json())
-                    .then((responseJson) => {
-                        //alert(responseJson);
-                        console.log(JSON.stringify(responseJson));
-                        console.log(responseJson);
-                        alert(JSON.stringify(responseJson));
-                        if (responseJson.status === 'True') {
+                        console.log(state.type);
+                        log("Warn", "No internet connection");
+                        Snackbar.show({
+                            title: 'No Internet Connection',
+                            backgroundColor: 'red',
+                            duration: Snackbar.LENGTH_LONG,
+                        });
+                    } else {
+                        fetch(API + 'addEditEmployee.php', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                empId: this.props.navigation.state.params.empId,
+                                fullname: this.props.navigation.state.params.fullname,
+                                email: this.props.navigation.state.params.email,
+                                username: this.props.navigation.state.params.username,
+                                mobile: this.props.navigation.state.params.mobile,
+                                action: "save",
+                                crop: cropcode,
+                                password: password,
+                                team: team,
+                                designation: designation,
+                                userType: usertype,
+                                user_status: user_status,
+                                created_by: "admin",
+                            })
+                        }).then((response) => response.json())
+                            .then((responseJson) => {
+                                //alert(responseJson);
+                                console.log(JSON.stringify(responseJson));
+                                console.log(responseJson);
+                                //  alert(JSON.stringify(responseJson));
+                                if (responseJson.status === 'True') {
 
-                            this.props.navigation.navigate('AdminManageEmployees');
+                                    this.props.navigation.navigate('AdminManageEmployees');
 
-                        }
-                        else {
-                            console.log(JSON.stringify(responseJson));
-                           alert("error");
-                        }
+                                }
+                                else {
+                                    console.log(JSON.stringify(responseJson));
+                                    log("Warn", "Error  found");
+                                    alert("error");
+                                }
 
-                    }).catch((error) => {
-                        console.error(error);
-                    });
-                }
-            });
+                            }).catch((error) => {
+                                console.error(error);
+                                log("Error", "Adding the new Employee error");
+                            });
+                    }
+                });
             });
 
         }
@@ -186,8 +262,6 @@ export default class UpdateEmployee extends Component {
 
     render() {
 
-        // let data1 = [{ value: 'acres', }, { value: 'units', }, { value: 'squares', }, { value: 'cents', },];
-        // let data2 = [{ value: 'industries', }, { value: 'offices', }];
 
         return (
             <Container>
@@ -201,17 +275,14 @@ export default class UpdateEmployee extends Component {
                         borderBottomColor: '#ffffff',
                         justifyContent: 'space-between',
                     }}>
-                    <Left>
-                        <Icon name="arrow-left" size={25} style={{ color: '#fff', }} onPress={() =>
-                            this.props.navigation.toggleDrawer()} />
-                    </Left>
-                    <Body style={{ paddingRight: 60, }}>
-                        <Title style={{ color: '#fff', fontWeight: '600', }}>Add User</Title>
+
+                    <Icon name="arrow-left" size={25} style={{ color: '#fff', paddingTop: 17 }} onPress={() =>
+                        this.props.navigation.navigate('AdminManageEmployees')} />
+
+                    <Body style={{ paddingLeft: 30, }}>
+                        <Title style={{ color: '#fff', fontWeight: '600', }}>Add Employee</Title>
+                        <Subtitle></Subtitle>
                     </Body>
-
-                    <Right>
-
-                    </Right>
 
                 </Header>
 
@@ -220,146 +291,37 @@ export default class UpdateEmployee extends Component {
 
                     <View style={{ paddingLeft: 10, }}>
                         <Text style={{ fontSize: 20, color: 'black' }}>Enter Other Details </Text>
-
-
-
-
                     </View>
 
-                    <View style={{ flexDirection: 'row' }}>
+                    <View >
 
-                        <View style={{ height: 50, width: "30%", position: 'relative', left: '4%', marginTop: '10%' }} >
-                            {/* <View style={{ paddingLeft: 10, }}> */}
+                        <Dropdown
+                           
+                                style={{ paddingLeft: 10 }}
+                                placeholder='Select Designation *'
+                               // value={this.state.designation}
+                                onChangeText={typeValue => this.setState({ designation: typeValue })}
 
-                            {/* <TextInput style={{ width: wp('50%'), height: 45, color: 'white', }}
-                                placeholder='Designation*'
-                                // underlineColorAndroid='transparent'
-                                selectionColor='white'
-                                onChangeText={(maintask) => this.setState({ maintask })}
-                            /> */}
-                            <Text style={{ width: wp('50%'), height: 45, paddingTop: 20 }}> Designation*</Text>
-                        </View>
-                        <View style={{ paddingLeft: 130 }}>
-                            <SearchableDropdown
-                                onTextChange={text => console.log(text)}
-                                onItemSelect={item => alert(JSON.stringify(item))}
-                                containerStyle={{ padding: 5 }}
-                                textInputStyle={{
-                                    padding: 12,
-                                    borderWidth: 1,
-                                    borderColor: '#ccc',
-                                    backgroundColor: '#FAF7F6',
-                                }}
-                                itemStyle={{
-                                    padding: 10,
-                                    marginTop: 2,
-                                    backgroundColor: '#FAF9F8',
-                                    borderColor: '#bbb',
-                                    borderWidth: 1,
-                                }}
-                                itemTextStyle={{
+                                data={this.state.designationData}
+                            />
+                            <Dropdown
+                                //   ref={this.nameRef}
+                                style={{ paddingLeft: 10 }}
+                                placeholder='Select Role *'
+                                //value={this.state.team}
+                                onChangeText={typeValue => this.setState({ team: typeValue })}
 
-                                    color: '#222',
-                                }}
-                                itemsContainerStyle={{
-
-                                    maxHeight: '60%',
-                                }}
-                                items={this.state.designation}
-
-                                defaultIndex={2}
-
-                                placeholder="placeholder"
-
-                                resetValue={false}
-
-                                underlineColorAndroid="transparent"
-
+                                data={this.state.roleData}
                             />
 
-                            {/* <Dropdown
-                                //label={this.state.saleLabel}     
-                                data={data1}
-                                value={this.state.saleLabel}
-                                onChangeText={saleValue => this.setState({ saleLabel: saleValue, })}
-                            /> */}
-
-
-                        </View>
-
                     </View>
-
-
-
-
-
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ paddingLeft: 10, }}>
-
-
-                            <Text style={{ width: wp('50%'), height: 45, paddingTop: 20 }}>Team*</Text>
-                        </View>
-                        <View style={{ paddingLeft: 30 }}>
-                            <SearchableDropdown
-                                onTextChange={text => console.log(text)}
-                                onItemSelect={team => alert(JSON.stringify(team))}
-                                containerStyle={{ padding: 5 }}
-                                textInputStyle={{
-                                    padding: 12,
-                                    borderWidth: 1,
-                                    borderColor: '#ccc',
-                                    backgroundColor: '#FAF7F6',
-                                }}
-                                itemStyle={{
-                                    padding: 10,
-                                    marginTop: 2,
-                                    backgroundColor: '#FAF9F8',
-                                    borderColor: '#bbb',
-                                    borderWidth: 1,
-                                }}
-                                itemTextStyle={{
-
-                                    color: '#222',
-                                }}
-                                itemsContainerStyle={{
-
-                                    maxHeight: '60%',
-                                }}
-                                items={this.state.team}
-
-                                defaultIndex={2}
-
-                                placeholder="placeholder"
-
-                                resetValue={false}
-
-                                underlineColorAndroid="transparent"
-
-                            />
-
-
-                        </View>
-
-                    </View>
-
-
-
-
-
-
-
-
-
-
-
+                  
                     <View style={{ paddingLeft: 10, }}>
-
-
                         <TextInput style={{ width: wp('95%'), height: 45, borderBottomWidth: 1, }}
                             placeholder='Password *'
                             secureTextEntry={true}
                             underlineColorAndroid='transparent'
-                            selectionColor='white'
+                           // selectionColor='white'
                             onChangeText={(password) => this.setState({ password })}
 
                         />
@@ -372,7 +334,7 @@ export default class UpdateEmployee extends Component {
                                 horizontal
                                 options={[
                                     {
-                                        id: 'active',
+                                        id: 'Active',
                                         labelView: (
                                             <Text>
                                                 <Text style={{ color: 'Black' }}>Active
@@ -381,7 +343,7 @@ export default class UpdateEmployee extends Component {
                                         ),
                                     },
                                     {
-                                        id: 'inactive',
+                                        id: 'Inactive',
                                         labelView: (
                                             <Text>
                                                 <Text style={{ color: 'black' }}>In-Active
@@ -391,11 +353,10 @@ export default class UpdateEmployee extends Component {
                                     },
 
                                     {
-                                        id: 'other',
+                                        id: 'Other',
                                         labelView: (
                                             <Text>
-                                                <Text style={{ color: 'black' }}>Other
-                  </Text>
+                                                <Text style={{ color: 'black' }}>Other</Text>
                                             </Text>
                                         ),
                                     },
@@ -415,30 +376,27 @@ export default class UpdateEmployee extends Component {
                                 horizontal
                                 options={[
                                     {
-                                        id: 'manager',
+                                        id: 'Manager',
                                         labelView: (
                                             <Text>
-                                                <Text style={{ color: 'Black' }}>Manager
-                  </Text>
+                                                <Text style={{ color: 'Black' }}>Manager</Text>
                                             </Text>
                                         ),
                                     },
                                     {
-                                        id: 'employee',
+                                        id: 'Emp',
                                         labelView: (
                                             <Text>
-                                                <Text style={{ color: 'black' }}>Employee
-                  </Text>
+                                                <Text style={{ color: 'black' }}>Employee</Text>
                                             </Text>
                                         ),
                                     },
 
                                     {
-                                        id: 'approver',
+                                        id: 'Approver',
                                         labelView: (
                                             <Text>
-                                                <Text style={{ color: 'black' }}>Approver
-                  </Text>
+                                                <Text style={{ color: 'black' }}>Approver</Text>
                                             </Text>
                                         ),
                                     },
@@ -452,85 +410,40 @@ export default class UpdateEmployee extends Component {
                     </View>
 
 
-                    {/* <View style={{ paddingLeft: 10, }}>
-
-
-                        <TextInput style={{ width: wp('95%'), height: 45, color: 'white', borderBottomWidth: 1, }}
-                            placeholder='Username *'
-                            underlineColorAndroid='transparent'
-                            selectionColor='white'
-                            onChangeText={(description) => this.setState({ description })}
-
-                        />
-                    </View> */}
-                    {/* <View style={{ paddingLeft: 10, }}>
-
-
-                        <TextInput style={{ width: wp('95%'), height: 45, color: 'white', borderBottomWidth: 1, }}
-                            placeholder='Mobile *'
-                            underlineColorAndroid='transparent'
-                            selectionColor='white'
-                            onChangeText={(description) => this.setState({ description })}
-
-                        />
-                    </View> */}
 
                 </View >
                 <View style={{ paddingTop: 20, }}>
-                    {/* <SearchableDropdown
-                onTextChange={text => console.log(text)}
-                onItemSelect={item => alert(JSON.stringify(item))}
-                containerStyle={{ padding: 5 }}
-                textInputStyle={{
-                  padding: 12,
-                  borderWidth: 1,
-                  borderColor: '#ccc',
-                  backgroundColor: '#FAF7F6',
-                }}
-                itemStyle={{
-                  padding: 10,
-                  marginTop: 2,
-                  backgroundColor: '#FAF9F8',
-                  borderColor: '#bbb',
-                  borderWidth: 1,
-                }}
-                itemTextStyle={{
-
-                  color: '#222',
-                }}
-                itemsContainerStyle={{
-
-                  maxHeight: '60%',
-                }}
-                items={items}
-
-                defaultIndex={2}
-
-                placeholder="placeholder"
-
-                resetValue={false}
-
-                underlineColorAndroid="transparent"
-
-              />
-            </View> */}
+                  
 
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
-                        <TouchableOpacity onPress={()=>this.onSignIn()} style={{ margin: 5, backgroundColor: '#00A2C1', borderRadius: 5, padding: 19, height: 30, alignItems: "center", justifyContent: 'center' }}>
-                            <Text style={{ color: 'white' }}> Submit</Text>
+                        <TouchableOpacity onPress={() => this.onSignIn()} style={styles.submit}>
+                            <Text style={{ color: 'white' ,fontSize:15}}> Submit</Text>
                         </TouchableOpacity>
 
                     </View>
 
                 </View>
                 {/* </Content> */}
-
-
-
-
-
-
             </Container >
         );
     }
 }
+//Styles for UI
+const styles = StyleSheet.create(
+    {
+    
+    submit: {
+        flex: 1,
+        ...Platform.select({
+          ios: {
+            backgroundColor: '#00A2C1', borderRadius: 5, marginLeft:130,marginRight:130,
+            width:'30%', height: 40, alignItems: "center", justifyContent: 'center' 
+          },
+          android: {
+            backgroundColor: '#00A2C1', borderRadius: 5, marginLeft:130,marginRight:130,
+           width:'30%', height: 40, alignItems: "center", justifyContent: 'center' 
+         },
+        }),
+      },
+  
+    });
