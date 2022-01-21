@@ -11,7 +11,7 @@
     "@react-native-community/async-storage": "1.7.0",
     "@react-native-community/netinfo": "4.7.0",
     "accordion-collapse-react-native": "^0.1.11",
-    "log4js": "^5.3.0",
+    "log4js": "^6.4.0",
     "native-base": "^2.13.5",
     "react": "16.8.6",
     "react-alert": "^5.5.0",
